@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://movienight.com/sitemap.xml
+Sitemap: https://abdo-omran2206.github.io/Movie-Night/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1

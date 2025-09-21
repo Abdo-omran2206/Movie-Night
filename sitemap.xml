@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://movienight.com/</loc>
+    <loc>https://abdo-omran2206.github.io/Movie-Night/</loc>
     <lastmod>2024-01-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://movienight.com/movies/</loc>
+    <loc>https://abdo-omran2206.github.io/Movie-Night/movies/</loc>
     <lastmod>2024-01-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://movienight.com/search/</loc>
+    <loc>https://abdo-omran2206.github.io/Movie-Night/search/</loc>
     <lastmod>2024-01-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://movienight.com/moviedetails/</loc>
+    <loc>https://abdo-omran2206.github.io/Movie-Night/moviedetails/</loc>
     <lastmod>2024-01-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
