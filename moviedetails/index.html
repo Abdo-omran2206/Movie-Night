@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Night-Movies</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1 onclick="location.href='/'">Movie Night</h1>
+      </div>
+      <div>
+        <div class="search-bar">
+          <form>
+            <input
+              type="text"
+              id="search-bar"
+              placeholder="Search for movies..."
+            />
+            <button id="search-btn">Search</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="movie-details-container">
+        <div class="loading-spinner" id="loading-spinner" style="display: flex;">
+          <div class="spinner"></div>
+          <p>Loading movie details...</p>
+        </div>
+        
+        <div class="movie-details" id="movie-details" style="display: none;">
+          <div class="movie-hero">
+            <div class="movie-backdrop">
+              <div class="backdrop-overlay"></div>
+            </div>
+            <div class="movie-content">
+              <div class="movie-poster">
+                <img id="movie-poster-img" src="" alt="Movie Poster" />
+              </div>
+              <div class="movie-info">
+                <h1 id="movie-title" class="movie-title"></h1>
+                <div class="movie-meta">
+                  <span id="movie-release-date" class="release-date"></span>
+                  <span id="movie-runtime" class="runtime"></span>
+                  <span id="movie-rating" class="rating"></span>
+                </div>
+                <div class="movie-genres" id="movie-genres"></div>
+                <div class="movie-overview">
+                  <h3>Overview</h3>
+                  <p id="movie-description"></p>
+                </div>
+                <div class="movie-actions" id="movie-actions">
+                  <button class="action-btn watch-btn">
+                    <i class="fas fa-play"></i>
+                    Watch Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="movie-details-sections">
+            <section class="cast-section">
+              <h2>Cast</h2>
+              <div class="cast-grid" id="cast-grid"></div>
+            </section>
+            
+            <section class="similar-movies-section">
+              <h2>Similar Movies</h2>
+              <div class="similar-movies-grid" id="similar-movies-grid"></div>
+            </section>
+          </div>
+        </div>
+        
+        <div class="error-message" id="error-message" style="display: none;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h2>Movie Not Found</h2>
+          <p>Sorry, we couldn't find the movie you're looking for.</p>
+          <button onclick="window.history.back()" class="back-btn">Go Back</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-brand">
+          <h1>Movie Night</h1>
+          <p>
+            Your ultimate destination for movie enthusiasts. Discover, watch,
+            and enjoy cinema like never before.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-nav">
+            <h3>Quick Links</h3>
+            <ul>
+              <li>
+                <a href="/movies/index.html?category=trending">Trending</a>
+              </li>
+              <li>
+                <a href="/movies/index.html?category=top_rated">Top Rated</a>
+              </li>
+              <li>
+                <a href="/movies/index.html?category=popular">Popular</a>
+              </li>
+              <li>
+                <a href="/movies/index.html?category=upcoming">Upcoming</a>
+              </li>
+              <li>
+                <a href="/movies/index.html?category=now_playing"
+                  >Now Playing</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-social">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Movie Night. All rights reserved.</p>
+      </div>
+    </footer>
+    <script src="main.js"></script>
+    <script>
+      $("#search-btn").on("click", function (e) {
+        e.preventDefault();
+        const searchTerm = $("#search-bar").val().trim();
+        if (searchTerm) {
+          window.location.href = `/search/index.html?search=${encodeURIComponent(
+            searchTerm
+          )}`;
+        }
+      });
+
+      $("#search-bar").on("keypress", function (e) {
+        if (e.which === 13) {
+          // Enter key
+          e.preventDefault();
+          $("#search-btn").click();
+        }
+      });
+    </script>
+  </body>
+</html>
