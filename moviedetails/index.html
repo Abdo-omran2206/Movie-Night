@@ -155,19 +155,19 @@
             <h3>Quick Links</h3>
             <ul>
               <li>
-                <a href="/movies/index.html?category=trending">Trending</a>
+                <a href="../movies/index.html?category=trending">Trending</a>
               </li>
               <li>
-                <a href="/movies/index.html?category=top_rated">Top Rated</a>
+                <a href="../movies/index.html?category=top_rated">Top Rated</a>
               </li>
               <li>
-                <a href="/movies/index.html?category=popular">Popular</a>
+                <a href="../movies/index.html?category=popular">Popular</a>
               </li>
               <li>
-                <a href="/movies/index.html?category=upcoming">Upcoming</a>
+                <a href="../movies/index.html?category=upcoming">Upcoming</a>
               </li>
               <li>
-                <a href="/movies/index.html?category=now_playing"
+                <a href="../movies/index.html?category=now_playing"
                   >Now Playing</a
                 >
               </li>
@@ -196,7 +196,7 @@
         e.preventDefault();
         const searchTerm = $("#search-bar").val().trim();
         if (searchTerm) {
-          window.location.href = `/search/index.html?search=${encodeURIComponent(
+          window.location.href = `../search/index.html?search=${encodeURIComponent(
             searchTerm
           )}`;
         }

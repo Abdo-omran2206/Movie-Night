@@ -111,11 +111,11 @@
           <div class="footer-nav">
             <h3>Quick Links</h3>
             <ul>
-              <li><a href="/movies/index.html?category=trending">Trending</a></li>
-              <li><a href="/movies/index.html?category=top-rated">Top Rated</a></li>
-              <li><a href="/movies/index.html?category=popular">Popular</a></li>
-              <li><a href="/movies/index.html?category=upcoming">Upcoming</a></li>
-              <li><a href="/movies/index.html?category=now-playing">Now Playing</a></li>
+              <li><a href="../movies/index.html?category=trending">Trending</a></li>
+              <li><a href="../movies/index.html?category=top-rated">Top Rated</a></li>
+              <li><a href="../movies/index.html?category=popular">Popular</a></li>
+              <li><a href="../movies/index.html?category=upcoming">Upcoming</a></li>
+              <li><a href="../movies/index.html?category=now-playing">Now Playing</a></li>
             </ul>
           </div>
 
@@ -141,7 +141,7 @@
         e.preventDefault();
         const searchTerm = $("#search-bar").val().trim();
         if (searchTerm) {
-          window.location.href = `/search/index.html?search=${encodeURIComponent(
+          window.location.href = `../search/index.html?search=${encodeURIComponent(
             searchTerm
           )}`;
         }
