@@ -6,6 +6,12 @@ A modern, responsive movie discovery web application built with vanilla JavaScri
   <img src="favicon.svg" alt="Movie Night" width="180" height="180" />
 </p>
 
+## 📝 Description
+
+**Movie Night** is a sleek, responsive web application that brings the magic of cinema to your browser. Built with modern web technologies, it offers an intuitive interface for discovering, searching, and exploring movies. Whether you're looking for trending blockbusters, critically acclaimed films, or hidden gems, Movie Night provides comprehensive movie information including cast details, ratings, genres, and plot summaries. The application features a dark, cinematic theme with smooth animations and is fully optimized for all devices, making it your perfect companion for planning your next movie night.
+
+**Live Demo:** [https://abdo-omran2206.github.io/Movie-Night/](https://abdo-omran2206.github.io/Movie-Night/)
+
 ## ✨ Features
 
 ### 🏠 **Home Page**
