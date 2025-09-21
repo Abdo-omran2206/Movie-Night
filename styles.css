@@ -125,6 +125,19 @@ form{
   100% { transform: rotate(360deg); }
 }
 
+/* Screen Reader Only Text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 main {
   padding: 30px 10px;
   flex: 1;

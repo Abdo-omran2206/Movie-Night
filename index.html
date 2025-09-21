@@ -4,60 +4,123 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Night - Discover Your Next Favorite Film</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Discover trending movies, search through thousands of films, and explore detailed movie information. Your ultimate destination for movie enthusiasts with a beautiful Netflix-inspired interface." />
+    <meta name="keywords" content="movies, film, cinema, trending movies, popular movies, movie search, movie database, film discovery, movie night, entertainment" />
+    <meta name="author" content="Movie Night" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Movie Night - Discover Your Next Favorite Film" />
+    <meta property="og:description" content="Discover trending movies, search through thousands of films, and explore detailed movie information. Your ultimate destination for movie enthusiasts." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://movienight.com" />
+    <meta property="og:image" content="https://movienight.com/favicon.svg" />
+    <meta property="og:site_name" content="Movie Night" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Movie Night - Discover Your Next Favorite Film" />
+    <meta name="twitter:description" content="Discover trending movies, search through thousands of films, and explore detailed movie information." />
+    <meta name="twitter:image" content="https://movienight.com/favicon.svg" />
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#e50914" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://movienight.com" />
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    
+    <!-- Scripts and Styles -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Movie Night",
+      "description": "Discover trending movies, search through thousands of films, and explore detailed movie information.",
+      "url": "https://movienight.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://movienight.com/search/index.html?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
   </head>
   <body>
-    <header>
+    <header role="banner">
       <div>
         <h1>Movie Night</h1>
       </div>
       <div>
         <div class="search-bar">
-          <form>
+          <form role="search">
+            <label for="search-bar" class="sr-only">Search for movies</label>
             <input
               type="text"
               id="search-bar"
+              name="search"
               placeholder="Search for movies..."
+              aria-label="Search for movies"
             />
-            <button id="search-btn">Search</button>
+            <button id="search-btn" type="submit" aria-label="Search movies">Search</button>
           </form>
         </div>
       </div>
     </header>
 
-    <main>
+    <main role="main">
       <!-- Loading Spinner -->
-      <div class="loading-spinner" id="main-loading-spinner">
-        <div class="spinner"></div>
+      <div class="loading-spinner" id="main-loading-spinner" aria-live="polite" aria-label="Loading movies">
+        <div class="spinner" aria-hidden="true"></div>
         <p>Loading movies...</p>
       </div>
 
-      <section class="trending-movies" style="display: none;" id="trending-section">
-        <div class="movie-grid" id="trending-movies"></div>
+      <section class="trending-movies" style="display: none;" id="trending-section" aria-labelledby="trending-heading">
+        <h2 id="trending-heading" class="sr-only">Trending Movies</h2>
+        <div class="movie-grid" id="trending-movies" role="list" aria-label="Trending movies"></div>
       </section>
 
-      <section class="movie-section" style="display: none;" id="top-rated-section">
-        <h2>Top Rated Movies</h2>
-        <div class="movie-view" id="top-rated-movies"></div>
+      <section class="movie-section" style="display: none;" id="top-rated-section" aria-labelledby="top-rated-heading">
+        <h2 id="top-rated-heading">Top Rated Movies</h2>
+        <div class="movie-view" id="top-rated-movies" role="list" aria-label="Top rated movies"></div>
       </section>
 
-      <section class="movie-section" style="display: none;" id="popular-section">
-        <h2>Popular</h2>
-        <div class="movie-view" id="popular-movies"></div>
+      <section class="movie-section" style="display: none;" id="popular-section" aria-labelledby="popular-heading">
+        <h2 id="popular-heading">Popular Movies</h2>
+        <div class="movie-view" id="popular-movies" role="list" aria-label="Popular movies"></div>
       </section>
-      <section class="movie-section" style="display: none;" id="upcoming-section">
-        <h2>Upcoming</h2>
-        <div class="movie-view" id="upcoming-movies"></div>
+      
+      <section class="movie-section" style="display: none;" id="upcoming-section" aria-labelledby="upcoming-heading">
+        <h2 id="upcoming-heading">Upcoming Movies</h2>
+        <div class="movie-view" id="upcoming-movies" role="list" aria-label="Upcoming movies"></div>
       </section>
-      <section class="movie-section" style="display: none;" id="now-playing-section">
-        <h2>Now Playing</h2>
-        <div class="movie-view" id="now-playing-movies"></div>
+      
+      <section class="movie-section" style="display: none;" id="now-playing-section" aria-labelledby="now-playing-heading">
+        <h2 id="now-playing-heading">Now Playing Movies</h2>
+        <div class="movie-view" id="now-playing-movies" role="list" aria-label="Now playing movies"></div>
       </section>
     </main>
     <footer>
