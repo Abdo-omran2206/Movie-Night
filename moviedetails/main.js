@@ -91,7 +91,7 @@ function displayMovieDetails(movie) {
   document.getElementById("movie-description").textContent = movie.overview || "No overview available.";
   
   // Set page title
-  document.title = `${movie.title} - Movie Night`;
+  document.title = `${movie.title} (${movie.release_date ? new Date(movie.release_date).getFullYear() : 'TBA'}) - Movie Details | Movie Night`;
   
   // Display cast
   displayCast(movie.credits.cast.slice(0, 12)); // Show first 12 cast members
