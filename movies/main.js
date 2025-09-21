@@ -43,7 +43,7 @@ async function fetchMovies(category, page) {
 function createMovieCard(movie) {
   const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
-  return `<div class="top-rated-card" onclick="location.href='/moviedetails/index.html?movieID=${movie.id}'">
+  return `<div class="top-rated-card" onclick="location.href='./moviedetails/index.html?movieID=${movie.id}'">
             <img
               src="${posterUrl}"
               alt="${movie.title}"

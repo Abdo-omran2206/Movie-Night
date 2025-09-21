@@ -108,7 +108,7 @@ function TrendingMovieBuilder(movie) {
 function MovieCardGenerator(movie) {
   const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
-  return `<article class="top-rated-card" onclick="location.href='/moviedetails/index.html?movieID=${movie.id}'" role="listitem" itemscope itemtype="https://schema.org/Movie">
+  return `<article class="top-rated-card" onclick="location.href='./moviedetails/index.html?movieID=${movie.id}'" role="listitem" itemscope itemtype="https://schema.org/Movie">
             <img
               src="${posterUrl}"
               alt="Poster for ${movie.title} movie"
