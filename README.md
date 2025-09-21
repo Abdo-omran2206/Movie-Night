@@ -2,7 +2,9 @@
 
 A modern, responsive movie discovery web application built with vanilla JavaScript, HTML, and CSS. Browse trending movies, search for your favorites, and explore detailed movie information with a beautiful, Netflix-inspired interface.
 
-![Movie Night](favicon.svg)
+<p align="center">
+  <img src="favicon.svg" alt="Movie Night" width="180" height="180" />
+</p>
 
 ## ✨ Features
 
