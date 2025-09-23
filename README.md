@@ -31,6 +31,12 @@ A modern, responsive movie discovery web application built with vanilla JavaScri
 - **Similar Movies**: Discover related content
 - **Interactive Elements**: Action buttons and smooth scrolling
 
+### 👤 **Actor Details Page**
+- **Biography**: Detailed life and career overview
+- **Quick Facts**: Place of birth, gender, popularity, aliases
+- **Filmography**: Grid of movies with ratings and poster art
+- **Deep Links**: Click a film to open its movie details page
+
 ### 🎨 **Design Features**
 - **Dark Theme**: Modern black and red color scheme
 - **Glass Morphism**: Backdrop blur effects and transparency
@@ -56,6 +62,10 @@ Movie Night/
 ├── main.js                 # Homepage functionality
 ├── styles.css              # Main stylesheet
 ├── favicon.svg             # Custom film reel favicon
+├── actor/
+│   ├── index.html          # Actor details page
+│   ├── main.js             # Actor page functionality
+│   └── styles.css          # Actor page styles
 ├── movies/
 │   ├── index.html          # Movies listing page
 │   ├── main.js             # Movies page functionality
@@ -87,12 +97,21 @@ Movie Night/
 - Handles multiple endpoints: trending, top-rated, popular, upcoming, now-playing
 - Search functionality with query parameters
 - Detailed movie information with cast and crew
+- Person search and details (actor biography, filmography)
+
+### **Deep Linking / URLs**
+- Home: `index.html`
+- Search: `search/index.html?search=Inception`
+- Movies by category: `movies/index.html?category=top_rated`
+- Movie details by ID: `moviedetails/index.html?movieID=12345`
+- Actor by name: `actor/index.html?name=Tom%20Hanks`
+- Actor by ID: `actor/index.html?actorID=31`
 
 ### **Responsive Design**
 - **Desktop**: Full layout with side-by-side content
 - **Tablet**: Adjusted spacing and sizing
 - **Mobile**: Stacked layout with touch-friendly controls
-- **Breakpoints**: 1024px, 768px, and 480px
+- **Breakpoints**: 1024px, 840px, 768px, and 480px
 
 ### **Performance Optimizations**
 - Lazy loading for images
@@ -136,7 +155,7 @@ Movie Night/
 ### **API Key**
 To use your own TMDB API key:
 1. Get a free API key from [TMDB](https://www.themoviedb.org/settings/api)
-2. Replace the `api_key` variable in all JavaScript files
+2. Replace the `api_key` variable in all JavaScript files (e.g., `main.js`, `movies/main.js`, `moviedetails/main.js`, `actor/main.js`, `search/search.js`)
 
 ### **Styling**
 - Modify CSS variables in `:root` for easy color changes
