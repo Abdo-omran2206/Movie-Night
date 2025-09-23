@@ -23,40 +23,70 @@ async function searchMovie(query, page) {
     return [];
   }
 }
+// Generate rating stars
+function getStars(rating) {
+  const stars = [];
+  const fullStars = Math.floor(rating / 2);
+  const halfStar = rating % 2 >= 1 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStar;
 
+  for (let i = 0; i < fullStars; i++)
+    stars.push('<i class="fa-solid fa-star" style="color:gold"></i>');
+  if (halfStar)
+    stars.push(
+      '<i class="fa-solid fa-star-half-stroke" style="color:gold"></i>'
+    );
+  for (let i = 0; i < emptyStars; i++)
+    stars.push('<i class="fa-regular fa-star" style="color:gold"></i>');
+
+  return stars.join("");
+}
 function createMovieCard(movie) {
-  const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+ const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  const stars = getStars(movie.vote_average);
 
-  return `<div class="top-rated-card" onclick="location.href='../moviedetails/index.html?movieID=${movie.id}'">
-            <img
-              src="${posterUrl}"
-              alt="${movie.title}"
-              loading="lazy"
-            />
-            <div class="card-overlay">
-              <h3>${movie.title}</h3>
-              <p>Release Date: ${movie.release_date || "N/A"}</p>
-              <p>Rating: ${"★".repeat(Math.round(movie.vote_average / 2))}☆</p>
-            </div>
-          </div>`;
+  return `
+    <article class="top-rated-card" 
+             onclick="location.href='../moviedetails/index.html?movieID=${
+               movie.id
+             }'" 
+             role="listitem" 
+             itemscope 
+             itemtype="https://schema.org/Movie">
+      <img src="${posterUrl}" 
+           alt="Poster for ${movie.title}" 
+           loading="lazy" 
+           itemprop="image" />
+      <div class="card-overlay">
+        <h3 itemprop="name">${movie.title}</h3>
+        <p itemprop="datePublished">Release Date: ${
+          movie.release_date || "N/A"
+        }</p>
+        <p itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+          ${stars}
+        </p>
+      </div>
+    </article>
+  `;
 }
 
 async function updatePagination() {
-  // Show loading spinner
   $("#search-loading-spinner").show();
   $("#category-title").hide();
   $("#movie-list-section").hide();
   $("#pagination-section").hide();
-  
+
   $("#movie-list-section").empty();
   try {
-    const movieData = await searchMovie(name,page); // استنى لحد ما البيانات ترجع
+    const movieData = await searchMovie(name, page);
     movieData.forEach((element) => {
       const movieHTML = createMovieCard(element);
       $("#movie-list-section").append(movieHTML);
     });
-    
-    // Hide loading and show content
+
+    // Update page info here, AFTER fetching totalPages
+    $("#page-info").text(`Page ${page} of ${totalPages}`);
+
     $("#search-loading-spinner").hide();
     $("#category-title").show();
     $("#movie-list-section").show();
@@ -66,6 +96,7 @@ async function updatePagination() {
     $("#search-loading-spinner").hide();
   }
 }
+
 
 function scrollToTop() {
   window.scrollTo({
@@ -92,10 +123,9 @@ $("#next-btn").on("click", function () {
   }
 });
 
-$(document).ready(async function () {
+$(document).ready(function () {
   $("#category-title").text(
     `${name.charAt(0).toUpperCase() + name.slice(1).replace("-", " ")}`
   );
-  updatePagination();
-  $("#page-info").text(`Page ${page} of ${totalPages}`);
+  updatePagination(); // page-info will update internally
 });

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Actor Details | Movie Night</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore detailed actor information including biography, filmography, and career highlights. Your comprehensive database for discovering actors and their work." />
+    <meta name="keywords" content="actor details, biography, filmography, actor information, movie credits, actor career" />
+    <meta name="author" content="Movie Night" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Actor Details | Movie Night" />
+    <meta property="og:description" content="Explore detailed actor information including biography and filmography." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abdo-omran2206.github.io/Movie-Night/actordetails/" />
+    <meta property="og:image" content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Actor Details | Movie Night" />
+    <meta name="twitter:description" content="Explore detailed actor information including biography and filmography." />
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#e50914" />
+    <link rel="canonical" href="https://abdo-omran2206.github.io/Movie-Night/actordetails/" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="apple-touch-icon" href="../favicon.svg" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    
+    <!-- Scripts and Styles -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Actor Details",
+      "description": "Explore detailed actor information including biography and filmography.",
+      "url": "https://abdo-omran2206.github.io/Movie-Night/actordetails/",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Actor Details Page",
+        "description": "Comprehensive actor information and filmography"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1 onclick="location.href='../index.html'">Movie Night</h1>
+      </div>
+      <div>
+        <div class="search-bar">
+          <form>
+            <input
+              type="text"
+              id="search-bar"
+              placeholder="Search for movies..."
+            />
+            <button id="search-btn">Search</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="actor-details-container">
+        <div class="loading-spinner" id="loading-spinner" style="display: flex;">
+          <div class="spinner"></div>
+          <p>Loading actor details...</p>
+        </div>
+        
+        <div class="actor-details" id="actor-details" style="display: none;">
+          <div class="actor-hero">
+            <div class="actor-content">
+              <div class="actor-photo">
+                <img id="actor-photo-img" src="" alt="Actor Photo" />
+              </div>
+              <div class="actor-info">
+                <h1 id="actor-name" class="actor-title"></h1>
+                <div class="actor-meta">
+                  <span id="actor-birthday" class="birthday"></span>
+                  <span id="actor-department" class="department"></span>
+                </div>
+                <div class="actor-biography">
+                  <h3>Biography</h3>
+                  <p id="actor-bio"></p>
+                </div>
+              <div class="actor-facts">
+                <h3>Quick Facts</h3>
+                <ul>
+                  <li><span class="fact-label">Place of Birth:</span> <span id="actor-place">-</span></li>
+                  <li><span class="fact-label">Gender:</span> <span id="actor-gender">-</span></li>
+                  <li><span class="fact-label">Popularity:</span> <span id="actor-popularity">-</span></li>
+                  <li><span class="fact-label">Also Known As:</span> <span id="actor-also-known">-</span></li>
+                </ul>
+              </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="actor-details-sections">
+            <section class="movies-section">
+              <h2>Filmography</h2>
+              <div class="movies-grid" id="actor-movies"></div>
+            </section>
+          </div>
+        </div>
+        
+        <div class="error-message" id="error-message" style="display: none;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h2>Actor Not Found</h2>
+          <p>Sorry, we couldn't find the actor you're looking for.</p>
+          <button onclick="window.history.back()" class="back-btn">Go Back</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-brand">
+          <h1>Movie Night</h1>
+          <p>
+            Your ultimate destination for movie enthusiasts. Discover, watch,
+            and enjoy cinema like never before.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-nav">
+            <h3>Quick Links</h3>
+            <ul>
+              <li>
+                <a href="../movies/index.html?category=trending">Trending</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=top_rated">Top Rated</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=popular">Popular</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=upcoming">Upcoming</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=now_playing">Now Playing</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-social">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Movie Night. All rights reserved.</p>
+      </div>
+    </footer>
+    <script src="main.js"></script>
+    <script>
+      // Load actor details when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const actorName = urlParams.get('name');
+        const actorID = urlParams.get('actorID');
+        
+        if (actorName) {
+          searchActor(actorName);
+        } else if (actorID) {
+          // You can implement direct actor ID search here
+          console.log('Actor ID:', actorID);
+        }
+      });
+
+      $("#search-btn").on("click", function (e) {
+        e.preventDefault();
+        const searchTerm = $("#search-bar").val().trim();
+        if (searchTerm) {
+          window.location.href = `../search/index.html?search=${encodeURIComponent(searchTerm)}`;
+        }
+      });
+
+      $("#search-bar").on("keypress", function (e) {
+        if (e.which === 13) {
+          e.preventDefault();
+          $("#search-btn").click();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,5 +1,9 @@
+
+/* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Slab:wght@100..900&display=swap");
 
+
+/* CSS Variables for theme colors and fonts */
 :root {
   --header-font: "Bebas Neue", cursive;
   --text-font: "Roboto Slab", serif;
@@ -9,6 +13,8 @@
   --text-primary: #ffffff;
 }
 
+
+/* Reset and base font */
 * {
   margin: 0;
   padding: 0;
@@ -16,13 +22,17 @@
   font-family: var(--text-font);
 }
 
+
+/* Body styles and background gradient */
 body {
-  background-color: #000;
+  background: linear-gradient(#0e0d0d, #020203);
   display: flex;
   flex-direction: column;
-  padding-top: 70px; /* عشان الهيدر الثابت */
+  padding-top: 70px; /* For fixed header */
 }
 
+
+/* Header (fixed navigation bar) */
 header {
   position: fixed;
   top: 0;
@@ -38,6 +48,8 @@ header {
   z-index: 1000;
 }
 
+
+/* Logo/Brand in header */
 header h1 {
   font-family: var(--header-font);
   font-size: clamp(1rem, 2vw, 2.5rem);
@@ -46,9 +58,12 @@ header h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
+
+/* Header layout helpers */
 header div {
   flex: 1;
 }
+
 
 header div:last-child {
   flex: 1.5;
@@ -56,6 +71,8 @@ header div:last-child {
   align-items: center;
 }
 
+
+/* Search bar styles */
 .search-bar {
   display: flex;
   width: clamp(200px, 30vw, 350px);
@@ -63,11 +80,12 @@ header div:last-child {
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
-form{
+form {
   flex: 1;
   width: 100%;
   display: flex;
 }
+
 
 .search-bar input {
   flex: 5;
@@ -81,9 +99,11 @@ form{
   font-weight: 500;
 }
 
+
 .search-bar input::placeholder {
   color: #888;
 }
+
 
 .search-bar button {
   flex: 1;
@@ -99,6 +119,7 @@ form{
 .search-bar button:hover {
   filter: brightness(0.8);
 }
+
 
 /* Loading Spinner Styles */
 .loading-spinner {
@@ -121,11 +142,16 @@ form{
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Screen Reader Only Text */
+
+/* Screen Reader Only Text (Accessibility) */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -138,14 +164,17 @@ form{
   border: 0;
 }
 
+
+/* Main content area */
 main {
-  padding: 30px 10px;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
 
+
+/* Trending movies carousel */
 .trending-movies {
   flex: 1;
   display: flex;
@@ -153,15 +182,15 @@ main {
   align-items: center;
   overflow: hidden;
 }
-main section .movie-grid {
+main section .swiper-wrapper {
   display: flex;
-  overflow-x: scroll;
-  gap: 20px;
 }
-main section .movie-grid::-webkit-scrollbar {
+main section .swiper-wrapper::-webkit-scrollbar {
   display: none;
 }
 
+
+/* Movie card (main featured movie) */
 .movie-card {
   flex: 0 0 auto;
   position: relative;
@@ -169,13 +198,12 @@ main section .movie-grid::-webkit-scrollbar {
   width: 100%;
   flex-direction: row;
   align-items: center;
-  padding: 20px;
-  border-radius: 15px;
+  padding: 100px;
   overflow: hidden;
   color: #fff;
   background: rgba(0, 0, 0, 0.6);
   margin: 0px;
-  height: 80vh;
+  height: 90vh;
   justify-content: flex-start;
 }
 
@@ -186,13 +214,14 @@ main section .movie-grid::-webkit-scrollbar {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1));
   background-size: cover;
   background-position: center;
-  filter: blur(8px) brightness(0.5);
   z-index: 1;
 }
 
+
+/* Movie poster image */
 .poster {
   width: 100%;
   max-width: 250px;
@@ -204,105 +233,181 @@ main section .movie-grid::-webkit-scrollbar {
   z-index: 2;
 }
 
+
+/* Movie info section */
 .movie-info {
-  text-align: left;
-  max-width: 60%;
+  color: var(--text-primary);
   z-index: 2;
+  width: 60%;
 }
-@media (max-width: 768px) {
+
+
+/* Movie title */
+.movie-title {
+  font-family: var(--header-font);
+  font-size: clamp(2rem, 4vw, 4rem);
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  line-height: 1.1;
+}
+
+
+/* Movie meta info (year, rating, etc.) */
+.movie-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.movie-meta span {
+  background: rgba(229, 9, 20, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin: 5px;
+  border: 1px solid var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+
+/* Movie genres tags */
+.movie-genres {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.genre-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.genre-tag:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+
+/* Movie overview/description */
+.movie-overview {
+  margin-bottom: 10px;
+}
+
+.movie-overview h3 {
+  font-family: var(--header-font);
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+
+.movie-overview p {
+  font-size: clamp(0.8rem,2vw,1.1rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+/* Responsive styles for tablets */
+@media (max-width: 800px) {
   main {
     padding: 0px 20px;
   }
-  
   .search-bar {
     width: clamp(200px, 80vw, 300px);
     border-radius: 20px;
   }
-  
+
   .search-bar input {
     padding: 12px 15px;
     font-size: 0.9rem;
   }
-  
+
   .search-bar button {
     padding: 12px 15px;
     font-size: 0.9rem;
   }
-  
-  .movie-card {
-    flex-direction: column;
-    height: auto;
+  .movie-info{
+    padding: 0;
+    width: 100%;
   }
-  .poster {
-    width: 80%;
-    margin-bottom: 10px;
-  }
-
-  .movie-info {
-    text-align: left;
+  .movie-card{
+    padding: 50px;
   }
 }
 
+
+/* Responsive styles for mobile */
 @media (max-width: 767px) {
+  .movie-card{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
   .movie-info {
     text-align: center;
-    max-width: 100%;
+    width: 100%;
   }
-  
+  .movie-meta span{
+    padding: 5px 10px;
+    display:block;
+  }
+  .movie-genres{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
   .search-bar {
-    width: 90vw;
+    width: 20vw;
     max-width: 280px;
+    border-radius: 0;
   }
-  
+
   header {
     padding: 8px 10px;
   }
-  
+
   .search-bar input {
     padding: 10px 12px;
     font-size: 0.85rem;
   }
-  
+
   .search-bar button {
-    padding: 10px 12px;
-    font-size: 0.85rem;
+    display: none;
   }
 }
-.movie-title {
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
-  color: var(--accent);
-  margin-bottom: 10px;
-}
 
-.release-date,
-.rating,
-.language {
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
-  color: var(--text-secondary);
-  margin: 5px 0;
-}
 
-.overview {
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
-  line-height: 1.5;
-  margin-top: 10px;
-}
-
-/* ------------------------ */
+/* Movie section (for lists like top rated, etc.) */
 .movie-section {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  padding: 20px 0;
+  padding: 20px 20px;
 }
+@media (max-width: 767px) {
+  .movie-section {
+    padding: 20px 0px;
+  }
+}
+
 
 .movie-section h2 {
   color: var(--text-primary);
   font-family: var(--header-font);
+  display: flex;
+  align-items: center;
   letter-spacing: 5px;
-  padding: 10px;
+  padding: 10px 20px;
   position: relative;
   font-size: clamp(1.2rem, 2vw, 2.5rem);
   text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.7);
@@ -311,13 +416,36 @@ main section .movie-grid::-webkit-scrollbar {
 .movie-section h2::before {
   content: "";
   position: absolute;
-  width: 100%;
-  height: 3px;
-  bottom: 5px;
+  width: 5px;
+  height: 100%;
+  left: 5px;
   background-color: var(--accent);
   box-shadow: 1px 1px 10px var(--accent);
 }
 
+/* Section heading and navigation buttons */
+.headind {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.headind button {
+  padding: 10px clamp(8px,2vw,20px);
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  margin: 5px;
+  color: var(--text-primary);
+  border: 1px solid var(--accent);
+  background-color: rgba(0, 0, 0, 0);
+  transition: 0.5s;
+}
+.headind button:hover {
+  box-shadow: 0px 3px 25px var(--accent);
+  cursor: pointer;
+}
+
+
+/* Horizontal movie list view */
 .movie-view {
   display: flex;
   flex-direction: row;
@@ -331,35 +459,36 @@ main section .movie-grid::-webkit-scrollbar {
   display: none;
 }
 
+
+/* Top rated movie card styles */
 .top-rated-card {
   flex: 0 0 auto;
-  width: clamp(200px, 20vw, 300px);
-  height: 400px;
+  width: clamp(200px, 20vw, 250px);
+  height: clamp(auto ,20vw,500px);
   position: relative;
   overflow: hidden;
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.3s ease;
   scroll-snap-align: start;
-  scroll-snap-stop: always; /* يضمن توقف السناب عند كل بطاقة */
+  scroll-snap-stop: always; /* Ensures snap stops at each card */
 }
 
 .top-rated-card img {
   width: 100%;
-  height: 100%;
+  max-width: 250px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
+  transition: 0.5s;
+  position: relative;
+  filter: brightness(0.8);
+  transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
 }
 
 .card-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 60%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1));
   color: #fff;
   display: flex;
+  text-align: left;
   flex-direction: column;
   justify-content: flex-end;
   padding: 15px;
@@ -369,27 +498,20 @@ main section .movie-grid::-webkit-scrollbar {
 
 .card-overlay h3 {
   margin: 0;
-  font-size: 1.1rem;
-  text-align: center;
+  font-size: clamp(1rem , 2vw ,1rem);
 }
 
 .card-overlay p {
   font-size: 0.9rem;
-  opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.top-rated-card:hover {
-  transform: translateY(-6px);
+.top-rated-card img:hover {
+  transform: scale(1.07);
+  filter: brightness(1.1); 
 }
 
-.top-rated-card:hover .card-overlay {
-  top: 0;
-}
 
-.top-rated-card:hover .card-overlay p {
-  opacity: 1;
-}
 
 /* Footer Styles */
 footer {
@@ -555,7 +677,7 @@ footer {
   color: #777;
 }
 
-/* Responsive Design */
+/* Responsive Design for footer */
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;

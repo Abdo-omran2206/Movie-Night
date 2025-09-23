@@ -108,7 +108,9 @@ function displayCast(cast) {
   cast.forEach(person => {
     const castCard = document.createElement("div");
     castCard.className = "cast-card";
-    
+    castCard.addEventListener('click',()=>{
+      location.href = `../actor/index.html?actorID=${person.id}`
+    })
     const profileUrl = person.profile_path 
       ? `https://image.tmdb.org/t/p/w300${person.profile_path}`
       : "https://via.placeholder.com/300x450/333/fff?text=No+Image";

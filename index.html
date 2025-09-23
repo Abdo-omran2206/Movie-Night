@@ -4,69 +4,110 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Night - Discover Your Next Favorite Film</title>
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Discover trending movies, search through thousands of films, and explore detailed movie information. Your ultimate destination for movie enthusiasts with a beautiful Netflix-inspired interface." />
-    <meta name="keywords" content="movies, film, cinema, trending movies, popular movies, movie search, movie database, film discovery, movie night, entertainment" />
+    <meta
+      name="description"
+      content="Discover trending movies, search through thousands of films, and explore detailed movie information. Your ultimate destination for movie enthusiasts with a beautiful Netflix-inspired interface."
+    />
+    <meta
+      name="keywords"
+      content="movies, film, cinema, trending movies, popular movies, movie search, movie database, film discovery, movie night, entertainment"
+    />
     <meta name="author" content="Movie Night" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
-    
+
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Movie Night - Discover Your Next Favorite Film" />
-    <meta property="og:description" content="Discover trending movies, search through thousands of films, and explore detailed movie information. Your ultimate destination for movie enthusiasts." />
+    <meta
+      property="og:title"
+      content="Movie Night - Discover Your Next Favorite Film"
+    />
+    <meta
+      property="og:description"
+      content="Discover trending movies, search through thousands of films, and explore detailed movie information. Your ultimate destination for movie enthusiasts."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://abdo-omran2206.github.io/Movie-Night/" />
-    <meta property="og:image" content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg" />
+    <meta
+      property="og:url"
+      content="https://abdo-omran2206.github.io/Movie-Night/"
+    />
+    <meta
+      property="og:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+    />
     <meta property="og:site_name" content="Movie Night" />
-    
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Movie Night - Discover Your Next Favorite Film" />
-    <meta name="twitter:description" content="Discover trending movies, search through thousands of films, and explore detailed movie information." />
-    <meta name="twitter:image" content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg" />
-    
+    <meta
+      name="twitter:title"
+      content="Movie Night - Discover Your Next Favorite Film"
+    />
+    <meta
+      name="twitter:description"
+      content="Discover trending movies, search through thousands of films, and explore detailed movie information."
+    />
+    <meta
+      name="twitter:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+    />
+
     <!-- Additional SEO -->
     <meta name="theme-color" content="#e50914" />
     <meta name="msapplication-TileColor" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://abdo-omran2206.github.io/Movie-Night/" />
-    
+    <link
+      rel="canonical"
+      href="https://abdo-omran2206.github.io/Movie-Night/"
+    />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />
-    
+
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://image.tmdb.org" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    
+
     <!-- Scripts and Styles -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
-    
+
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Movie Night",
-      "description": "Discover trending movies, search through thousands of films, and explore detailed movie information.",
-      "url": "https://abdo-omran2206.github.io/Movie-Night/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://abdo-omran2206.github.io/Movie-Night/search/index.html?search={search_term_string}",
-        "query-input": "required name=search_term_string"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Movie Night",
+        "description": "Discover trending movies, search through thousands of films, and explore detailed movie information.",
+        "url": "https://abdo-omran2206.github.io/Movie-Night/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://abdo-omran2206.github.io/Movie-Night/search/index.html?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
       }
-    }
     </script>
   </head>
   <body>
@@ -85,7 +126,9 @@
               placeholder="Search for movies..."
               aria-label="Search for movies"
             />
-            <button id="search-btn" type="submit" aria-label="Search movies">Search</button>
+            <button id="search-btn" type="submit" aria-label="Search movies">
+              Search
+            </button>
           </form>
         </div>
       </div>
@@ -93,34 +136,130 @@
 
     <main role="main">
       <!-- Loading Spinner -->
-      <div class="loading-spinner" id="main-loading-spinner" aria-live="polite" aria-label="Loading movies">
+      <div
+        class="loading-spinner"
+        id="main-loading-spinner"
+        aria-live="polite"
+        aria-label="Loading movies"
+      >
         <div class="spinner" aria-hidden="true"></div>
         <p>Loading movies...</p>
       </div>
 
-      <section class="trending-movies" style="display: none;" id="trending-section" aria-labelledby="trending-heading">
-        <h2 id="trending-heading" class="sr-only">Trending Movies</h2>
-        <div class="movie-grid" id="trending-movies" role="list" aria-label="Trending movies"></div>
+      <section
+        class="trending-movies"
+        style="display: none"
+        id="trending-section"
+        aria-labelledby="trending-heading"
+      >
+        <div
+          class="swiper-wrapper"
+          id="trending-movies"
+          role="list"
+          aria-label="Trending movies"
+        >
+          <!-- Slides هتتضاف هنا -->
+        </div>
+
+        <!-- أزرار التحكم -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+
+        <!-- النقاط (pagination) -->
+        <div class="swiper-pagination"></div>
       </section>
 
-      <section class="movie-section" style="display: none;" id="top-rated-section" aria-labelledby="top-rated-heading">
-        <h2 id="top-rated-heading">Top Rated Movies</h2>
-        <div class="movie-view" id="top-rated-movies" role="list" aria-label="Top rated movies"></div>
+      <section
+        class="movie-section"
+        style="display: none"
+        id="top-rated-section"
+        aria-labelledby="top-rated-heading"
+      >
+        <div class="headind">
+          <h2 id="top-rated-heading">Top Rated Movies</h2>
+
+          <button
+            onclick="location.href ='movies/index.html?category=top_rated'"
+          >
+            view all
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <div
+          class="movie-view"
+          id="top-rated-movies"
+          role="list"
+          aria-label="Top rated movies"
+        ></div>
       </section>
 
-      <section class="movie-section" style="display: none;" id="popular-section" aria-labelledby="popular-heading">
-        <h2 id="popular-heading">Popular Movies</h2>
-        <div class="movie-view" id="popular-movies" role="list" aria-label="Popular movies"></div>
+      <section
+        class="movie-section"
+        style="display: none"
+        id="popular-section"
+        aria-labelledby="popular-heading"
+      >
+        <div class="headind">
+          <h2 id="popular-heading">Popular Movies</h2>
+          <button onclick="location.href ='movies/index.html?category=popular'">
+            view all
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div
+          class="movie-view"
+          id="popular-movies"
+          role="list"
+          aria-label="Popular movies"
+        ></div>
       </section>
-      
-      <section class="movie-section" style="display: none;" id="upcoming-section" aria-labelledby="upcoming-heading">
-        <h2 id="upcoming-heading">Upcoming Movies</h2>
-        <div class="movie-view" id="upcoming-movies" role="list" aria-label="Upcoming movies"></div>
+
+      <section
+        class="movie-section"
+        style="display: none"
+        id="upcoming-section"
+        aria-labelledby="upcoming-heading"
+      >
+        <div class="headind">
+          <h2 id="upcoming-heading">Upcoming Movies</h2>
+          <button
+            onclick="location.href ='movies/index.html?category=upcoming'"
+          >
+            view all
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div
+          class="movie-view"
+          id="upcoming-movies"
+          role="list"
+          aria-label="Upcoming movies"
+        ></div>
       </section>
-      
-      <section class="movie-section" style="display: none;" id="now-playing-section" aria-labelledby="now-playing-heading">
-        <h2 id="now-playing-heading">Now Playing Movies</h2>
-        <div class="movie-view" id="now-playing-movies" role="list" aria-label="Now playing movies"></div>
+
+      <section
+        class="movie-section"
+        style="display: none"
+        id="now-playing-section"
+        aria-labelledby="now-playing-heading"
+      >
+        <div class="headind">
+          <h2 id="now-playing-heading">Now Playing Movies</h2>
+          <button
+            onclick="location.href = 'movies/index.html?category=now_playing'"
+          >
+            view all
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <div
+          class="movie-view"
+          id="now-playing-movies"
+          role="list"
+          aria-label="Now playing movies"
+        ></div>
       </section>
     </main>
     <footer>
@@ -135,24 +274,43 @@
 
         <div class="footer-links">
           <div class="footer-nav">
+            <h3>Navigation</h3>
+            <ul>
+              <li>
+                <a href="#trending-section">Home</a>
+              </li>
+              <li>
+                <a href="#top-rated-section">Top Rated</a>
+              </li>
+              <li>
+                <a href="#popular-section">Popular</a>
+              </li>
+              <li>
+                <a href="#upcoming-section">Upcoming</a>
+              </li>
+              <li>
+                <a href="#now-playing-section">Now Playing</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-nav">
             <h3>Quick Links</h3>
             <ul>
               <li>
-                <a href="movies/index.html?category=trending">Trending</a>
+                <a href="movies/index.html?category=trending">Trending Page</a>
               </li>
               <li>
-                <a href="movies/index.html?category=top_rated">Top Rated</a>
+                <a href="movies/index.html?category=top_rated">Top Rated Page</a>
               </li>
               <li>
-                <a href="movies/index.html?category=popular">Popular</a>
+                <a href="movies/index.html?category=popular">Popular Page</a>
               </li>
               <li>
-                <a href="movies/index.html?category=upcoming">Upcoming</a>
+                <a href="movies/index.html?category=upcoming">Upcoming Page</a>
               </li>
               <li>
-                <a href="movies/index.html?category=now_playing"
-                  >Now Playing</a
-                >
+                <a href="movies/index.html?category=now_playing">Now Playing Page</a>
               </li>
             </ul>
           </div>
@@ -191,6 +349,22 @@
           e.preventDefault();
           $("#search-btn").click();
         }
+      });
+
+      const swiper = new Swiper(".trending-movies", {
+        loop: true, // السلايدر يلف بشكل مستمر
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
       });
     </script>
   </body>
