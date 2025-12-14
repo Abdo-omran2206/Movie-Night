@@ -94,11 +94,11 @@ function TrendingMovieBuilder(movie) {
             
             <h3>OVERVIEW</h3>
             <p itemprop="description">
-              ${
-                movie.overview 
-              }
+              ${movie.overview}
             </p>
-              <button>View Movie</button>
+              <button onclick="location.href='moviedetails/index.html?movieID=${
+                movie.id
+              }'" >View Movie</button>
             </div>
           </div>
         </div>
