@@ -1,0 +1,141 @@
+/* Header (fixed navigation bar) */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  background-color: rgba(28, 28, 28, 0.95);
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+/* Logo/Brand in header */
+header h1 {
+  font-family: var(--header-font);
+  font-size: clamp(1rem, 2vw, 2.5rem);
+  color: var(--accent);
+  letter-spacing: 5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+header h1:hover{
+    cursor: pointer;
+}
+
+/* Header layout helpers */
+header div {
+  flex: 1;
+}
+
+header div:first-child {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+header div:first-child i {
+  font-size: 28px;
+  color: var(--accent);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+header div:first-child i:hover {
+  transform: scale(1.1);
+}
+
+header div:last-child {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+}
+
+/* Search bar styles */
+.search-bar {
+  display: flex;
+  width: clamp(200px, 30vw, 350px);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+form {
+  flex: 1;
+  width: 100%;
+  display: flex;
+}
+
+.search-bar input {
+  flex: 5;
+  width: 80%;
+  padding: 12px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.search-bar input::placeholder {
+  color: #888;
+}
+
+.search-bar button {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  background-color: var(--accent);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: filter 0.3s;
+  font-weight: bold;
+}
+
+.search-bar button:hover {
+  filter: brightness(0.8);
+}
+
+/* Responsive styles for header/search */
+@media (max-width: 800px) {
+  .search-bar {
+    width: clamp(200px, 80vw, 300px);
+    border-radius: 20px;
+  }
+
+  .search-bar input {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+
+  .search-bar button {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .search-bar {
+    width: 20vw;
+    max-width: 280px;
+    border-radius: 0;
+  }
+
+  header {
+    padding: 8px 10px;
+  }
+
+  .search-bar input {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .search-bar button {
+    display: none;
+  }
+}

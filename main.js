@@ -98,6 +98,7 @@ function TrendingMovieBuilder(movie) {
                 movie.overview 
               }
             </p>
+              <button>View Movie</button>
             </div>
           </div>
         </div>

@@ -4,39 +4,66 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movies - Browse Trending, Popular & More | Movie Night</title>
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Browse trending movies, top-rated films, popular releases, upcoming movies, and now playing films. Discover your next favorite movie with detailed information and ratings." />
-    <meta name="keywords" content="movies, trending movies, popular movies, top rated movies, upcoming movies, now playing, film database, movie browser, cinema" />
+    <meta
+      name="description"
+      content="Browse trending movies, top-rated films, popular releases, upcoming movies, and now playing films. Discover your next favorite movie with detailed information and ratings."
+    />
+    <meta
+      name="keywords"
+      content="movies, trending movies, popular movies, top rated movies, upcoming movies, now playing, film database, movie browser, cinema"
+    />
     <meta name="author" content="Movie Night" />
     <meta name="robots" content="index, follow" />
-    
+
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Movies - Browse Trending, Popular & More | Movie Night" />
-    <meta property="og:description" content="Browse trending movies, top-rated films, popular releases, and upcoming movies. Discover your next favorite film." />
+    <meta
+      property="og:title"
+      content="Movies - Browse Trending, Popular & More | Movie Night"
+    />
+    <meta
+      property="og:description"
+      content="Browse trending movies, top-rated films, popular releases, and upcoming movies. Discover your next favorite film."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://abdo-omran2206.github.io/Movie-Night/movies/" />
-    <meta property="og:image" content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg" />
-    
+    <meta
+      property="og:url"
+      content="https://abdo-omran2206.github.io/Movie-Night/movies/"
+    />
+    <meta
+      property="og:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+    />
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Movies - Browse Trending, Popular & More | Movie Night" />
-    <meta name="twitter:description" content="Browse trending movies, top-rated films, popular releases, and upcoming movies." />
-    
+    <meta
+      name="twitter:title"
+      content="Movies - Browse Trending, Popular & More | Movie Night"
+    />
+    <meta
+      name="twitter:description"
+      content="Browse trending movies, top-rated films, popular releases, and upcoming movies."
+    />
+
     <!-- Additional SEO -->
     <meta name="theme-color" content="#e50914" />
-    <link rel="canonical" href="https://abdo-omran2206.github.io/Movie-Night/movies/" />
-    
+    <link
+      rel="canonical"
+      href="https://abdo-omran2206.github.io/Movie-Night/movies/"
+    />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="apple-touch-icon" href="../favicon.svg" />
-    
+
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://image.tmdb.org" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    
+
     <!-- Scripts and Styles -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link
@@ -44,26 +71,30 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
-    
+    <link rel="stylesheet" href="../assets/header.css" />
+    <link rel="stylesheet" href="../assets/footer.css" />
+    <link rel="stylesheet" href="../assets/menu.css" />
+
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Movies Collection",
-      "description": "Browse trending movies, top-rated films, popular releases, and upcoming movies.",
-      "url": "https://abdo-omran2206.github.io/Movie-Night/movies/",
-      "mainEntity": {
-        "@type": "ItemList",
-        "name": "Movie Collection",
-        "description": "A curated collection of trending, popular, and upcoming movies"
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Movies Collection",
+        "description": "Browse trending movies, top-rated films, popular releases, and upcoming movies.",
+        "url": "https://abdo-omran2206.github.io/Movie-Night/movies/",
+        "mainEntity": {
+          "@type": "ItemList",
+          "name": "Movie Collection",
+          "description": "A curated collection of trending, popular, and upcoming movies"
+        }
       }
-    }
     </script>
   </head>
   <body>
     <header>
       <div>
+        <i class="fa fa-bars"></i>
         <h1 onclick="location.href='../index.html'">Movie Night</h1>
       </div>
       <div>
@@ -87,9 +118,9 @@
         <p>Loading movies...</p>
       </div>
 
-      <h2 id="category-title" style="display: none;">Movies</h2>
-      <section style="display: none;" id="movie-list-section"></section>
-      <section style="display: none;" id="pagination-section">
+      <h2 id="category-title" style="display: none">Movies</h2>
+      <section style="display: none" id="movie-list-section"></section>
+      <section style="display: none" id="pagination-section">
         <div id="list-selection">
           <button id="prev-btn">Previous</button>
           <span id="page-info">Page 1</span>
@@ -148,6 +179,7 @@
       </div>
     </footer>
     <script src="main.js"></script>
+    <script src="../assets/menu.js"></script>
     <script>
       $("#search-btn").on("click", function (e) {
         e.preventDefault();

@@ -4,39 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Details | Movie Night</title>
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Explore detailed movie information including cast, crew, ratings, genres, plot summary, and similar movies. Your comprehensive movie database for discovering new films." />
-    <meta name="keywords" content="movie details, film information, cast and crew, movie ratings, film genres, movie plot, cinema database, film discovery" />
+    <meta
+      name="description"
+      content="Explore detailed movie information including cast, crew, ratings, genres, plot summary, and similar movies. Your comprehensive movie database for discovering new films."
+    />
+    <meta
+      name="keywords"
+      content="movie details, film information, cast and crew, movie ratings, film genres, movie plot, cinema database, film discovery"
+    />
     <meta name="author" content="Movie Night" />
     <meta name="robots" content="index, follow" />
-    
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Movie Details | Movie Night" />
-    <meta property="og:description" content="Explore detailed movie information including cast, crew, ratings, genres, and plot summary." />
+    <meta
+      property="og:description"
+      content="Explore detailed movie information including cast, crew, ratings, genres, and plot summary."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://abdo-omran2206.github.io/Movie-Night/moviedetails/" />
-    <meta property="og:image" content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg" />
-    
+    <meta
+      property="og:url"
+      content="https://abdo-omran2206.github.io/Movie-Night/moviedetails/"
+    />
+    <meta
+      property="og:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+    />
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Movie Details | Movie Night" />
-    <meta name="twitter:description" content="Explore detailed movie information including cast, crew, ratings, and genres." />
-    
+    <meta
+      name="twitter:description"
+      content="Explore detailed movie information including cast, crew, ratings, and genres."
+    />
+
     <!-- Additional SEO -->
     <meta name="theme-color" content="#e50914" />
-    <link rel="canonical" href="https://abdo-omran2206.github.io/Movie-Night/moviedetails/" />
-    
+    <link
+      rel="canonical"
+      href="https://abdo-omran2206.github.io/Movie-Night/moviedetails/"
+    />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="apple-touch-icon" href="../favicon.svg" />
-    
+
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://image.tmdb.org" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    
+
     <!-- Scripts and Styles -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link
@@ -44,26 +65,30 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
-    
+    <link rel="stylesheet" href="../assets/header.css" />
+    <link rel="stylesheet" href="../assets/footer.css" />
+    <link rel="stylesheet" href="../assets/menu.css" />
+
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Movie Details",
-      "description": "Explore detailed movie information including cast, crew, ratings, genres, and plot summary.",
-      "url": "https://abdo-omran2206.github.io/Movie-Night/moviedetails/",
-      "mainEntity": {
-        "@type": "Movie",
-        "name": "Movie Details Page",
-        "description": "Comprehensive movie information and details"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Movie Details",
+        "description": "Explore detailed movie information including cast, crew, ratings, genres, and plot summary.",
+        "url": "https://abdo-omran2206.github.io/Movie-Night/moviedetails/",
+        "mainEntity": {
+          "@type": "Movie",
+          "name": "Movie Details Page",
+          "description": "Comprehensive movie information and details"
+        }
       }
-    }
     </script>
   </head>
   <body>
     <header>
       <div>
+        <i class="fa fa-bars"></i>
         <h1 onclick="location.href='../index.html'">Movie Night</h1>
       </div>
       <div>
@@ -82,12 +107,12 @@
 
     <main>
       <div class="movie-details-container">
-        <div class="loading-spinner" id="loading-spinner" style="display: flex;">
+        <div class="loading-spinner" id="loading-spinner" style="display: flex">
           <div class="spinner"></div>
           <p>Loading movie details...</p>
         </div>
-        
-        <div class="movie-details" id="movie-details" style="display: none;">
+
+        <div class="movie-details" id="movie-details" style="display: none">
           <div class="movie-hero">
             <div class="movie-backdrop">
               <div class="backdrop-overlay"></div>
@@ -117,25 +142,27 @@
               </div>
             </div>
           </div>
-          
+
           <div class="movie-details-sections">
             <section class="cast-section">
               <h2>Cast</h2>
               <div class="cast-grid" id="cast-grid"></div>
             </section>
-            
+
             <section class="similar-movies-section">
               <h2>Similar Movies</h2>
               <div class="similar-movies-grid" id="similar-movies-grid"></div>
             </section>
           </div>
         </div>
-        
-        <div class="error-message" id="error-message" style="display: none;">
+
+        <div class="error-message" id="error-message" style="display: none">
           <i class="fas fa-exclamation-triangle"></i>
           <h2>Movie Not Found</h2>
           <p>Sorry, we couldn't find the movie you're looking for.</p>
-          <button onclick="window.history.back()" class="back-btn">Go Back</button>
+          <button onclick="window.history.back()" class="back-btn">
+            Go Back
+          </button>
         </div>
       </div>
     </main>
@@ -191,6 +218,7 @@
       </div>
     </footer>
     <script src="main.js"></script>
+    <script src="../assets/menu.js"></script>
     <script>
       $("#search-btn").on("click", function (e) {
         e.preventDefault();

@@ -4,39 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Results | Movie Night</title>
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Search through thousands of movies and find your next favorite film. Browse detailed movie information, ratings, cast, and crew with our comprehensive movie search." />
-    <meta name="keywords" content="movie search, film search, search movies, find movies, movie database search, film discovery, movie finder" />
+    <meta
+      name="description"
+      content="Search through thousands of movies and find your next favorite film. Browse detailed movie information, ratings, cast, and crew with our comprehensive movie search."
+    />
+    <meta
+      name="keywords"
+      content="movie search, film search, search movies, find movies, movie database search, film discovery, movie finder"
+    />
     <meta name="author" content="Movie Night" />
     <meta name="robots" content="index, follow" />
-    
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Search Results | Movie Night" />
-    <meta property="og:description" content="Search through thousands of movies and find your next favorite film with detailed information and ratings." />
+    <meta
+      property="og:description"
+      content="Search through thousands of movies and find your next favorite film with detailed information and ratings."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://abdo-omran2206.github.io/Movie-Night/search/" />
-    <meta property="og:image" content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg" />
-    
+    <meta
+      property="og:url"
+      content="https://abdo-omran2206.github.io/Movie-Night/search/"
+    />
+    <meta
+      property="og:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+    />
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Search Results | Movie Night" />
-    <meta name="twitter:description" content="Search through thousands of movies and find your next favorite film." />
-    
+    <meta
+      name="twitter:description"
+      content="Search through thousands of movies and find your next favorite film."
+    />
+
     <!-- Additional SEO -->
     <meta name="theme-color" content="#e50914" />
-    <link rel="canonical" href="https://abdo-omran2206.github.io/Movie-Night/search/" />
-    
+    <link
+      rel="canonical"
+      href="https://abdo-omran2206.github.io/Movie-Night/search/"
+    />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="apple-touch-icon" href="../favicon.svg" />
-    
+
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://image.tmdb.org" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    
+
     <!-- Scripts and Styles -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link
@@ -44,26 +65,30 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
-    
+    <link rel="stylesheet" href="../assets/header.css" />
+    <link rel="stylesheet" href="../assets/footer.css" />
+    <link rel="stylesheet" href="../assets/menu.css" />
+
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SearchResultsPage",
-      "name": "Movie Search Results",
-      "description": "Search through thousands of movies and find your next favorite film.",
-      "url": "https://abdo-omran2206.github.io/Movie-Night/search/",
-      "mainEntity": {
-        "@type": "ItemList",
-        "name": "Search Results",
-        "description": "Search results for movies and films"
+      {
+        "@context": "https://schema.org",
+        "@type": "SearchResultsPage",
+        "name": "Movie Search Results",
+        "description": "Search through thousands of movies and find your next favorite film.",
+        "url": "https://abdo-omran2206.github.io/Movie-Night/search/",
+        "mainEntity": {
+          "@type": "ItemList",
+          "name": "Search Results",
+          "description": "Search results for movies and films"
+        }
       }
-    }
     </script>
   </head>
   <body>
     <header>
       <div>
+        <i class="fa fa-bars"></i>
         <h1 onclick="location.href='../index.html'">Movie Night</h1>
       </div>
       <div>
@@ -86,14 +111,13 @@
         <p>Searching movies...</p>
       </div>
 
-      <h2 id="category-title" style="display: none;">Movies</h2>
-      <section style="display: none;" id="movie-list-section">
-      </section>
-      <section style="display: none;" id="pagination-section">
+      <h2 id="category-title" style="display: none">Movies</h2>
+      <section style="display: none" id="movie-list-section"></section>
+      <section style="display: none" id="pagination-section">
         <div id="list-selection">
-            <button id="prev-btn">Previous</button>
-            <span id="page-info">Page 1</span>
-            <button id="next-btn">Next</button>
+          <button id="prev-btn">Previous</button>
+          <span id="page-info">Page 1</span>
+          <button id="next-btn">Next</button>
         </div>
       </section>
     </main>
@@ -111,11 +135,23 @@
           <div class="footer-nav">
             <h3>Quick Links</h3>
             <ul>
-              <li><a href="../movies/index.html?category=trending">Trending</a></li>
-              <li><a href="../movies/index.html?category=top-rated">Top Rated</a></li>
-              <li><a href="../movies/index.html?category=popular">Popular</a></li>
-              <li><a href="../movies/index.html?category=upcoming">Upcoming</a></li>
-              <li><a href="../movies/index.html?category=now-playing">Now Playing</a></li>
+              <li>
+                <a href="../movies/index.html?category=trending">Trending</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=top-rated">Top Rated</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=popular">Popular</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=upcoming">Upcoming</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=now-playing"
+                  >Now Playing</a
+                >
+              </li>
             </ul>
           </div>
 
@@ -136,6 +172,7 @@
       </div>
     </footer>
     <script src="search.js"></script>
+    <script src="../assets/menu.js"></script>
     <script>
       $("#search-btn").on("click", function (e) {
         e.preventDefault();

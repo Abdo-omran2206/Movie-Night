@@ -33,7 +33,9 @@ function safeText(value, fallback = "-") {
 }
 
 function buildImageUrl(path) {
-  return path ? `${image_url}${path}` : "https://via.placeholder.com/300x450?text=No+Image";
+  return path
+    ? `${image_url}${path}`
+    : "https://via.placeholder.com/300x450?text=No+Image";
 }
 
 async function fetchJson(url) {
@@ -47,7 +49,10 @@ function createMovieCard(movie) {
     ? `${image_url}${movie.poster_path}`
     : "https://via.placeholder.com/300x450?text=No+Poster";
 
-  const vote = typeof movie.vote_average === "number" ? movie.vote_average.toFixed(1) : "-";
+  const vote =
+    typeof movie.vote_average === "number"
+      ? movie.vote_average.toFixed(1)
+      : "-";
   const title = movie.title || movie.name || "Untitled";
 
   const card = document.createElement("div");
@@ -85,21 +90,41 @@ function populateActorDetails(actor, credits) {
   }
 
   if (photoEl) photoEl.src = buildImageUrl(actor.profile_path);
-  if (nameEl) nameEl.textContent = safeText(actor.name);
-  if (birthdayEl) birthdayEl.textContent = actor.birthday ? `Born: ${actor.birthday}` : "Born: -";
-  if (departmentEl) departmentEl.textContent = actor.known_for_department ? actor.known_for_department : "";
-  if (bioEl) bioEl.textContent = safeText(actor.biography, "No biography available.");
+  if (nameEl) {
+    nameEl.textContent = safeText(actor.name);
+    document.title = `${actor.name} | Movie Night`;
+  }
+  if (birthdayEl)
+    birthdayEl.textContent = actor.birthday
+      ? `Born: ${actor.birthday}`
+      : "Born: -";
+  if (departmentEl)
+    departmentEl.textContent = actor.known_for_department
+      ? actor.known_for_department
+      : "";
+  if (bioEl)
+    bioEl.textContent = safeText(actor.biography, "No biography available.");
   if (placeEl) placeEl.textContent = safeText(actor.place_of_birth, "-");
-  if (genderEl) genderEl.textContent = actor.gender === 1 ? "Female" : actor.gender === 2 ? "Male" : "-";
-  if (popularityEl) popularityEl.textContent = typeof actor.popularity === "number" ? actor.popularity.toFixed(1) : "-";
+  if (genderEl)
+    genderEl.textContent =
+      actor.gender === 1 ? "Female" : actor.gender === 2 ? "Male" : "-";
+  if (popularityEl)
+    popularityEl.textContent =
+      typeof actor.popularity === "number" ? actor.popularity.toFixed(1) : "-";
   if (alsoKnownEl) {
-    const aliases = Array.isArray(actor.also_known_as) ? actor.also_known_as.filter(Boolean) : [];
-    alsoKnownEl.textContent = aliases.length ? aliases.slice(0, 5).join(", ") : "-";
+    const aliases = Array.isArray(actor.also_known_as)
+      ? actor.also_known_as.filter(Boolean)
+      : [];
+    alsoKnownEl.textContent = aliases.length
+      ? aliases.slice(0, 5).join(", ")
+      : "-";
   }
 
   if (moviesGrid) {
     moviesGrid.innerHTML = "";
-    const cast = Array.isArray(credits && credits.cast) ? credits.cast.slice() : [];
+    const cast = Array.isArray(credits && credits.cast)
+      ? credits.cast.slice()
+      : [];
     cast.sort((a, b) => {
       const popDiff = (b.popularity || 0) - (a.popularity || 0);
       if (popDiff !== 0) return popDiff;
@@ -118,8 +143,12 @@ function populateActorDetails(actor, credits) {
 
 async function getActorDetailsById(personId) {
   const [details, credits] = await Promise.all([
-    fetchJson(`${base_url}/person/${personId}?api_key=${api_key}&language=en-US`),
-    fetchJson(`${base_url}/person/${personId}/movie_credits?api_key=${api_key}&language=en-US`)
+    fetchJson(
+      `${base_url}/person/${personId}?api_key=${api_key}&language=en-US`
+    ),
+    fetchJson(
+      `${base_url}/person/${personId}/movie_credits?api_key=${api_key}&language=en-US`
+    ),
   ]);
   return { details, credits };
 }
@@ -133,7 +162,9 @@ async function searchActor(nameOrId) {
       personId = String(nameOrId);
     } else {
       const search = await fetchJson(
-        `${base_url}/search/person?api_key=${api_key}&query=${encodeURIComponent(String(nameOrId))}&include_adult=false&language=en-US&page=1`
+        `${base_url}/search/person?api_key=${api_key}&query=${encodeURIComponent(
+          String(nameOrId)
+        )}&include_adult=false&language=en-US&page=1`
       );
       const first = Array.isArray(search.results) ? search.results[0] : null;
       if (!first) {
@@ -159,5 +190,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.searchActor = searchActor;
-
-

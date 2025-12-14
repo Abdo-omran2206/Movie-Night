@@ -1,7 +1,5 @@
-
 /* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Slab:wght@100..900&display=swap");
-
 
 /* CSS Variables for theme colors and fonts */
 :root {
@@ -13,7 +11,6 @@
   --text-primary: #ffffff;
 }
 
-
 /* Reset and base font */
 * {
   margin: 0;
@@ -22,7 +19,6 @@
   font-family: var(--text-font);
 }
 
-
 /* Body styles and background gradient */
 body {
   background: linear-gradient(#0e0d0d, #020203);
@@ -30,96 +26,6 @@ body {
   flex-direction: column;
   padding-top: 70px; /* For fixed header */
 }
-
-
-/* Header (fixed navigation bar) */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-  background-color: rgba(28, 28, 28, 0.95);
-  transition: background-color 0.3s ease;
-  z-index: 1000;
-}
-
-
-/* Logo/Brand in header */
-header h1 {
-  font-family: var(--header-font);
-  font-size: clamp(1rem, 2vw, 2.5rem);
-  color: var(--accent);
-  letter-spacing: 5px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-
-/* Header layout helpers */
-header div {
-  flex: 1;
-}
-
-
-header div:last-child {
-  flex: 1.5;
-  display: flex;
-  align-items: center;
-}
-
-
-/* Search bar styles */
-.search-bar {
-  display: flex;
-  width: clamp(200px, 30vw, 350px);
-  border-radius: 5px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-form {
-  flex: 1;
-  width: 100%;
-  display: flex;
-}
-
-
-.search-bar input {
-  flex: 5;
-  width: 80%;
-  padding: 12px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  background: transparent;
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-
-.search-bar input::placeholder {
-  color: #888;
-}
-
-
-.search-bar button {
-  flex: 1;
-  padding: 12px 15px;
-  border: none;
-  background-color: var(--accent);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: filter 0.3s;
-  font-weight: bold;
-}
-
-.search-bar button:hover {
-  filter: brightness(0.8);
-}
-
 
 /* Loading Spinner Styles */
 .loading-spinner {
@@ -150,7 +56,6 @@ form {
   }
 }
 
-
 /* Screen Reader Only Text (Accessibility) */
 .sr-only {
   position: absolute;
@@ -164,7 +69,6 @@ form {
   border: 0;
 }
 
-
 /* Main content area */
 main {
   flex: 1;
@@ -172,7 +76,6 @@ main {
   flex-direction: column;
   gap: 40px;
 }
-
 
 /* Trending movies carousel */
 .trending-movies {
@@ -188,7 +91,6 @@ main section .swiper-wrapper {
 main section .swiper-wrapper::-webkit-scrollbar {
   display: none;
 }
-
 
 /* Movie card (main featured movie) */
 .movie-card {
@@ -220,7 +122,6 @@ main section .swiper-wrapper::-webkit-scrollbar {
   z-index: 1;
 }
 
-
 /* Movie poster image */
 .poster {
   width: 100%;
@@ -233,14 +134,12 @@ main section .swiper-wrapper::-webkit-scrollbar {
   z-index: 2;
 }
 
-
 /* Movie info section */
 .movie-info {
   color: var(--text-primary);
   z-index: 2;
   width: 60%;
 }
-
 
 /* Movie title */
 .movie-title {
@@ -251,7 +150,6 @@ main section .swiper-wrapper::-webkit-scrollbar {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   line-height: 1.1;
 }
-
 
 /* Movie meta info (year, rating, etc.) */
 .movie-meta {
@@ -270,7 +168,6 @@ main section .swiper-wrapper::-webkit-scrollbar {
   font-weight: 600;
   font-size: 0.9rem;
 }
-
 
 /* Movie genres tags */
 .movie-genres {
@@ -294,7 +191,6 @@ main section .swiper-wrapper::-webkit-scrollbar {
   transform: translateY(-2px);
 }
 
-
 /* Movie overview/description */
 .movie-overview {
   margin-bottom: 10px;
@@ -309,44 +205,59 @@ main section .swiper-wrapper::-webkit-scrollbar {
 }
 
 .movie-overview p {
-  font-size: clamp(0.8rem,2vw,1.1rem);
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
   line-height: 1.6;
   color: var(--text-secondary);
   max-width: 600px;
 }
 
+.movie-overview button {
+  background-color: rgba(255, 255, 255, 0.1); /* Darker, subtle background */
+  color: var(--text-primary); /* Light text for dark theme */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+  margin-top: 20px;
+  font-family: var(--text-font);
+  font-weight: bold;
+  letter-spacing: 1px;
+  outline: none;
+}
+
+.movie-overview button:hover {
+  background-color: var(--accent); /* Accent color on hover */
+  border-color: var(--accent); /* Border matches accent on hover */
+  transform: translateY(-2px);
+}
+
+.movie-overview button:active {
+  transform: translateY(0);
+}
+
+.movie-overview button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.5); /* Focus indicator */
+}
 /* Responsive styles for tablets */
 @media (max-width: 800px) {
   main {
     padding: 0px 20px;
   }
-  .search-bar {
-    width: clamp(200px, 80vw, 300px);
-    border-radius: 20px;
-  }
-
-  .search-bar input {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-  }
-
-  .search-bar button {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-  }
-  .movie-info{
+  .movie-info {
     padding: 0;
     width: 100%;
   }
-  .movie-card{
+  .movie-card {
     padding: 50px;
   }
 }
 
-
+/* Responsive styles for mobile */
 /* Responsive styles for mobile */
 @media (max-width: 767px) {
-  .movie-card{
+  .movie-card {
     padding: 10px;
     display: flex;
     align-items: center;
@@ -355,35 +266,16 @@ main section .swiper-wrapper::-webkit-scrollbar {
     text-align: center;
     width: 100%;
   }
-  .movie-meta span{
+  .movie-meta span {
     padding: 5px 10px;
-    display:block;
+    display: block;
   }
-  .movie-genres{
+  .movie-genres {
     align-items: center;
     justify-content: center;
     display: flex;
   }
-  .search-bar {
-    width: 20vw;
-    max-width: 280px;
-    border-radius: 0;
-  }
-
-  header {
-    padding: 8px 10px;
-  }
-
-  .search-bar input {
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
-
-  .search-bar button {
-    display: none;
-  }
 }
-
 
 /* Movie section (for lists like top rated, etc.) */
 .movie-section {
@@ -399,7 +291,6 @@ main section .swiper-wrapper::-webkit-scrollbar {
     padding: 20px 0px;
   }
 }
-
 
 .movie-section h2 {
   color: var(--text-primary);
@@ -431,7 +322,7 @@ main section .swiper-wrapper::-webkit-scrollbar {
   align-items: center;
 }
 .headind button {
-  padding: 10px clamp(8px,2vw,20px);
+  padding: 10px clamp(8px, 2vw, 20px);
   font-size: clamp(0.8rem, 2vw, 1rem);
   margin: 5px;
   color: var(--text-primary);
@@ -443,7 +334,6 @@ main section .swiper-wrapper::-webkit-scrollbar {
   box-shadow: 0px 3px 25px var(--accent);
   cursor: pointer;
 }
-
 
 /* Horizontal movie list view */
 .movie-view {
@@ -459,12 +349,11 @@ main section .swiper-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-
 /* Top rated movie card styles */
 .top-rated-card {
   flex: 0 0 auto;
   width: clamp(200px, 20vw, 250px);
-  height: clamp(auto ,20vw,500px);
+  height: clamp(auto, 20vw, 500px);
   position: relative;
   overflow: hidden;
   border-radius: 12px;
@@ -498,7 +387,7 @@ main section .swiper-wrapper::-webkit-scrollbar {
 
 .card-overlay h3 {
   margin: 0;
-  font-size: clamp(1rem , 2vw ,1rem);
+  font-size: clamp(1rem, 2vw, 1rem);
 }
 
 .card-overlay p {
@@ -508,195 +397,5 @@ main section .swiper-wrapper::-webkit-scrollbar {
 
 .top-rated-card img:hover {
   transform: scale(1.07);
-  filter: brightness(1.1); 
-}
-
-
-
-/* Footer Styles */
-footer {
-  background-color: #111;
-  color: #bbb;
-  padding: 40px 20px 20px;
-  margin-top: 40px;
-  border-top: 2px solid var(--accent);
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: space-between;
-}
-
-.footer-brand {
-  flex: 1;
-  min-width: 250px;
-}
-
-.footer-brand h1 {
-  font-family: var(--header-font);
-  font-size: 2.8rem;
-  color: var(--accent);
-  letter-spacing: 4px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-.footer-brand h1::before {
-  content: "";
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  bottom: 0;
-  background-color: var(--accent);
-  transition: all 0.3s ease;
-}
-.footer-brand h1:hover {
-  text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-}
-.footer-brand h1:hover::before {
-  width: clamp(50%, 40%, 30%);
-  transition: all 0.3s ease;
-}
-
-.footer-brand p {
-  font-size: 1rem;
-  line-height: 1.6;
-  max-width: 300px;
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-}
-
-.footer-nav,
-.footer-social {
-  min-width: 150px;
-}
-
-.footer-nav h3,
-.footer-social h3 {
-  color: var(--text-primary);
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  font-weight: 700;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-.footer-nav h3:after,
-.footer-social h3:after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background-color: var(--accent);
-}
-
-.footer-nav ul {
-  list-style: none;
-}
-
-.footer-nav li {
-  margin-bottom: 12px;
-}
-
-.footer-nav a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  position: relative;
-  padding-left: 0;
-}
-
-.footer-nav a:before {
-  content: "▶";
-  color: var(--accent);
-  position: absolute;
-  left: -15px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-.footer-nav a:hover {
-  color: var(--text-primary);
-  padding-left: 15px;
-}
-
-.footer-nav a:hover:before {
-  opacity: 1;
-  left: 0;
-}
-
-.social-icons {
-  display: flex;
-  gap: 15px;
-}
-
-.social-icons a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background-color: #222;
-  color: var(--text-secondary);
-  border-radius: 50%;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.social-icons a:hover {
-  background-color: var(--accent);
-  color: var(--text-primary);
-  transform: translateY(-3px);
-}
-
-.footer-bottom {
-  max-width: 1200px;
-  margin: 40px auto 0;
-  padding-top: 20px;
-  border-top: 1px solid #333;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-.footer-bottom p {
-  color: #777;
-}
-
-/* Responsive Design for footer */
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .footer-links {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-links {
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .footer-brand h1 {
-    font-size: 2.2rem;
-  }
+  filter: brightness(1.1);
 }

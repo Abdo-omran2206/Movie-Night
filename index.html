@@ -93,6 +93,9 @@
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="assets/header.css" />
+    <link rel="stylesheet" href="assets/footer.css" />
+    <link rel="stylesheet" href="assets/menu.css" />
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -109,12 +112,19 @@
         }
       }
     </script>
-<meta name="google-site-verification" content="_PRVZC09YG96OdsLOnYwEHcwenKiYaEUwvuaw9J2JQU" />
-    <meta name="google-site-verification" content="0TWJXveRsyMWLUa8IymCFusg7dPk60lkiDKPirp14VA" />
+    <meta
+      name="google-site-verification"
+      content="_PRVZC09YG96OdsLOnYwEHcwenKiYaEUwvuaw9J2JQU"
+    />
+    <meta
+      name="google-site-verification"
+      content="0TWJXveRsyMWLUa8IymCFusg7dPk60lkiDKPirp14VA"
+    />
   </head>
   <body>
     <header role="banner">
       <div>
+        <i class="fa fa-bars"></i>
         <h1>Movie Night</h1>
       </div>
       <div>
@@ -303,7 +313,9 @@
                 <a href="movies/index.html?category=trending">Trending Page</a>
               </li>
               <li>
-                <a href="movies/index.html?category=top_rated">Top Rated Page</a>
+                <a href="movies/index.html?category=top_rated"
+                  >Top Rated Page</a
+                >
               </li>
               <li>
                 <a href="movies/index.html?category=popular">Popular Page</a>
@@ -312,7 +324,9 @@
                 <a href="movies/index.html?category=upcoming">Upcoming Page</a>
               </li>
               <li>
-                <a href="movies/index.html?category=now_playing">Now Playing Page</a>
+                <a href="movies/index.html?category=now_playing"
+                  >Now Playing Page</a
+                >
               </li>
             </ul>
           </div>
@@ -334,6 +348,7 @@
       </div>
     </footer>
     <script src="main.js"></script>
+    <script src="assets/menu.js"></script>
     <script>
       $("#search-btn").on("click", function (e) {
         e.preventDefault();

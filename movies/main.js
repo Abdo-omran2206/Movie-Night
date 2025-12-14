@@ -4,41 +4,55 @@ const image_url = "https://image.tmdb.org/t/p/w500";
 
 // For current page URL
 const urlParams = new URLSearchParams(window.location.search);
-const paramValue = urlParams.get("paramName");
+const category = urlParams.get("category");
+const genreId = urlParams.get("genre");
+const genreName = urlParams.get("name");
 
-const name = urlParams.get("category");
 let page = 1;
-let totalPages ;
+let totalPages;
 
-async function fetchMovies(category, page) {
+async function fetchMovies(page) {
   try {
-    if (
-      !["trending", "top_rated", "popular", "upcoming", "now_playing"].includes(
-        category
-      )
-    ) {
-      throw new Error("Invalid category");
-    }
-    if (category === "trending") {
-      const response = await fetch(
-        `${base_url}/${category}/movie/week?api_key=${api_key}&page=${page}`
-      );
-      const data = await response.json();
-      totalPages = data.total_pages; // Set total pages
-      return data.results; // Array of movies
+    let url = "";
+
+    if (genreId) {
+      // Fetch by genre
+      url = `${base_url}/discover/movie?api_key=${api_key}&with_genres=${genreId}&page=${page}`;
+    } else if (category) {
+      if (
+        ![
+          "trending",
+          "top_rated",
+          "popular",
+          "upcoming",
+          "now_playing",
+        ].includes(category)
+      ) {
+        throw new Error("Invalid category");
+      }
+
+      if (category === "trending") {
+        url = `${base_url}/${category}/movie/week?api_key=${api_key}&page=${page}`;
+      } else {
+        url = `${base_url}/movie/${category}?api_key=${api_key}&page=${page}`;
+      }
     } else {
-      const response = await fetch(
-        `${base_url}/movie/${category}?api_key=${api_key}&page=${page}`
-      );
-      const data = await response.json();
-      totalPages = data.total_pages; // Set total pages
-      return data.results; // Array of movies
+      // Fallback or default? For now, maybe popular if nothing is specified
+      // But the previous code didn't handle "no category" explicitly well other than throwing if invalid.
+      // Let's assume there's always one provided for now, or just default to popular.
+      url = `${base_url}/movie/popular?api_key=${api_key}&page=${page}`;
     }
+
+    const response = await fetch(url);
+    const data = await response.json();
+    totalPages = data.total_pages; // Set total pages
+    return data.results; // Array of movies
   } catch (error) {
-    console.error("Error fetching trending movies:", error);
+    console.error("Error fetching movies:", error);
     return [];
   }
 }
+
 // Generate rating stars
 function getStars(rating) {
   const stars = [];
@@ -59,7 +73,10 @@ function getStars(rating) {
 }
 
 function createMovieCard(movie) {
-  const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "https://via.placeholder.com/500x750?text=No+Poster"; // Fallback image
+
   const stars = getStars(movie.vote_average);
 
   return `
@@ -95,7 +112,7 @@ async function updatePagination() {
 
   $("#movie-list-section").empty();
   try {
-    const movieData = await fetchMovies(name, page);
+    const movieData = await fetchMovies(page);
     movieData.forEach((element) => {
       const movieHTML = createMovieCard(element);
       $("#movie-list-section").append(movieHTML);
@@ -114,11 +131,10 @@ async function updatePagination() {
   }
 }
 
-
 function scrollToTop() {
   window.scrollTo({
     top: 0,
-    behavior: "smooth"
+    behavior: "smooth",
   });
 }
 
@@ -126,8 +142,7 @@ $("#prev-btn").on("click", function () {
   if (page > 1) {
     page--;
     updatePagination();
-    $("#page-info").text(`Page ${page} of ${totalPages}`);
-    scrollToTop()
+    scrollToTop();
   }
 });
 
@@ -135,14 +150,21 @@ $("#next-btn").on("click", function () {
   if (page < totalPages) {
     page++;
     updatePagination();
-    $("#page-info").text(`Page ${page} of ${totalPages}`);
-    scrollToTop()
+    scrollToTop();
   }
 });
 
 $(document).ready(function () {
-  $("#category-title").text(
-    `${name.charAt(0).toUpperCase() + name.slice(1).replace("-", " ")} Movies`
-  );
-  updatePagination(); // page-info updated inside
+  let title = "Movies";
+  if (genreName) {
+    title = `${decodeURIComponent(genreName)} Movies`;
+  } else if (category) {
+    title = `${
+      category.charAt(0).toUpperCase() + category.slice(1).replace(/_/g, " ")
+    } Movies`;
+  }
+
+  $("#category-title").text(title);
+  document.title = `${title} | Movie Night`;
+  updatePagination();
 });
