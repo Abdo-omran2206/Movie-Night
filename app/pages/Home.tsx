@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import RenderMovieCard from "@/app/components/MovieCard";
@@ -30,7 +31,7 @@ export default function Home() {
   const [upcoming, setUpcoming] = useState<Movie[]>([]);
   const [nowPlaying, setNowPlaying] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { height } = useWindowDimensions();
   useEffect(() => {
     async function loadData() {
       try {
@@ -73,7 +74,7 @@ export default function Home() {
     <ScrollView style={{ backgroundColor: "#000", flex: 1 }}>
       {/* 🎬 Hero Swiper */}
       <Swiper
-        style={{ height: 350 }}
+        style={{ height: height *  0.45}}
         showsPagination={true}
         dotColor="gray"
         activeDotColor="#E50914"

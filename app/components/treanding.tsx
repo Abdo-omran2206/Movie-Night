@@ -11,9 +11,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-
-const { width } = Dimensions.get("window");
-const SLIDE_HEIGHT = 340;
+const { width , height } = Dimensions.get("window");
+const SLIDE_HEIGHT = height * 0.43;
 
 type TrendProps = {
   id: number;
