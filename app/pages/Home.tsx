@@ -20,6 +20,7 @@ type Movie = {
   name?: string;
   backdrop_path?: string;
   poster_path?: string;
+  vote_average?: number;
 };
 
 export default function Home() {
@@ -72,20 +73,21 @@ export default function Home() {
     <ScrollView style={{ backgroundColor: "#000", flex: 1 }}>
       {/* 🎬 Hero Swiper */}
       <Swiper
-        style={{ height: 300 }}
+        style={{ height: 350 }}
         showsPagination={true}
         dotColor="gray"
         activeDotColor="#E50914"
         loop
         autoplay
-        autoplayTimeout={4}
+        autoplayTimeout={5}
       >
         {trending.map((item) => (
           <Trend
             key={item.id}
-            cover={`https://image.tmdb.org/t/p/w500${item.backdrop_path}`}
+            cover={`https://image.tmdb.org/t/p/w780${item.backdrop_path}`}
             movieTitle={item.title || item.name || "Untitled"}
             id={item.id}
+            rating={item.vote_average}
           />
         ))}
       </Swiper>
@@ -154,6 +156,25 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontFamily: "RobotoSlab",
+  },
+  dot: {
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 3,
+  },
+  activeDot: {
+    backgroundColor: "#E50914",
+    width: 20,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 3,
+  },
+  pagination: {
+    bottom: 20,
+    justifyContent: "flex-end",
+    paddingRight: 20,
   },
   sectionHeader: {
     flexDirection: "row",
