@@ -18,7 +18,7 @@ interface Bookmark {
   title: string;
   overview: string;
   movieID: string;
-  type: "movie" | "tv"; 
+  type: "movie" | "tv";
 }
 
 export default function BookmarkCard({
@@ -62,18 +62,25 @@ export default function BookmarkCard({
               }}
               style={styles.poster}
             />
-            <View style={{ flex: 1, marginHorizontal: 10 }}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.overview} numberOfLines={3}>
-                {item.overview}
-              </Text>
+            <View
+              style={{
+                flex: 1,
+                marginHorizontal: 10,
+                justifyContent: "space-between",
+              }}
+            >
+              <View>
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.overview} numberOfLines={3}>
+                  {item.overview}
+                </Text>
+              </View>
+              {/* 🗑 زر الحذف */}
+              <TouchableOpacity onPress={() => onRemove(item.movieID)}>
+                <Ionicons name="trash" size={28} color="#E50914" />
+              </TouchableOpacity>
             </View>
           </Pressable>
-
-          {/* 🗑 زر الحذف */}
-          <TouchableOpacity onPress={() => onRemove(item.movieID)}>
-            <Ionicons name="trash" size={26} color="#E50914" />
-          </TouchableOpacity>
         </View>
       </ImageBackground>
     </View>

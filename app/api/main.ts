@@ -99,6 +99,9 @@ const regionLanguageMap: Record<string, string> = {
   ES: "es",
   IT: "it",
   RU: "ru",
+  TR: "tr",
+  BR: "pt",
+  MX: "es",
 };
 
 export async function fetchFilter({
@@ -106,12 +109,14 @@ export async function fetchFilter({
   category = "popular", // popular | top_rated | upcoming | now_playing
   region = "US", // e.g. US, EG, JP, FR
   genre,
+  year,
   page = 1,
 }: {
   type?: "movie" | "tv";
   category?: "popular" | "top_rated" | "upcoming" | "now_playing";
   region?: string;
   genre?: string;
+  year?: string;
   page?: number;
 }) {
   try {
@@ -140,6 +145,15 @@ export async function fetchFilter({
     // 🎭 Add genre filtering
     if (genre) {
       params["with_genres"] = genre;
+    }
+
+    // 📅 Add year filtering
+    if (year) {
+      if (type === "movie") {
+        params["primary_release_year"] = year;
+      } else {
+        params["first_air_date_year"] = year;
+      }
     }
 
     // 🌐 Add language hint

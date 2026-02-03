@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   movieCard: {
-    backgroundColor: "rgba(255,255,255,0.05)",
+    backgroundColor: "rgba(0,0,0)",
     borderRadius: 12,
     overflow: "hidden",
   },

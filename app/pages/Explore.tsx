@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useFonts } from "expo-font";
 import {
   View,
@@ -6,11 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  Modal,
+  ScrollView,
 } from "react-native";
 import { fetchFilter } from "@/app/api/main";
-import { useEffect, useState } from "react";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import RenderMovieCard from "@/app/components/ExploreCard";
-import React from "react";
 
 export default function Explore() {
   const [fontsLoaded] = useFonts({
@@ -24,10 +26,12 @@ export default function Explore() {
   >("popular");
   const [country, setCountry] = useState("US");
   const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+  const [year, setYear] = useState("");
   const [items, setItems] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const countries = [
     { code: "US", label: "🇺🇸 USA" },
@@ -37,6 +41,10 @@ export default function Explore() {
     { code: "JP", label: "🇯🇵 Japan" },
     { code: "KR", label: "🇰🇷 Korea" },
     { code: "IN", label: "🇮🇳 India" },
+    { code: "TR", label: "🇹🇷 Turkey" },
+    { code: "BR", label: "🇧🇷 Brazil" },
+    { code: "MX", label: "🇲🇽 Mexico" },
+    { code: "CN", label: "🇨🇳 China" },
   ];
 
   const genres = [
@@ -48,201 +56,292 @@ export default function Explore() {
     { id: 878, name: "Sci-Fi" },
     { id: 10749, name: "Romance" },
     { id: 80, name: "Crime" },
+    { id: 12, name: "Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 99, name: "Doc" },
+    { id: 10751, name: "Family" },
+    { id: 9648, name: "Mystery" },
+    { id: 53, name: "Thriller" },
+    { id: 37, name: "Western" },
   ];
 
-  async function loadData(resetPage = true) {
-    try {
-      if (resetPage) {
-        setLoading(true);
-        setPage(1);
-      }
-      const data = await fetchFilter({
-        type,
-        category: status,
-        region: country,
-        genre: selectedGenres.length > 0 ? selectedGenres.join(",") : undefined,
-        page: resetPage ? 1 : page + 1,
-      });
-
-      if (resetPage) {
-        setItems(data?.results || []);
-      } else {
-        setItems((prev) => [...prev, ...(data?.results || [])]);
-      }
-      setPage((prev) => (resetPage ? 1 : prev + 1));
-    } catch (err) {
-      console.error("❌ Failed to load data:", err);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
+  const years = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const yearList = [];
+    for (let i = currentYear; i >= 2000; i--) {
+      yearList.push(i.toString());
     }
-  }
+    return ["All",...yearList];
+  }, []);
+
+  const loadData = useCallback(
+    async (targetPage: number, isReset = true) => {
+      try {
+        if (isReset) {
+          setLoading(true);
+        }
+
+        const data = await fetchFilter({
+          type,
+          category: status,
+          region: country,
+          genre:
+            selectedGenres.length > 0 ? selectedGenres.join(",") : undefined,
+          year: year === "All" ? "" : year,
+          page: targetPage,
+        });
+
+        if (isReset) {
+          setItems(data?.results || []);
+          setPage(1);
+        } else {
+          setItems((prev) => [...prev, ...(data?.results || [])]);
+          setPage(targetPage);
+        }
+      } catch (err) {
+        console.error("❌ Failed to load data:", err);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [type, status, country, selectedGenres, year], // Removed 'page' to stabilize reference
+  );
 
   useEffect(() => {
-    loadData(true);
-  }, [type, status, country, selectedGenres]);
+    loadData(1, true); // Always fetch page 1 on filter change
+  }, [loadData]); // Safely depends on loadData now
 
   const loadMore = () => {
-    if (!loadingMore) {
+    if (!loadingMore && !loading) {
       setLoadingMore(true);
-      loadData(false);
+      loadData(page + 1, false);
     }
   };
 
   const toggleGenre = (id: number) => {
     setSelectedGenres((prev) =>
-      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id],
     );
   };
 
-  if (!fontsLoaded) return null;
-
-  const renderHeader = () => (
-    <View style={styles.headerContainer}>
-      <View style={styles.headerTop}>
-        <Text style={styles.title}>Explore</Text>
-        <View style={styles.titleUnderline} />
+  const renderHeader = useMemo(
+    () => (
+      <View style={styles.headerContainer}>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.title}>Explore</Text>
+            <View style={styles.titleUnderline} />
+          </View>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={styles.filterIconButton}
+          >
+            <FontAwesome5 name="filter" size={25} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      {/* Filter Sections */}
-      <View style={styles.filtersSection}>
-        <Text style={styles.filterGroupTitle}>🎬 Type</Text>
-        <FlatList
-          data={["movie", "tv"]}
-          horizontal
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => setType(item as any)}
-              style={[
-                styles.filterButton,
-                type === item && styles.filterButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.filterText,
-                  type === item && styles.filterTextActive,
-                ]}
-              >
-                {item === "movie" ? "Movie" : "TV Show"}
-              </Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item}
-          showsHorizontalScrollIndicator={false}
-        />
-
-        <Text style={styles.filterGroupTitle}>⭐ Status</Text>
-        <FlatList
-          data={["popular", "top_rated", "upcoming", "now_playing"]}
-          horizontal
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => setStatus(item as any)}
-              style={[
-                styles.filterButton,
-                status === item && styles.filterButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.filterText,
-                  status === item && styles.filterTextActive,
-                ]}
-              >
-                {item === "popular"
-                  ? "Popular"
-                  : item === "top_rated"
-                  ? "Top Rated"
-                  : item === "upcoming"
-                  ? "Upcoming"
-                  : "Now Playing"}
-              </Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item}
-          showsHorizontalScrollIndicator={false}
-        />
-
-        <Text style={styles.filterGroupTitle}>🌍 Country</Text>
-        <FlatList
-          data={countries}
-          horizontal
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => setCountry(item.code)}
-              style={[
-                styles.filterButton,
-                country === item.code && styles.filterButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.filterText,
-                  country === item.code && styles.filterTextActive,
-                ]}
-              >
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.code}
-          showsHorizontalScrollIndicator={false}
-        />
-
-        <Text style={styles.filterGroupTitle}>🎭 Genres</Text>
-        <FlatList
-          data={genres}
-          horizontal
-          renderItem={({ item }) => {
-            const active = selectedGenres.includes(item.id);
-            return (
-              <TouchableOpacity
-                onPress={() => toggleGenre(item.id)}
-                style={[
-                  styles.filterButton,
-                  active && styles.filterButtonActive,
-                ]}
-              >
-                <Text
-                  style={[styles.filterText, active && styles.filterTextActive]}
-                >
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-          keyExtractor={(item) => item.id.toString()}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    </View>
+    ),
+    [],
   );
 
-  return loading ? (
-    <ActivityIndicator size="large" color="#E50914" style={{ marginTop: 40 }} />
-  ) : (
-    <FlatList
-      data={items}
-      keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-      numColumns={2}
-      renderItem={({ item }) => <RenderMovieCard item={item} />}
-      ListHeaderComponent={renderHeader}
-      contentContainerStyle={styles.listContainer}
-      columnWrapperStyle={styles.columnWrapper}
-      showsVerticalScrollIndicator={false}
-      onEndReached={loadMore}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={
-        loadingMore ? (
-          <ActivityIndicator
-            size="small"
-            color="#E50914"
-            style={{ marginVertical: 20 }}
-          />
-        ) : null
-      }
-    />
+  if (!fontsLoaded) return null;
+
+  return (
+    <View style={{ flex: 1, backgroundColor: "#0a0a0a" }}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filters</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <FontAwesome5 name="times" size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.filtersSection}>
+                <Text style={styles.filterGroupTitle}>🎬 Type</Text>
+                <View style={styles.filterGroup}>
+                  {["movie", "tv"].map((item) => (
+                    <TouchableOpacity
+                      key={item}
+                      onPress={() => setType(item as any)}
+                      style={[
+                        styles.filterButton,
+                        type === item && styles.filterButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.filterText,
+                          type === item && styles.filterTextActive,
+                        ]}
+                      >
+                        {item === "movie" ? "Movie" : "TV Show"}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <Text style={styles.filterGroupTitle}>⭐ Status</Text>
+                <View style={styles.filterGroup}>
+                  {["popular", "top_rated", "upcoming", "now_playing"].map(
+                    (item) => (
+                      <TouchableOpacity
+                        key={item}
+                        onPress={() => setStatus(item as any)}
+                        style={[
+                          styles.filterButton,
+                          status === item && styles.filterButtonActive,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.filterText,
+                            status === item && styles.filterTextActive,
+                          ]}
+                        >
+                          {item === "popular"
+                            ? "Popular"
+                            : item === "top_rated"
+                              ? "Top Rated"
+                              : item === "upcoming"
+                                ? "Upcoming"
+                                : "Now Playing"}
+                        </Text>
+                      </TouchableOpacity>
+                    ),
+                  )}
+                </View>
+
+                <Text style={styles.filterGroupTitle}>📅 Year</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.yearScrollContainer}
+                >
+                  {years.map((y) => (
+                    <TouchableOpacity
+                      key={y}
+                      onPress={() => setYear(y === "All" ? "" : y)}
+                      style={[
+                        styles.yearButton,
+                        (year === y || (y === "All" && year === "")) &&
+                          styles.filterButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.filterText,
+                          (year === y || (y === "All" && year === "")) &&
+                            styles.filterTextActive,
+                        ]}
+                      >
+                        {y}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+
+                <Text style={styles.filterGroupTitle}>🌍 Country</Text>
+                <View style={styles.filterGroup}>
+                  {countries.map((item) => (
+                    <TouchableOpacity
+                      key={item.code}
+                      onPress={() => setCountry(item.code)}
+                      style={[
+                        styles.filterButton,
+                        country === item.code && styles.filterButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.filterText,
+                          country === item.code && styles.filterTextActive,
+                        ]}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <Text style={styles.filterGroupTitle}>🎭 Genres</Text>
+                <View style={styles.filterGroup}>
+                  {genres.map((item) => {
+                    const active = selectedGenres.includes(item.id);
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        onPress={() => toggleGenre(item.id)}
+                        style={[
+                          styles.filterButton,
+                          active && styles.filterButtonActive,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.filterText,
+                            active && styles.filterTextActive,
+                          ]}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.applyButtonText}>Apply Filters</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {loading && items.length === 0 ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#E50914" />
+        </View>
+      ) : (
+        <FlatList
+          data={items}
+          keyExtractor={(item, index) =>
+            item.id?.toString() || index.toString()
+          }
+          numColumns={2}
+          renderItem={({ item }) => <RenderMovieCard item={item} />}
+          ListHeaderComponent={renderHeader}
+          contentContainerStyle={styles.listContainer}
+          columnWrapperStyle={styles.columnWrapper}
+          showsVerticalScrollIndicator={false}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            loadingMore || loading ? (
+              <ActivityIndicator
+                size="small"
+                color="#E50914"
+                style={{ marginVertical: 20 }}
+              />
+            ) : null
+          }
+        />
+      )}
+    </View>
   );
 }
 
@@ -254,6 +353,14 @@ const styles = StyleSheet.create({
   headerTop: {
     paddingHorizontal: 20,
     paddingVertical: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  filterIconButton: {
+    padding: 10,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderRadius: 12,
   },
   title: {
     fontFamily: "BebasNeue",
@@ -282,10 +389,29 @@ const styles = StyleSheet.create({
     borderColor: "#E50914",
     borderWidth: 1,
     borderRadius: 25,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     backgroundColor: "rgba(255,255,255,0.05)",
-    marginRight: 8,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  filterGroup: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 5,
+  },
+  yearScrollContainer: {
+    paddingVertical: 5,
+    paddingRight: 20,
+  },
+  yearButton: {
+    borderColor: "#E50914",
+    borderWidth: 1,
+    borderRadius: 25,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(255,255,255,0.05)",
+    marginRight: 10,
   },
   filterButtonActive: {
     backgroundColor: "#E50914",
@@ -306,6 +432,45 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   columnWrapper: {
-    justifyContent: "space-between", // ensures even spacing for 2 columns
+    justifyContent: "space-between",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "#1a1a1a",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+    maxHeight: "80%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+    paddingHorizontal: 5,
+  },
+  modalTitle: {
+    fontFamily: "BebasNeue",
+    fontSize: 28,
+    color: "#fff",
+  },
+  applyButton: {
+    backgroundColor: "#E50914",
+    borderRadius: 15,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  applyButtonText: {
+    fontFamily: "RobotoSlab",
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
