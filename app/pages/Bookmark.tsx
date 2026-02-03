@@ -10,7 +10,8 @@ import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { getBookmarks, removeBookmark } from "@/app/api/databasecommader";
-import BookmarkCard from "./components/BookmarkCard";
+import BookmarkCard from "@/app/components/BookmarkCard";
+import React from "react";
 
 export default function Bookmark() {
   const [data, setData] = useState<any[]>([]);

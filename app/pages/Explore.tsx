@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { fetchFilter } from "@/app/api/main";
 import { useEffect, useState } from "react";
-import RenderMovieCard from "./components/moviecard";
+import RenderMovieCard from "@/app/components/ExploreCard";
+import React from "react";
 
 export default function Explore() {
   const [fontsLoaded] = useFonts({

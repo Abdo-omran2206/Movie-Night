@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import React from "react";
 
 interface Bookmark {
   id: number;
@@ -17,7 +18,7 @@ interface Bookmark {
   title: string;
   overview: string;
   movieID: string;
-  type: "movie" | "tv"; // ✅ أضفنا النوع هنا
+  type: "movie" | "tv"; 
 }
 
 export default function BookmarkCard({

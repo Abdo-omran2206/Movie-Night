@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 
 type CastProps = {

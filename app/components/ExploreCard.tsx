@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
+import React from "react";
 import { View, Image, StyleSheet, Text, Pressable } from "react-native";
 
 type Movie = {

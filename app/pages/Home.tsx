@@ -10,8 +10,9 @@ import {
   View,
 } from "react-native";
 import Swiper from "react-native-swiper";
-import RenderMovieCard from "./components/moviecard";
-import Trend from "./components/treanding";
+import RenderMovieCard from "@/app/components/MovieCard";
+import Trend from "@/app/components/treanding";
+import React from "react";
 
 type Movie = {
   id: number;

@@ -14,14 +14,15 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { getMovieById } from "../api/main";
 import { useFonts } from "expo-font";
-import RenderCastCard from "./components/rendercastcard";
-import RenderMovieCard from "../main/Home/components/moviecard";
+import RenderCastCard from "../components/CastCard";
+import RenderMovieCard from "../components/MovieCard";
 import {
   addBookmark,
   removeBookmark,
   isBookmarked,
 } from "../api/databasecommader";
-import TrailerModal from "./components/showtrailer";
+import TrailerModal from "@/app/components/ShowTrailer";
+import React from "react";
 
 export default function MovieDetails() {
   const { movieID } = useLocalSearchParams();

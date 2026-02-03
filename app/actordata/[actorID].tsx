@@ -13,7 +13,8 @@ import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getActorById } from "../api/main";
 import { useFonts } from "expo-font";
-import RenderMovieCard from "../main/Home/components/moviecard";
+import RenderMovieCard from "../components/MovieCard";
+import React from "react";
 
 export default function ActorDetails() {
   const { actorID } = useLocalSearchParams();
@@ -60,9 +61,9 @@ export default function ActorDetails() {
   }
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{flex:1,backgroundColor:"#000",paddingTop:30 }}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
-      <ScrollView style={{ flex: 1, backgroundColor: "#000" }}>
+      <ScrollView style={{ flex: 1, backgroundColor: "#000"}}>
         {/* صورة الممثل */}
         <View style={styles.profileWrapper}>
           <Image

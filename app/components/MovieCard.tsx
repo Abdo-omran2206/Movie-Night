@@ -1,10 +1,13 @@
+// components/moviecard.tsx
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
+import React from "react";
 import { View, Image, StyleSheet, Text, Pressable } from "react-native";
 
 type Movie = {
   id: number;
   title?: string;
+  name?: string;
   poster_path?: string;
   release_date?: string;
   vote_average?: number;
@@ -20,32 +23,34 @@ export default function RenderMovieCard({ item }: { item: Movie }) {
     return null;
   }
 
-  const handlePress = () => {
-    router.push(`/moviedetails/${item.id}`);
-  };
-
-  // ✅ صورة الفيلم (poster فقط)
-  const imageUri = item.poster_path
-    ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-    : "https://via.placeholder.com/200x300?text=No+Image";
+  const handlePress = () =>{
+    router.push(`/moviedetails/${item.id}`)
+  }
 
   return (
     <Pressable onPress={handlePress}>
-      <View style={styles.card}>
+      <View style={styles.movieCard}>
         {/* 🎬 Poster */}
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        <Image
+          source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
+          style={styles.movieImage}
+        />
 
         {/* 🎥 Title */}
-        <Text style={styles.title}>{item.title || "Untitled"}</Text>
+        <Text style={styles.movieTitle}>
+          {item.title || item.name || "Untitled"}
+        </Text>
 
         {/* 📅 Release Date */}
         {item.release_date && (
-          <Text style={styles.meta}>Release: {item.release_date}</Text>
+          <Text style={styles.movieMeta}>Release: {item.release_date}</Text>
         )}
 
         {/* ⭐ Rating */}
         {item.vote_average !== undefined && (
-          <Text style={styles.meta}>⭐ {item.vote_average.toFixed(1)}/10</Text>
+          <Text style={styles.movieMeta}>
+            ⭐ {item.vote_average.toFixed(1)}/10
+          </Text>
         )}
       </View>
     </Pressable>
@@ -53,28 +58,26 @@ export default function RenderMovieCard({ item }: { item: Movie }) {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    margin: 10,
+  movieCard: {
+    marginHorizontal: 10,
+    marginVertical: 15,
     alignItems: "flex-start",
-    width: 165,
-    padding: 1,
+    width: 200,
   },
-  image: {
-    width: 160,
-    height: 240,
+  movieImage: {
+    width: 200,
+    height: 300,
     borderRadius: 10,
-    backgroundColor: "#222",
   },
-  title: {
+  movieTitle: {
     marginTop: 6,
     color: "#fff",
     fontFamily: "BebasNeue",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 20,
     textAlign: "left",
     width: "100%",
   },
-  meta: {
+  movieMeta: {
     marginTop: 2,
     color: "#aaa",
     fontSize: 13,

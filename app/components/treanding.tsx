@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
 import {
   Dimensions,
   ImageBackground,

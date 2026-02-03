@@ -9,7 +9,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect, useRef } from "react";
 import { search } from "@/app/api/main";
-import RenderMovieCard from "./components/moviecard";
+import RenderMovieCard from "@/app/components/MovieCard";
+import React from "react";
+
 
 export default function Search() {
   const [query, setQuery] = useState("");
