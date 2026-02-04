@@ -10,25 +10,19 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { getTvById } from "../api/main";
 import RenderCastCard from "@/app/components/CastCard";
 import RenderMovieCard from "../components/MovieCard";
-import {
-  addBookmark,
-  removeBookmark,
-  isBookmarked,
-} from "../api/databasecommader";
+import BookmarkModel from "../components/BookmarkModel";
 import TrailerModal from "@/app/components/ShowTrailer";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function TvDetails() {
   const { tvID } = useLocalSearchParams();
   const [tv, setTv] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isbookmarked, setisbookmarked] = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
 
   const [fontsLoaded] = useFonts({
@@ -49,8 +43,6 @@ export default function TvDetails() {
 
         if (tvData) {
           setTv(tvData);
-          const bookmarked = await isBookmarked(tvData.id.toString());
-          setisbookmarked(bookmarked);
         }
       } catch (err) {
         console.error(err);
@@ -60,29 +52,6 @@ export default function TvDetails() {
     }
     loaddata();
   }, [tvID]);
-
-  async function toggleBookmark() {
-    if (!tv) return;
-
-    try {
-      if (isbookmarked) {
-        await removeBookmark(tv.id.toString());
-        setisbookmarked(false);
-      } else {
-        await addBookmark({
-          id: tv.id,
-          title: tv.name,
-          overview: tv.overview,
-          poster_path: tv.poster_path,
-          backdrop_path: tv.backdrop_path,
-          type:"tv"
-        });
-        setisbookmarked(true);
-      }
-    } catch (error) {
-      console.error("❌ Error toggling bookmark:", error);
-    }
-  }
 
   if (!fontsLoaded) return null;
 
@@ -128,12 +97,7 @@ export default function TvDetails() {
       {/* 🎞 Title + Bookmark */}
       <View style={styles.headerRow}>
         <Text style={styles.title}>{tv.name}</Text>
-        <Ionicons
-          name={isbookmarked ? "bookmark" : "bookmark-outline"}
-          size={28}
-          color={isbookmarked ? "#FED400" : "#fff"}
-          onPress={toggleBookmark}
-        />
+        <BookmarkModel data={tv} />
       </View>
 
       {/* 🧾 Overview */}

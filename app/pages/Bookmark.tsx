@@ -4,19 +4,23 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  Dimensions,
+  Pressable,
+  ScrollView,
 } from "react-native";
-import { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { getBookmarks, removeBookmark } from "@/app/api/databasecommader";
 import BookmarkCard from "@/app/components/BookmarkCard";
-import React from "react";
+const { height } = Dimensions.get("window");
 
 export default function Bookmark() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [filter, setFilter] = useState<string>();
+  const [renderData, setRenderData] = useState<any>([]);
   const [fontsLoaded] = useFonts({
     BebasNeue: require("@/assets/fonts/BebasNeue-Regular.ttf"),
     RobotoSlab: require("@/assets/fonts/RobotoSlab-VariableFont_wght.ttf"),
@@ -27,7 +31,6 @@ export default function Bookmark() {
     useCallback(() => {
       let active = true;
       setLoading(true);
-
       async function fetchBookmarks() {
         try {
           const bridge = await getBookmarks();
@@ -38,13 +41,21 @@ export default function Bookmark() {
           if (active) setLoading(false);
         }
       }
-
       fetchBookmarks();
       return () => {
         active = false;
       };
-    }, [])
+    }, []),
   );
+
+  useEffect(() => {
+    if (!filter || filter === "All") {
+      setRenderData(data);
+    } else {
+      const filtered = data.filter((item) => item.status === filter);
+      setRenderData(filtered);
+    }
+  }, [filter, data]);
 
   const handleRemove = useCallback(async (id: string) => {
     try {
@@ -55,7 +66,15 @@ export default function Bookmark() {
     }
   }, []);
 
+  const options = [
+    { icon: "apps", label: "All", color: "#fff" },
+    { icon: "play", label: "Watching", color: "#4CAF50" },
+    { icon: "time", label: "Watch Later", color: "#2196F3" },
+    { icon: "checkmark-done", label: "Completed", color: "#9C27B0" },
+    { icon: "close-circle", label: "Dropped", color: "#F44336" },
+  ];
   // ⏳ حالة التحميل أو الخطوط
+
   if (!fontsLoaded || loading) {
     return (
       <View style={styles.center}>
@@ -66,8 +85,48 @@ export default function Bookmark() {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          paddingVertical: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: "#333",
+          backgroundColor: "#111",
+        }}
+      >
+        {options.map((item) => {
+          const isActive =
+            filter === item.label || (!filter && item.label === "All");
+          return (
+            <Pressable
+              key={item.label}
+              style={{
+                alignItems: "center",
+                flex: 1,
+                opacity: isActive ? 1 : 0.5,
+                transform: [{ scale: isActive ? 1.1 : 1 }],
+              }}
+              onPress={() => setFilter(item.label)}
+            >
+              <Ionicons name={item.icon as any} size={22} color={item.color} />
+              <Text
+                style={{
+                  color: isActive ? item.color : "#fff",
+                  fontSize: 10,
+                  marginTop: 4,
+                  fontWeight: isActive ? "bold" : "normal",
+                }}
+              >
+                {item.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
       <FlatList
-        data={data}
+        data={renderData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <BookmarkCard item={item} onRemove={handleRemove} />
@@ -94,7 +153,7 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    height:"100%",
+    height: height,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",

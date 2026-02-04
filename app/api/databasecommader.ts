@@ -5,7 +5,7 @@ const DB_NAME = "Movie_Night.db";
 let db: SQLite.SQLiteDatabase | null = null;
 
 // ✅ فتح قاعدة البيانات بأمان
-export async function getDB() {
+export async function getDB(): Promise<SQLite.SQLiteDatabase | null> {
   if (db) return db;
 
   try {
@@ -13,17 +13,14 @@ export async function getDB() {
     return db;
   } catch (error) {
     console.error("❌ Failed to open database:", error);
-    throw error;
+    return null;
   }
 }
 
 // 🛠️ إنشاء جدول الـ Bookmarks
 export async function createBookmarkTable() {
   const database = await getDB();
-
-  if (!database) {
-    throw new Error("Database is null, cannot create table");
-  }
+  if (!database) return;
 
   try {
     await database.execAsync(`
@@ -35,12 +32,12 @@ export async function createBookmarkTable() {
         poster_path TEXT,
         backdrop_path TEXT,
         type TEXT,
+        status TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
   } catch (error) {
-    console.error("❌ Error creating bookmark table:", JSON.stringify(error, null, 2));
-    throw new Error("Failed to create bookmark table");
+    console.error("❌ Error creating bookmark table:", error);
   }
 }
 
@@ -51,20 +48,24 @@ export async function addBookmark(movie: {
   overview: string;
   poster_path: string;
   backdrop_path: string;
-  type:string
+  type: string;
+  status: string;
 }) {
   const database = await getDB();
+  if (!database) return;
+
   try {
     await database.runAsync(
-      `INSERT OR IGNORE INTO bookmark (movieID, title, overview, poster_path, backdrop_path,type)
-       VALUES (?, ?, ?, ?, ?,?)`,
+      `INSERT OR IGNORE INTO bookmark (movieID, title, overview, poster_path, backdrop_path, type, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         movie.id.toString(),
         movie.title,
         movie.overview,
         movie.poster_path,
         movie.backdrop_path,
-        movie.type
+        movie.type,
+        movie.status,
       ]
     );
   } catch (error) {
@@ -75,8 +76,10 @@ export async function addBookmark(movie: {
 // 📥 جلب كل الـ Bookmarks
 export async function getBookmarks() {
   const database = await getDB();
+  if (!database) return [];
+
   try {
-    const rows = await database.getAllAsync(
+    const rows = await database.getAllAsync<any>(
       `SELECT * FROM bookmark ORDER BY id DESC`
     );
     return rows;
@@ -89,9 +92,10 @@ export async function getBookmarks() {
 // ❌ حذف Bookmark واحد
 export async function removeBookmark(id: string) {
   const database = await getDB();
+  if (!database) return;
+
   try {
     await database.runAsync(`DELETE FROM bookmark WHERE movieID = ?`, [id]);
-    
   } catch (error) {
     console.error("❌ Error removing bookmark:", error);
   }
@@ -100,6 +104,8 @@ export async function removeBookmark(id: string) {
 // 🗑️ حذف كل الـ Bookmarks
 export async function clearBookmarks() {
   const database = await getDB();
+  if (!database) return;
+
   try {
     await database.runAsync(`DELETE FROM bookmark`);
   } catch (error) {
@@ -107,18 +113,20 @@ export async function clearBookmarks() {
   }
 }
 
-// ✅ التحقق إذا الفيلم موجود بالفعل
+// ✅ التحقق إذا الفيلم موجود بالفعل وجلب الحالة
 export async function isBookmarked(movieID: string) {
   const database = await getDB();
+  if (!database) return null;
+
   try {
-    const row = await database.getFirstAsync(
-      `SELECT 1 FROM bookmark WHERE movieID = ? LIMIT 1`,
+    const row = await database.getFirstAsync<{ status: string }>(
+      `SELECT status FROM bookmark WHERE movieID = ? LIMIT 1`,
       [movieID]
     );
-    
-    return !!row; // true لو موجود، false لو لأ
+
+    return row ? row.status : null;
   } catch (error) {
     console.error("❌ Error checking bookmark:", error);
-    return false;
+    return null;
   }
 }

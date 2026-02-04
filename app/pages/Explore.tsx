@@ -71,7 +71,7 @@ export default function Explore() {
     for (let i = currentYear; i >= 2000; i--) {
       yearList.push(i.toString());
     }
-    return ["All",...yearList];
+    return ["All", ...yearList];
   }, []);
 
   const loadData = useCallback(
@@ -105,12 +105,12 @@ export default function Explore() {
         setLoadingMore(false);
       }
     },
-    [type, status, country, selectedGenres, year], // Removed 'page' to stabilize reference
+    [type, status, country, selectedGenres, year],
   );
 
   useEffect(() => {
-    loadData(1, true); // Always fetch page 1 on filter change
-  }, [loadData]); // Safely depends on loadData now
+    loadData(1, true);
+  }, [loadData]);
 
   const loadMore = () => {
     if (!loadingMore && !loading) {
@@ -310,7 +310,8 @@ export default function Explore() {
         </View>
       </Modal>
 
-      {loading && items.length === 0 ? (
+      {renderHeader}
+      {loading ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
@@ -324,21 +325,11 @@ export default function Explore() {
           }
           numColumns={2}
           renderItem={({ item }) => <RenderMovieCard item={item} />}
-          ListHeaderComponent={renderHeader}
           contentContainerStyle={styles.listContainer}
           columnWrapperStyle={styles.columnWrapper}
           showsVerticalScrollIndicator={false}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            loadingMore || loading ? (
-              <ActivityIndicator
-                size="small"
-                color="#E50914"
-                style={{ marginVertical: 20 }}
-              />
-            ) : null
-          }
         />
       )}
     </View>
@@ -386,7 +377,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   filterButton: {
-    borderColor: "#E50914",
+    borderColor: "rgba(255,255,255,0.2)",
     borderWidth: 1,
     borderRadius: 25,
     paddingVertical: 8,
@@ -405,7 +396,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   yearButton: {
-    borderColor: "#E50914",
+    borderColor: "rgba(255,255,255,0.2)",
     borderWidth: 1,
     borderRadius: 25,
     paddingVertical: 8,
@@ -429,7 +420,7 @@ const styles = StyleSheet.create({
   listContainer: {
     backgroundColor: "#0a0a0a",
     paddingHorizontal: 10,
-    paddingBottom: 80,
+    paddingBottom: 100,
   },
   columnWrapper: {
     justifyContent: "space-between",
@@ -446,7 +437,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 40,
-    maxHeight: "80%",
+    maxHeight: "85%",
   },
   modalHeader: {
     flexDirection: "row",
@@ -457,7 +448,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontFamily: "BebasNeue",
-    fontSize: 28,
+    fontSize: 32,
     color: "#fff",
   },
   applyButton: {

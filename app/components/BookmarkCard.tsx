@@ -19,6 +19,7 @@ interface Bookmark {
   overview: string;
   movieID: string;
   type: "movie" | "tv";
+  status: string;
 }
 
 export default function BookmarkCard({
@@ -67,17 +68,26 @@ export default function BookmarkCard({
                 flex: 1,
                 marginHorizontal: 10,
                 justifyContent: "space-between",
+                paddingVertical: 5,
               }}
             >
               <View>
                 <Text style={styles.title}>{item.title}</Text>
+                {item.status && (
+                  <View style={styles.statusBadge}>
+                    <Text style={styles.statusText}>{item.status}</Text>
+                  </View>
+                )}
                 <Text style={styles.overview} numberOfLines={3}>
                   {item.overview}
                 </Text>
               </View>
               {/* 🗑 زر الحذف */}
-              <TouchableOpacity onPress={() => onRemove(item.movieID)}>
-                <Ionicons name="trash" size={28} color="#E50914" />
+              <TouchableOpacity
+                onPress={() => onRemove(item.movieID)}
+                style={styles.deleteButton}
+              >
+                <Ionicons name="trash-outline" size={24} color="#FF3B30" />
               </TouchableOpacity>
             </View>
           </Pressable>
@@ -90,35 +100,62 @@ export default function BookmarkCard({
 const styles = StyleSheet.create({
   card: {
     margin: 10,
-    borderRadius: 10,
+    borderRadius: 12,
     overflow: "hidden",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   bgImage: {
     width: "100%",
-    height: 200,
+    height: 180,
     justifyContent: "flex-end",
   },
   overlay: {
     flexDirection: "row",
     flex: 1,
-    justifyContent: "space-between",
-    backgroundColor: "rgba(0,0,0,0.45)",
-    padding: 5,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    padding: 10,
     alignItems: "center",
   },
   poster: {
-    width: 120,
-    height: 160,
+    width: 100,
+    height: 150,
     borderRadius: 8,
   },
   title: {
     color: "#fff",
     fontFamily: "BebasNeue",
-    fontSize: 22,
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  statusBadge: {
+    backgroundColor: "#E50914",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: "flex-start",
+    marginBottom: 6,
+  },
+  statusText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   overview: {
     color: "#ccc",
     fontFamily: "RobotoSlab",
-    fontSize: 14,
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  deleteButton: {
+    alignSelf: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    padding: 6,
+    borderRadius: 20,
   },
 });

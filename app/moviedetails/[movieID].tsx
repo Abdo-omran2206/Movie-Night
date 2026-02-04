@@ -10,25 +10,18 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { getMovieById } from "../api/main";
 import { useFonts } from "expo-font";
 import RenderCastCard from "../components/CastCard";
 import RenderMovieCard from "../components/MovieCard";
-import {
-  addBookmark,
-  removeBookmark,
-  isBookmarked,
-} from "../api/databasecommader";
 import TrailerModal from "@/app/components/ShowTrailer";
-import React from "react";
-
+import BookmarkModel from "../components/BookmarkModel";
 export default function MovieDetails() {
   const { movieID } = useLocalSearchParams();
   const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isbookmarked, setisbookmarked] = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
 
   const [fontsLoaded] = useFonts({
@@ -42,16 +35,12 @@ export default function MovieDetails() {
         let movieData: any = null;
         if (typeof movieID === "string") {
           movieData = await getMovieById(movieID);
-          setMovie(movieData);
         } else if (Array.isArray(movieID) && movieID.length > 0) {
           movieData = await getMovieById(movieID[0]);
         }
 
         if (movieData) {
           setMovie(movieData);
-          // ✅ تأكد أن قاعدة البيانات جاهزة فعلاً قبل الاستعلام
-          const bookmarked = await isBookmarked(movieData.id.toString());
-          setisbookmarked(bookmarked);
         }
       } catch (err) {
         console.error(err);
@@ -66,29 +55,6 @@ export default function MovieDetails() {
     const hours = Math.floor(mins / 60);
     const minutes = mins % 60;
     return `${hours}h ${minutes}min`;
-  }
-
-  async function toggleBookmark() {
-    if (!movie) return;
-
-    try {
-      if (isbookmarked) {
-        await removeBookmark(movie.id.toString());
-        setisbookmarked(false);
-      } else {
-        await addBookmark({
-          id: movie.id,
-          title: movie.title,
-          overview: movie.overview,
-          poster_path: movie.poster_path,
-          backdrop_path: movie.backdrop_path,
-          type:"movie"
-        });
-        setisbookmarked(true);
-      }
-    } catch (error) {
-      console.error("❌ Error toggling bookmark:", error);
-    }
   }
 
   if (!fontsLoaded) {
@@ -137,18 +103,11 @@ export default function MovieDetails() {
       {/* Title + Bookmark */}
       <View style={styles.headerRow}>
         <Text style={styles.title}>{movie.title}</Text>
-        <Ionicons
-          name={isbookmarked ? "bookmark" : "bookmark-outline"}
-          size={28}
-          color={isbookmarked ? "#FED400" : "#fff"}
-          onPress={toggleBookmark}
-        />
+        <BookmarkModel data={movie} />
       </View>
-
       {/* Overview */}
       <Text style={styles.sectionHeading}>OVERVIEW</Text>
       <Text style={styles.overview}>{movie.overview}</Text>
-
       {/* Metadata */}
       <View style={styles.metaRow}>
         <Text style={styles.metaBox}>{movie.release_date}</Text>
@@ -157,7 +116,6 @@ export default function MovieDetails() {
           ⭐ {movie.vote_average?.toFixed(1)}/10
         </Text>
       </View>
-
       {/* Genres */}
       <View style={styles.genresRow}>
         {movie.genres?.map((g: any) => (
@@ -199,7 +157,6 @@ export default function MovieDetails() {
           </Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.castSection}>
         <Text style={styles.castTitle}>Cast</Text>
         <View style={styles.underline}></View>
@@ -211,7 +168,6 @@ export default function MovieDetails() {
           showsHorizontalScrollIndicator={false}
         />
       </View>
-
       {movie?.similar?.results?.length > 0 && (
         <View style={styles.castSection}>
           <Text style={styles.castTitle}>Similar Movies</Text>
