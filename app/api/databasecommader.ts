@@ -130,3 +130,17 @@ export async function isBookmarked(movieID: string) {
     return null;
   }
 }
+// 🔄 تحديث حالة الـ Bookmark
+export async function updateBookmarkStatus(movieID: string, status: string) {
+  const database = await getDB();
+  if (!database) return;
+
+  try {
+    await database.runAsync(
+      `UPDATE bookmark SET status = ? WHERE movieID = ?`,
+      [status, movieID]
+    );
+  } catch (error) {
+    console.error("❌ Error updating bookmark status:", error);
+  }
+}
