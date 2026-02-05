@@ -12,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 const { width , height } = Dimensions.get("window");
-const SLIDE_HEIGHT = height * 0.43;
+const SLIDE_HEIGHT = height * 0.45;
 
 type TrendProps = {
   id: number;
@@ -31,7 +31,7 @@ export default function Trend({ id, cover, movieTitle, rating }: TrendProps) {
 
   const handlePress = () => {
     router.push({
-      pathname: "/moviedetails/[movieID]",
+      pathname: "/pages/moviedetails/[movieID]",
       params: { movieID: id.toString() },
     });
   };

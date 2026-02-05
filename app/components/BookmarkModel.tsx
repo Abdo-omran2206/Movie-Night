@@ -8,11 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  addBookmark,
-  removeBookmark,
-  isBookmarked,
-} from "../api/databasecommader";
+import { BookmarkManager } from "../api/BookmarkManager";
 
 interface BookmarkModalProps {
   data: any;
@@ -27,30 +23,36 @@ export default function BookmarkModal({ data }: BookmarkModalProps) {
   useEffect(() => {
     async function checkStatus() {
       if (data?.id) {
-        const status = await isBookmarked(data.id.toString());
+        const status = await BookmarkManager.isBookmarked(data.id.toString());
         setCurrentStatus(status);
       }
     }
     checkStatus();
   }, [data]);
 
-  async function handleAddBookmark(status: string) {
+  async function handleBookmarkSelection(status: string) {
     if (!data) return;
 
     try {
-      await addBookmark({
-        id: data.id,
-        title: data.title || data.name, // Handle both movies and TV shows
-        overview: data.overview,
-        poster_path: data.poster_path,
-        backdrop_path: data.backdrop_path,
-        type: data.title ? "movie" : "tv",
-        status: status,
-      });
+      if (isbookmarked) {
+        // If already bookmarked, update the status
+        await BookmarkManager.updateBookmarkStatus(data.id.toString(), status);
+      } else {
+        // If not bookmarked, add a new one
+        await BookmarkManager.addBookmark({
+          id: data.id,
+          title: data.title || data.name, // Handle both movies and TV shows
+          overview: data.overview,
+          poster_path: data.poster_path,
+          backdrop_path: data.backdrop_path,
+          type: data.title ? "movie" : "tv",
+          status: status,
+        });
+      }
       setCurrentStatus(status);
       setShowModal(false);
     } catch (error) {
-      console.error("❌ Error adding bookmark:", error);
+      console.error("❌ Error handling bookmark selection:", error);
     }
   }
 
@@ -58,7 +60,7 @@ export default function BookmarkModal({ data }: BookmarkModalProps) {
     if (!data) return;
 
     try {
-      await removeBookmark(data.id.toString());
+      await BookmarkManager.removeBookmark(data.id.toString());
       setCurrentStatus(null);
       setShowModal(false);
     } catch (error) {
@@ -103,7 +105,7 @@ export default function BookmarkModal({ data }: BookmarkModalProps) {
                   styles.optionButton,
                   currentStatus === opt.label && styles.selectedOption,
                 ]}
-                onPress={() => handleAddBookmark(opt.label)}
+                onPress={() => handleBookmarkSelection(opt.label)}
               >
                 <Ionicons
                   name={opt.icon as any}

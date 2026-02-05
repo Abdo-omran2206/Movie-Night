@@ -17,7 +17,7 @@ export default function RenderCastCard({ item }: CastProps) {
     <Pressable
       onPress={() =>
         router.push({
-          pathname: "/actordata/[actorID]",
+          pathname: "/pages/actordata/[actorID]",
           params: { actorID: item.id.toString() },
         })
       }

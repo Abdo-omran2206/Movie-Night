@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useFonts } from "expo-font";
 import {
   View,
@@ -9,11 +15,14 @@ import {
   FlatList,
   Modal,
   ScrollView,
+  TextInput,
+  Dimensions
 } from "react-native";
-import { fetchFilter } from "@/app/api/main";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { fetchFilter, search } from "@/app/api/main";
+import { Ionicons } from "@expo/vector-icons";
 import RenderMovieCard from "@/app/components/ExploreCard";
-
+import { SafeAreaView } from "react-native-safe-area-context";
+const { width } = Dimensions.get("window");
 export default function Explore() {
   const [fontsLoaded] = useFonts({
     BebasNeue: require("@/assets/fonts/BebasNeue-Regular.ttf"),
@@ -32,6 +41,13 @@ export default function Explore() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
+  // 🔍 Search State
+  const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchPage, setSearchPage] = useState(1);
+  const [isSearching, setIsSearching] = useState(false);
+  const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const countries = [
     { code: "US", label: "🇺🇸 USA" },
@@ -74,6 +90,7 @@ export default function Explore() {
     return ["All", ...yearList];
   }, []);
 
+  // 🌍 Load Explore Data
   const loadData = useCallback(
     async (targetPage: number, isReset = true) => {
       try {
@@ -108,16 +125,46 @@ export default function Explore() {
     [type, status, country, selectedGenres, year],
   );
 
+  // 🔍 Handle Search Logic
   useEffect(() => {
-    loadData(1, true);
-  }, [loadData]);
+    if (query.trim().length > 2) {
+      if (typingTimeout.current) clearTimeout(typingTimeout.current);
+      typingTimeout.current = setTimeout(async () => {
+        setIsSearching(true);
+        setSearchPage(1);
+        const data = await search(query, 1);
+        setSearchResults(data || []);
+        setIsSearching(false);
+      }, 500);
+    } else {
+      setSearchResults([]);
+    }
+  }, [query]);
 
-  const loadMore = () => {
-    if (!loadingMore && !loading) {
+  // 🚀 Load More Logic (Handles both Explore & Search)
+  const loadMore = async () => {
+    if (loadingMore || loading || isSearching) return;
+
+    if (query.trim().length > 2) {
+      // Load more search results
+      setIsSearching(true);
+      const nextPage = searchPage + 1;
+      const data = await search(query, nextPage);
+      setSearchResults((prev) => [...prev, ...(data || [])]);
+      setSearchPage(nextPage);
+      setIsSearching(false);
+    } else {
+      // Load more explore results
       setLoadingMore(true);
       loadData(page + 1, false);
     }
   };
+
+  useEffect(() => {
+    if (query.trim().length <= 2) {
+      loadData(1, true);
+    }
+  }, [loadData, query]);
 
   const toggleGenre = (id: number) => {
     setSelectedGenres((prev) =>
@@ -137,17 +184,37 @@ export default function Explore() {
             onPress={() => setModalVisible(true)}
             style={styles.filterIconButton}
           >
-            <FontAwesome5 name="filter" size={25} color="white" />
+            <Ionicons name="options-outline" size={24} color="white" />
           </TouchableOpacity>
+        </View>
+
+        {/* 🔍 Unified Search Bar */}
+        <View style={styles.searchWrapper}>
+          <View style={styles.searchBar}>
+            <Ionicons name="search-outline" size={20} color="#777" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search movies, tv shows..."
+              placeholderTextColor="#777"
+              value={query}
+              onChangeText={setQuery}
+            />
+            {query.length > 0 && (
+              <TouchableOpacity onPress={() => setQuery("")}>
+                <Ionicons name="close-circle" size={20} color="#777" />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
     ),
-    [],
+    [query],
   );
 
   if (!fontsLoaded) return null;
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a0a" }}>
     <View style={{ flex: 1, backgroundColor: "#0a0a0a" }}>
       <Modal
         animationType="slide"
@@ -160,7 +227,7 @@ export default function Explore() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Filters</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <FontAwesome5 name="times" size={24} color="#fff" />
+                <Ionicons name="close" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
 
@@ -311,7 +378,9 @@ export default function Explore() {
       </Modal>
 
       {renderHeader}
-      {loading ? (
+      {(loading || isSearching) &&
+      items.length === 0 &&
+      searchResults.length === 0 ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
@@ -319,7 +388,7 @@ export default function Explore() {
         </View>
       ) : (
         <FlatList
-          data={items}
+          data={query.trim().length > 2 ? searchResults : items}
           keyExtractor={(item, index) =>
             item.id?.toString() || index.toString()
           }
@@ -330,9 +399,19 @@ export default function Explore() {
           showsVerticalScrollIndicator={false}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            loadingMore || isSearching ? (
+              <ActivityIndicator
+                size="small"
+                color="#E50914"
+                style={{ marginVertical: 20 }}
+              />
+            ) : null
+          }
         />
       )}
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -340,6 +419,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: "#0a0a0a",
     paddingBottom: 10,
+    width:width,
   },
   headerTop: {
     paddingHorizontal: 20,
@@ -421,6 +501,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#0a0a0a",
     paddingHorizontal: 10,
     paddingBottom: 100,
+    paddingTop: 10,
   },
   columnWrapper: {
     justifyContent: "space-between",
@@ -463,5 +544,26 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  searchWrapper: {
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1c1c1c",
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: "#333",
+  },
+  searchInput: {
+    flex: 1,
+    color: "#fff",
+    fontFamily: "RobotoSlab",
+    fontSize: 15,
+    marginLeft: 10,
   },
 });

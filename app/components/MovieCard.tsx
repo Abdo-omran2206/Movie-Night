@@ -24,7 +24,7 @@ export default function RenderMovieCard({ item }: { item: Movie }) {
   }
 
   const handlePress = () =>{
-    router.push(`/moviedetails/${item.id}`)
+    router.push(`/pages/moviedetails/${item.id}`)
   }
 
   return (

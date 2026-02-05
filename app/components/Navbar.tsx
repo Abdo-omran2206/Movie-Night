@@ -20,16 +20,16 @@ export default function Navbar() {
         onPress={() => setPage("Explore")}
       />
       <Ionicons
-        name="search"
-        size={30}
-        color={page === "Search" ? "#E50914" : "#fff"}
-        onPress={() => setPage("Search")}
-      />
-      <Ionicons
         name="bookmark"
         size={30}
         color={page === "Bookmark" ? "#E50914" : "#fff"}
         onPress={() => setPage("Bookmark")}
+      />
+      <Ionicons
+        name="person"
+        size={30}
+        color={page === "Account" ? "#E50914" : "#fff"}
+        onPress={() => setPage("Account")}
       />
     </View>
   );

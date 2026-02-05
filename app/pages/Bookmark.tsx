@@ -6,14 +6,14 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
-  ScrollView,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { getBookmarks, removeBookmark } from "@/app/api/databasecommader";
+import { BookmarkManager } from "@/app/api/BookmarkManager";
 import BookmarkCard from "@/app/components/BookmarkCard";
+
 const { height } = Dimensions.get("window");
 
 export default function Bookmark() {
@@ -33,7 +33,7 @@ export default function Bookmark() {
       setLoading(true);
       async function fetchBookmarks() {
         try {
-          const bridge = await getBookmarks();
+          const bridge = await BookmarkManager.getBookmarks();
           if (active) setData(bridge);
         } catch (err) {
           console.error("Error loading bookmarks:", err);
@@ -59,7 +59,7 @@ export default function Bookmark() {
 
   const handleRemove = useCallback(async (id: string) => {
     try {
-      await removeBookmark(id);
+      await BookmarkManager.removeBookmark(id);
       setData((prev) => prev.filter((item) => item.movieID !== id));
     } catch (err) {
       console.error("Error removing bookmark:", err);
@@ -90,6 +90,7 @@ export default function Bookmark() {
           flexDirection: "row",
           justifyContent: "space-around",
           paddingVertical: 15,
+          paddingTop: 45, // 🚨 Added padding for the transparent status bar
           borderBottomWidth: 1,
           borderBottomColor: "#333",
           backgroundColor: "#111",

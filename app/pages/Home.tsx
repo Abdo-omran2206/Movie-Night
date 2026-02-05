@@ -1,6 +1,6 @@
 import { fetchMovies } from "@/app/api/main";
 import { useFonts } from "expo-font";
-import { useEffect, useState } from "react";
+import React , { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -13,7 +13,6 @@ import {
 import Swiper from "react-native-swiper";
 import RenderMovieCard from "@/app/components/MovieCard";
 import Trend from "@/app/components/treanding";
-import React from "react";
 
 type Movie = {
   id: number;
@@ -74,7 +73,7 @@ export default function Home() {
     <ScrollView style={{ backgroundColor: "#000", flex: 1 }}>
       {/* 🎬 Hero Swiper */}
       <Swiper
-        style={{ height: height *  0.45}}
+        style={{ height: height *  0.48}}
         showsPagination={true}
         dotColor="gray"
         activeDotColor="#E50914"

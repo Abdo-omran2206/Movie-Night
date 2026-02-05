@@ -31,12 +31,12 @@ export default function RenderMovieCard({ item }: { item: Movie }) {
   const handlePress = () => {
     if (isTV) {
       router.push({
-        pathname: "/tvdetails/[tvID]",
+        pathname: "/pages/tvdetails/[tvID]",
         params: { tvID: item.id.toString() },
       });
     } else {
       router.push({
-        pathname: "/moviedetails/[movieID]",
+        pathname: "/pages/moviedetails/[movieID]",
         params: { movieID: item.id.toString() },
       });
     }

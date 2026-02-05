@@ -32,12 +32,12 @@ export default function BookmarkCard({
   function handlePress() {
     if (item.type === "tv") {
       router.push({
-        pathname: "/tvdetails/[tvID]",
+        pathname: "/pages/tvdetails/[tvID]",
         params: { tvID: item.movieID.toString() },
       });
     } else {
       router.push({
-        pathname: "/moviedetails/[movieID]",
+        pathname: "/pages/moviedetails/[movieID]",
         params: { movieID: item.movieID.toString() },
       });
     }

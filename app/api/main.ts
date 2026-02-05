@@ -65,6 +65,24 @@ export async function getActorById(actorId: string) {
   }
 }
 
+export async function getActorImages(actorId: string) {
+  try {
+    const response = await fetch(
+      `${base_url}/person/${actorId}/images?api_key=${api_key}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch images for actor ID: ${actorId}`);
+    }
+
+    const data = await response.json();
+    return data.profiles || [];
+  } catch (error) {
+    console.error("Error fetching actor images:", error);
+    return [];
+  }
+}
+
 export async function getTvById(tvID: string) {
   try {
     // ✅ Fetch TV show details with credits, videos, and similar shows

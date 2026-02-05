@@ -1,29 +1,47 @@
-import { useLocalSearchParams } from "expo-router";
 import {
   View,
   Text,
   ActivityIndicator,
+  ScrollView,
   Image,
   StyleSheet,
   ImageBackground,
   FlatList,
   TouchableOpacity,
-  ScrollView,
+  Dimensions,
+  Share,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
-import { getTvById } from "../api/main";
-import RenderCastCard from "@/app/components/CastCard";
-import RenderMovieCard from "../components/MovieCard";
-import BookmarkModel from "../components/BookmarkModel";
-import TrailerModal from "@/app/components/ShowTrailer";
 import React, { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { getMovieById } from "../../api/main";
+import { useFonts } from "expo-font";
+import RenderCastCard from "../../components/CastCard";
+import RenderMovieCard from "../../components/MovieCard";
+import TrailerModal from "@/app/components/ShowTrailer";
+import BookmarkModel from "../../components/BookmarkModel";
+import { useStore } from "../../store/store";
+const { width, height } = Dimensions.get("window");
 
-export default function TvDetails() {
-  const { tvID } = useLocalSearchParams();
-  const [tv, setTv] = useState<any>(null);
+export default function MovieDetails() {
+  const { movieID } = useLocalSearchParams();
+  const router = useRouter();
+  const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showTrailer, setShowTrailer] = useState(false);
+  const { webSiteUrl } = useStore();
+  const onShare = async () => {
+    try {
+      await Share.share({
+        title: "Movie Night",
+        message: `Check out ${movie?.title} on Movie Night!
+        ${webSiteUrl}/moviedetails/index.html?movieID=${movie.id}
+        `,
+      });
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
 
   const [fontsLoaded] = useFonts({
     BebasNeue: require("@/assets/fonts/BebasNeue-Regular.ttf"),
@@ -33,16 +51,15 @@ export default function TvDetails() {
   useEffect(() => {
     async function loaddata() {
       try {
-        let tvData: any = null;
-        if (typeof tvID === "string") {
-          tvData = await getTvById(tvID);
-          setTv(tvData);
-        } else if (Array.isArray(tvID) && tvID.length > 0) {
-          tvData = await getTvById(tvID[0]);
+        let movieData: any = null;
+        if (typeof movieID === "string") {
+          movieData = await getMovieById(movieID);
+        } else if (Array.isArray(movieID) && movieID.length > 0) {
+          movieData = await getMovieById(movieID[0]);
         }
 
-        if (tvData) {
-          setTv(tvData);
+        if (movieData) {
+          setMovie(movieData);
         }
       } catch (err) {
         console.error(err);
@@ -51,9 +68,17 @@ export default function TvDetails() {
       }
     }
     loaddata();
-  }, [tvID]);
+  }, [movieID]);
 
-  if (!fontsLoaded) return null;
+  function formatRuntime(mins: number) {
+    const hours = Math.floor(mins / 60);
+    const minutes = mins % 60;
+    return `${hours}h ${minutes}min`;
+  }
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   if (loading) {
     return (
@@ -63,30 +88,42 @@ export default function TvDetails() {
     );
   }
 
-  if (!tv) {
+  if (!movie) {
     return (
       <View style={styles.center}>
-        <Text style={{ color: "white" }}>TV Show not found</Text>
+        <Text style={{ color: "white" }}>Movie not found</Text>
       </View>
     );
   }
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#000" }}>
-      {/* 🎬 Backdrop + Poster */}
+      {/* Backdrop + Poster */}
       <View style={styles.posterSection}>
         <ImageBackground
           source={{
-            uri: `https://image.tmdb.org/t/p/w500${tv.backdrop_path}`,
+            uri: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
           }}
           style={styles.cover}
           resizeMode="cover"
         >
           <View style={styles.overlay} />
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.actionButton}
+            >
+              <Ionicons name="chevron-back" size={28} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onShare} style={styles.actionButton}>
+              <Ionicons name="share-social-outline" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.posterWrapper}>
             <Image
               source={{
-                uri: `https://image.tmdb.org/t/p/w500${tv.poster_path}`,
+                uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
               }}
               style={styles.movieposter}
             />
@@ -94,41 +131,70 @@ export default function TvDetails() {
         </ImageBackground>
       </View>
 
-      {/* 🎞 Title + Bookmark */}
+      {/* Title + Bookmark */}
       <View style={styles.headerRow}>
-        <Text style={styles.title}>{tv.name}</Text>
-        <BookmarkModel data={tv} />
+        <Text style={styles.title}>{movie.title}</Text>
+        <BookmarkModel data={movie} />
       </View>
-
-      {/* 🧾 Overview */}
+      {/* Overview */}
       <Text style={styles.sectionHeading}>OVERVIEW</Text>
-      <Text style={styles.overview}>{tv.overview}</Text>
-
-      {/* 📅 Metadata */}
+      <Text style={styles.overview}>{movie.overview}</Text>
+      {/* Metadata */}
       <View style={styles.metaRow}>
-        <Text style={styles.metaBox}>{tv.first_air_date}</Text>
-        <Text style={styles.metaBox}>{tv.number_of_seasons} Seasons</Text>
-        <Text style={styles.metaBox}>⭐ {tv.vote_average?.toFixed(1)}/10</Text>
+        <Text style={styles.metaBox}>{movie.release_date}</Text>
+        <Text style={styles.metaBox}>{formatRuntime(movie.runtime)}</Text>
+        <Text style={styles.metaBox}>
+          ⭐ {movie.vote_average?.toFixed(1)}/10
+        </Text>
       </View>
-
-      {/* 🎭 Genres */}
+      {/* Genres */}
       <View style={styles.genresRow}>
-        {tv.genres?.map((g: any) => (
+        {movie.genres?.map((g: any) => (
           <Text key={g.id} style={styles.genreChip}>
             {g.name}
           </Text>
         ))}
       </View>
-
-      {/* ▶️ Watch Trailer */}
       <View
         style={{
-          alignItems: "flex-start",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 15,
           marginBottom: 20,
           marginHorizontal: 20,
           marginTop: 5,
         }}
       >
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/pages/player/[player]",
+              params: { player: movie.id },
+            })
+          }
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#fff",
+            paddingVertical: 12,
+            paddingHorizontal: 25,
+            borderRadius: 30,
+            elevation: 5,
+          }}
+        >
+          <Ionicons name="play" size={24} color="#000" />
+          <Text
+            style={{
+              color: "#000",
+              fontSize: 17,
+              fontWeight: "bold",
+              marginLeft: 8,
+            }}
+          >
+            Watch Now
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => setShowTrailer(true)}
           style={{
@@ -150,45 +216,38 @@ export default function TvDetails() {
               marginLeft: 8,
             }}
           >
-            Watch Trailer
+            Trailer
           </Text>
         </TouchableOpacity>
       </View>
-
-      {/* 👥 Cast */}
-      {tv.credits?.cast?.length > 0 && (
+      <View style={styles.castSection}>
+        <Text style={styles.castTitle}>Cast</Text>
+        <View style={styles.underline}></View>
+        <FlatList
+          horizontal
+          data={movie.credits.cast}
+          renderItem={({ item }) => <RenderCastCard item={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+      {movie?.similar?.results?.length > 0 && (
         <View style={styles.castSection}>
-          <Text style={styles.castTitle}>Cast</Text>
+          <Text style={styles.castTitle}>Similar Movies</Text>
           <View style={styles.underline}></View>
           <FlatList
             horizontal
-            data={tv.credits.cast}
-            renderItem={({ item }) => <RenderCastCard item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-      )}
-
-      {/* 🎬 Similar Shows */}
-      {tv.similar?.results?.length > 0 && (
-        <View style={styles.castSection}>
-          <Text style={styles.castTitle}>Similar Shows</Text>
-          <View style={styles.underline}></View>
-          <FlatList
-            horizontal
-            data={tv.similar.results}
+            data={movie.similar.results}
             renderItem={({ item }) => <RenderMovieCard item={item} />}
             keyExtractor={(item) => item.id.toString()}
             showsHorizontalScrollIndicator={false}
           />
         </View>
       )}
-
       <TrailerModal
         visible={showTrailer}
         onClose={() => setShowTrailer(false)}
-        movie={tv}
+        movie={movie}
       />
     </ScrollView>
   );
@@ -206,13 +265,31 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   cover: {
-    width: "100%",
-    height: 250,
+    width: width,
+    height: height * 0.35,
     justifyContent: "flex-end",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  headerActions: {
+    position: "absolute",
+    top: 35,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    zIndex: 10,
+  },
+  actionButton: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   posterWrapper: {
     alignItems: "flex-start",
