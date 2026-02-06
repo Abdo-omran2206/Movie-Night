@@ -22,7 +22,7 @@ import { supabase } from "../api/supabase";
 const { width } = Dimensions.get("window");
 
 export default function Account() {
-  const { mood, setMood, user, setUser } = useStore();
+  const { mood, setMood, user, setUser, setPage } = useStore();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -82,6 +82,7 @@ export default function Account() {
             if (Platform.OS === "android") {
               ToastAndroid.show("Logged out successfully", ToastAndroid.SHORT);
             }
+            setPage("Home");
             router.replace("/");
           },
           style: "destructive",

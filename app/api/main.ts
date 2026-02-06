@@ -1,4 +1,4 @@
-const api_key = "46c6b94ccce1c631a65491288f4b23b1";
+const api_key = "";
 const base_url = "https://api.themoviedb.org/3";
 
 // Reusable fetch function

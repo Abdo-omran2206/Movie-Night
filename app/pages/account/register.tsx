@@ -5,9 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   ActivityIndicator,
   ToastAndroid,
   ScrollView,
@@ -15,15 +15,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { supabase } from "../../api/supabase";
-import { useStore } from "../../store/store";
 import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Register() {
   const router = useRouter();
-  const { setMood } = useStore();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,50 +67,19 @@ export default function Register() {
           ToastAndroid.LONG,
         );
       }
-      setMood("Account");
-      router.replace("/");
+      router.push({
+        pathname: "/pages/account/confirm",
+        params: { email },
+      });
     }
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
-    const redirectUrl = Linking.createURL("/pages/account/register");
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectUrl,
-        skipBrowserRedirect: true,
-      },
-    });
-
-    if (error) {
-      if (Platform.OS === "android") {
-        ToastAndroid.show(error.message, ToastAndroid.SHORT);
-      }
-      setLoading(false);
-      return;
+    if (Platform.OS === "android") {
+      ToastAndroid.show("Coming soon", ToastAndroid.SHORT);
+    } else {
+      alert("Coming soon");
     }
-
-    if (data?.url) {
-      const result = await WebBrowser.openAuthSessionAsync(
-        data.url,
-        redirectUrl,
-      );
-      if (result.type === "success") {
-        const { url } = result;
-        const params = Linking.parse(url);
-        if (params.queryParams?.access_token) {
-          await supabase.auth.setSession({
-            access_token: params.queryParams.access_token as string,
-            refresh_token: params.queryParams.refresh_token as string,
-          });
-          setMood("Account");
-          router.replace("/");
-        }
-      }
-    }
-    setLoading(false);
   };
 
   return (

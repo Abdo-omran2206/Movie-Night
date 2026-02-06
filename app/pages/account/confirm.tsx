@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -13,6 +12,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { supabase } from "../../api/supabase";
 import { useStore } from "../../store/store";
@@ -73,6 +73,25 @@ export default function ConfirmOTP() {
     }
   };
 
+  const handleResend = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.resend({
+      email: email as string,
+      type: "signup",
+    });
+
+    if (error) {
+      if (Platform.OS === "android") {
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      }
+    } else {
+      if (Platform.OS === "android") {
+        ToastAndroid.show("OTP resent to your email", ToastAndroid.SHORT);
+      }
+    }
+    setLoading(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -127,7 +146,11 @@ export default function ConfirmOTP() {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.resendButton}>
+          <TouchableOpacity
+            style={styles.resendButton}
+            onPress={handleResend}
+            disabled={loading}
+          >
             <Text style={styles.resendText}>
               Didn&apos;t receive code? Resend
             </Text>

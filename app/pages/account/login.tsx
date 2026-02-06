@@ -16,7 +16,6 @@ import { useRouter } from "expo-router";
 import { supabase } from "../../api/supabase";
 import { useStore } from "../../store/store";
 import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -50,42 +49,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
-    const redirectUrl = Linking.createURL("/pages/account/login");
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectUrl,
-        skipBrowserRedirect: true,
-      },
-    });
-
-    if (error) {
-      Alert.alert("Error", error.message);
-      setLoading(false);
-      return;
-    }
-
-    if (data?.url) {
-      const result = await WebBrowser.openAuthSessionAsync(
-        data.url,
-        redirectUrl,
-      );
-      if (result.type === "success") {
-        const { url } = result;
-        const params = Linking.parse(url);
-        if (params.queryParams?.access_token) {
-          await supabase.auth.setSession({
-            access_token: params.queryParams.access_token as string,
-            refresh_token: params.queryParams.refresh_token as string,
-          });
-          setMood("Account");
-          router.replace("/");
-        }
-      }
-    }
-    setLoading(false);
+    Alert.alert("Coming soon", "Google Login is not yet available.");
   };
 
   return (
