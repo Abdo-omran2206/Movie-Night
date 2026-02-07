@@ -7,8 +7,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const category = urlParams.get("category");
 const genreId = urlParams.get("genre");
 const genreName = urlParams.get("name");
-
-let page = 1;
+const pageNum = urlParams.get("page");
+let page = pageNum ? parseInt(pageNum) : 1;
 let totalPages;
 
 async function fetchMovies(page) {
@@ -64,7 +64,7 @@ function getStars(rating) {
     stars.push('<i class="fa-solid fa-star" style="color:gold"></i>');
   if (halfStar)
     stars.push(
-      '<i class="fa-solid fa-star-half-stroke" style="color:gold"></i>'
+      '<i class="fa-solid fa-star-half-stroke" style="color:gold"></i>',
     );
   for (let i = 0; i < emptyStars; i++)
     stars.push('<i class="fa-regular fa-star" style="color:gold"></i>');
@@ -141,6 +141,10 @@ function scrollToTop() {
 $("#prev-btn").on("click", function () {
   if (page > 1) {
     page--;
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set("page", page);
+    window.history.pushState({}, "", newUrl);
+
     updatePagination();
     scrollToTop();
   }
@@ -149,6 +153,10 @@ $("#prev-btn").on("click", function () {
 $("#next-btn").on("click", function () {
   if (page < totalPages) {
     page++;
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set("page", page);
+    window.history.pushState({}, "", newUrl);
+
     updatePagination();
     scrollToTop();
   }

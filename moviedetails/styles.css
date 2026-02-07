@@ -201,7 +201,7 @@ body {
 }
 
 .action-btn {
-  display: block;
+  display: flex;
   align-items: center;
   gap: 10px;
   padding: 15px 30px;
@@ -213,17 +213,28 @@ body {
   transition: all 0.3s ease;
   text-decoration: none;
   font-family: var(--text-font);
+  gap: 15px;
 }
 
-.watch-btn {
-  background: linear-gradient(135deg, var(--accent), #ff6b6b);
+.action-btn i{
+  font-size: large;
+}
+
+.watch-trl-btn {
+  background: var(--accent);
   color: var(--text-primary);
 }
 
-.watch-btn:hover {
-  background: linear-gradient(135deg, #ff6b6b, var(--accent));
+.watch-trl-btn:hover {
+  background: var(--accent);
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+}
+
+.watch-btn:hover{
+  background: var(--text-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(225, 225, 225, 0.4);
 }
 
 .favorite-btn {

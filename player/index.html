@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Player - Movie Night</title>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Watch your favorite movies in high quality. Enjoy a seamless streaming experience with our custom movie player."
+    />
+    <meta
+      name="keywords"
+      content="watch movies, movie player, streaming, cinema, online movies, HD movies"
+    />
+    <meta name="author" content="Movie Night" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Movie Player - Movie Night" />
+    <meta
+      property="og:description"
+      content="Watch your favorite movies in high quality with our custom player."
+    />
+    <meta property="og:type" content="video.movie" />
+    <meta
+      property="og:url"
+      content="https://abdo-omran2206.github.io/Movie-Night/player/"
+    />
+    <meta
+      property="og:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.png"
+    />
+    <meta property="og:site_name" content="Movie Night" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Movie Player - Movie Night" />
+    <meta
+      name="twitter:description"
+      content="Watch your favorite movies in high quality with our custom player."
+    />
+    <meta
+      name="twitter:image"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.png"
+    />
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#e50914" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <!-- Canonical URL -->
+    <link
+      rel="canonical"
+      href="https://abdo-omran2206.github.io/Movie-Night/player/"
+    />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link rel="apple-touch-icon" href="../favicon.png" />
+
+    <!-- External CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../assets/footer.css" />
+    <link rel="stylesheet" href="../assets/header.css" />
+    <link rel="stylesheet" href="../assets/menu.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <i class="fa fa-bars"></i>
+        <h1 onclick="location.href = '../index.html'">Movie Night</h1>
+      </div>
+      <div>
+        <div class="search-bar">
+          <form onsubmit="return false;">
+            <input
+              type="text"
+              id="search-bar"
+              placeholder="Search for movies..."
+              aria-label="Search movies"
+            />
+            <button id="search-btn" type="button" aria-label="Search">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="player-container">
+        <iframe
+          id="player"
+          title="Video Player"
+          allowfullscreen
+          allow="
+            accelerometer;
+            autoplay;
+            encrypted-media;
+            gyroscope;
+            picture-in-picture;
+          "
+        >
+        </iframe>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-brand">
+          <h1>Movie Night</h1>
+          <p>
+            Your ultimate destination for movie enthusiasts. Discover, watch,
+            and enjoy cinema like never before.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-nav">
+            <h3>Quick Links</h3>
+            <ul>
+              <li>
+                <a href="../movies/index.html?category=trending">Trending</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=top_rated">Top Rated</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=popular">Popular</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=upcoming">Upcoming</a>
+              </li>
+              <li>
+                <a href="../movies/index.html?category=now_playing"
+                  >Now Playing</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-social">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="#" aria-label="Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="YouTube"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Movie Night. All rights reserved.</p>
+        <p>Powered by <a href="https://www.themoviedb.org/">TMDB Api</a></p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+    <script src="../assets/menu.js"></script>
+  </body>
+</html>

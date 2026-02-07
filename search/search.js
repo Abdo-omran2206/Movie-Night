@@ -6,13 +6,14 @@ const urlParams = new URLSearchParams(window.location.search);
 const paramValue = urlParams.get("paramName");
 
 const name = urlParams.get("search");
-let page = 1;
+const pageNum = urlParams.get("page");
+let page = pageNum ? parseInt(pageNum) : 1;
 let totalPages = 500;
 
 async function searchMovie(query, page) {
   try {
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${encodeURIComponent(
-      query
+      query,
     )}&page=${page}`;
     const response = await fetch(url);
     const data = await response.json();
@@ -34,7 +35,7 @@ function getStars(rating) {
     stars.push('<i class="fa-solid fa-star" style="color:gold"></i>');
   if (halfStar)
     stars.push(
-      '<i class="fa-solid fa-star-half-stroke" style="color:gold"></i>'
+      '<i class="fa-solid fa-star-half-stroke" style="color:gold"></i>',
     );
   for (let i = 0; i < emptyStars; i++)
     stars.push('<i class="fa-regular fa-star" style="color:gold"></i>');
@@ -42,7 +43,7 @@ function getStars(rating) {
   return stars.join("");
 }
 function createMovieCard(movie) {
- const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
   const stars = getStars(movie.vote_average);
 
   return `
@@ -97,7 +98,6 @@ async function updatePagination() {
   }
 }
 
-
 function scrollToTop() {
   window.scrollTo({
     top: 0,
@@ -108,6 +108,10 @@ function scrollToTop() {
 $("#prev-btn").on("click", function () {
   if (page > 1) {
     page--;
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set("page", page);
+    window.history.pushState({}, "", newUrl);
+
     updatePagination();
     $("#page-info").text(`Page ${page} of ${totalPages}`);
     scrollToTop();
@@ -117,6 +121,11 @@ $("#prev-btn").on("click", function () {
 $("#next-btn").on("click", function () {
   if (page < totalPages) {
     page++;
+    page++;
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set("page", page);
+    window.history.pushState({}, "", newUrl);
+
     updatePagination();
     $("#page-info").text(`Page ${page} of ${totalPages}`);
     scrollToTop();
@@ -125,7 +134,7 @@ $("#next-btn").on("click", function () {
 
 $(document).ready(function () {
   $("#category-title").text(
-    `${name.charAt(0).toUpperCase() + name.slice(1).replace("-", " ")}`
+    `${name.charAt(0).toUpperCase() + name.slice(1).replace("-", " ")}`,
   );
   updatePagination(); // page-info will update internally
 });

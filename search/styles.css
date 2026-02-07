@@ -26,6 +26,7 @@ body {
 main {
   padding: 30px 10px;
   flex: 1;
+  min-height: 90dvh;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -70,7 +71,9 @@ main section {
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
   font-family: var(--header-font);
   letter-spacing: 1px;
 }
@@ -116,7 +119,10 @@ main section {
   transition: 0.5s;
   position: relative;
   filter: brightness(0.8);
-  transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .card-overlay {
@@ -127,7 +133,9 @@ main section {
   justify-content: flex-end;
   padding: 15px;
   gap: 10px;
-  transition: top 0.4s ease, opacity 0.3s ease;
+  transition:
+    top 0.4s ease,
+    opacity 0.3s ease;
 }
 
 .card-overlay h3 {
