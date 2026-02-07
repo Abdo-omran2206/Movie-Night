@@ -8,7 +8,7 @@ const paramValue = urlParams.get("paramName");
 const name = urlParams.get("search");
 const pageNum = urlParams.get("page");
 let page = pageNum ? parseInt(pageNum) : 1;
-let totalPages = 500;
+let totalPages;
 
 async function searchMovie(query, page) {
   try {
@@ -120,7 +120,6 @@ $("#prev-btn").on("click", function () {
 
 $("#next-btn").on("click", function () {
   if (page < totalPages) {
-    page++;
     page++;
     const newUrl = new URL(window.location);
     newUrl.searchParams.set("page", page);
