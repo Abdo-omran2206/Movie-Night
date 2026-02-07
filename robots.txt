@@ -7,6 +7,5 @@ Sitemap: https://abdo-omran2206.github.io/Movie-Night/sitemap.xml
 # Crawl-delay
 Crawl-delay: 1
 
-# Disallow admin or private areas (if any)
-# Disallow: /admin/
-# Disallow: /private/
+# Disallow specific directories if needed in the future
+# Disallow: /assets/

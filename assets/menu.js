@@ -1,4 +1,4 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Determine base path based on current location
   const path = window.location.pathname;
   let basePath = "";
@@ -7,7 +7,8 @@ $(document).ready(function () {
     path.includes("/movies/") ||
     path.includes("/actor/") ||
     path.includes("/moviedetails/") ||
-    path.includes("/search/")
+    path.includes("/search/") ||
+    path.includes("/player/")
   ) {
     basePath = "../";
   }
@@ -89,8 +90,6 @@ $(document).ready(function () {
         ? `<i class="${item.icon}" style="width: 25px; margin-right: 10px; text-align: center;"></i>`
         : "";
       // Construct genre link with basePath
-      // Original: movies/index.html?genre=...
-      // Since 'movies/index.html' is relative to root, we prepend basePath.
       menuHtml += `<li><a href="${basePath}movies/index.html?genre=${
         item.id
       }&name=${encodeURIComponent(item.text)}">${iconHtml}${
@@ -106,40 +105,55 @@ $(document).ready(function () {
   `;
 
   // Append to body
-  $("body").append(menuHtml);
+  document.body.insertAdjacentHTML("beforeend", menuHtml);
 
   // Event Listeners
-  const $menu = $("#side-menu");
-  const $overlay = $("#side-menu-overlay");
+  const menu = document.getElementById("side-menu");
+  const overlay = document.getElementById("side-menu-overlay");
 
   function openMenu() {
-    $menu.addClass("open");
-    $overlay.addClass("active");
-    $("body").css("overflow", "hidden"); // Prevent background scrolling
+    if (menu) menu.classList.add("open");
+    if (overlay) overlay.classList.add("active");
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
   }
 
   function closeMenu() {
-    $menu.removeClass("open");
-    $overlay.removeClass("active");
-    $("body").css("overflow", "");
+    if (menu) menu.classList.remove("open");
+    if (overlay) overlay.classList.remove("active");
+    document.body.style.overflow = "";
   }
 
   // Toggle button (fa-bars)
-  // Note: targeting existing fa-bars. It might need a specific class or ID added in HTML if there are multiple.
-  // Assuming the one in header is the main one.
-  $(".fa-bars")
-    .parent()
-    .on("click", function (e) {
+  // We use event delegation or direct selection if the element exists
+  const barsIcons = document.querySelectorAll(".fa-bars");
+  barsIcons.forEach((icon) => {
+    icon.parentElement.addEventListener("click", function (e) {
       e.stopPropagation(); // Prevent bubbling
       openMenu();
     });
+  });
 
-  // Specific targeting if the above is too broad (user pointed to line 118)
-  // $('header .fa-bars').on('click', openMenu);
+  const closeBtn = document.getElementById("close-menu-btn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeMenu);
+  }
 
-  $("#close-menu-btn").on("click", closeMenu);
-  $overlay.on("click", closeMenu);
+  if (overlay) {
+    overlay.addEventListener("click", closeMenu);
+  }
 
   // Close when clicking a link
-  $("#side-menu a").on("click", closeMenu);
+  const menuLinks = document.querySelectorAll("#side-menu a");
+  menuLinks.forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  // Dynamic Copyright Year
+  const copyrightParagraph = document.querySelector(
+    ".footer-bottom p:first-child",
+  );
+  if (copyrightParagraph) {
+    const currentYear = new Date().getFullYear();
+    copyrightParagraph.innerHTML = `&copy; ${currentYear} Movie Night. All rights reserved.`;
+  }
 });

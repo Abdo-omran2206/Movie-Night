@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -34,7 +34,7 @@
     />
     <meta
       property="og:image"
-      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.png"
     />
     <meta property="og:site_name" content="Movie Night" />
 
@@ -50,7 +50,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.png"
     />
 
     <!-- Additional SEO -->
@@ -69,8 +69,8 @@
     />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="apple-touch-icon" href="favicon.svg" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
@@ -191,9 +191,9 @@
           <h2 id="top-rated-heading">Top Rated Movies</h2>
 
           <button
-            onclick="location.href ='movies/index.html?category=top_rated'"
+            onclick="location.href = 'movies/index.html?category=top_rated'"
           >
-            view all
+            See all
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -213,8 +213,10 @@
       >
         <div class="headind">
           <h2 id="popular-heading">Popular Movies</h2>
-          <button onclick="location.href ='movies/index.html?category=popular'">
-            view all
+          <button
+            onclick="location.href = 'movies/index.html?category=popular'"
+          >
+            See all
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -236,9 +238,9 @@
         <div class="headind">
           <h2 id="upcoming-heading">Upcoming Movies</h2>
           <button
-            onclick="location.href ='movies/index.html?category=upcoming'"
+            onclick="location.href = 'movies/index.html?category=upcoming'"
           >
-            view all
+            See all
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -262,7 +264,7 @@
           <button
             onclick="location.href = 'movies/index.html?category=now_playing'"
           >
-            view all
+            See all
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -344,7 +346,8 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2024 Movie Night. All rights reserved.</p>
+        <p>&copy; 2026 Movie Night. All rights reserved.</p>
+        <p>Powered by <a href="https://www.themoviedb.org/">TMDB Api</a></p>
       </div>
     </footer>
     <script src="main.js"></script>
@@ -355,7 +358,7 @@
         const searchTerm = $("#search-bar").val().trim();
         if (searchTerm) {
           window.location.href = `search/index.html?search=${encodeURIComponent(
-            searchTerm
+            searchTerm,
           )}`;
         }
       });

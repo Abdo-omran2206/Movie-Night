@@ -95,7 +95,7 @@ function displayMovieDetails(movie) {
 
   // Call this after fetching movie details
   function setupWatchButton(videos) {
-    const $watchBtn = $("#movie-actions .watch-btn");
+    const $watchBtn = $("#movie-actions .watch-trl-btn");
 
     $watchBtn.off("click").on("click", function () {
       // Find a YouTube trailer
@@ -154,8 +154,17 @@ function displayMovieDetails(movie) {
     });
   }
 
+  function setupWatchMovieButton(id) {
+  const $watchMovieBtn = $("#movie-actions .watch-btn");
+
+  $watchMovieBtn.off("click").on("click", () => {
+    location.href = `../player/index.html?movieID=${id}`;
+  });
+}
+
   // In your displayMovieDetails(movie) function, after setting movie.videos:
   setupWatchButton(movie.videos);
+  setupWatchMovieButton(movie.id);
 
   // Set overview
   document.getElementById("movie-description").textContent =

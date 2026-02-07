@@ -26,6 +26,7 @@ body {
 main {
   padding: 30px 10px;
   flex: 1;
+  min-height: 90dvh;
   display: flex;
   flex-direction: column;
   gap: 40px;

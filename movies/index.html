@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -33,7 +33,7 @@
     />
     <meta
       property="og:image"
-      content="https://abdo-omran2206.github.io/Movie-Night/favicon.svg"
+      content="https://abdo-omran2206.github.io/Movie-Night/favicon.png"
     />
 
     <!-- Twitter Card Meta Tags -->
@@ -55,8 +55,8 @@
     />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <link rel="apple-touch-icon" href="../favicon.svg" />
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link rel="apple-touch-icon" href="../favicon.png" />
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
@@ -95,7 +95,7 @@
     <header>
       <div>
         <i class="fa fa-bars"></i>
-        <h1 onclick="location.href='../index.html'">Movie Night</h1>
+        <h1 onclick="location.href = '../index.html'">Movie Night</h1>
       </div>
       <div>
         <div class="search-bar">
@@ -175,7 +175,8 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2024 Movie Night. All rights reserved.</p>
+        <p>&copy; 2026 Movie Night. All rights reserved.</p>
+        <p>Powered by <a href="https://www.themoviedb.org/">TMDB Api</a></p>
       </div>
     </footer>
     <script src="main.js"></script>
@@ -186,7 +187,7 @@
         const searchTerm = $("#search-bar").val().trim();
         if (searchTerm) {
           window.location.href = `../search/index.html?search=${encodeURIComponent(
-            searchTerm
+            searchTerm,
           )}`;
         }
       });
