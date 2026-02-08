@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-bebas: var(--font-bebas);
+  --font-roboto: var(--font-roboto);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +22,70 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto);
+  font-weight: 600;
+}
+
+h1,
+h2,
+h4,
+h5,
+h6 {
+  font-family: var(--font-bebas);
+}
+/* Swiper Navigation Buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #e50914 !important;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #b20710 !important;
+}
+
+/* Swiper Pagination Bullets */
+.swiper-pagination-bullet {
+  background: #e50914 !important;
+  opacity: 0.5 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #e50914 !important;
+  opacity: 1 !important;
+}
+
+/* Hide Scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar for Movie Sections */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e50914;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #b20710;
+}
+
+/* Firefox scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e50914 #1a1a1a;
 }

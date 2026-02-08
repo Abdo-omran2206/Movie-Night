@@ -1,0 +1,70 @@
+"use client";
+import Image from "next/image";
+import { Movie } from "./Banner";
+import Link from "next/link";
+import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
+
+interface MovieCardProps {
+  movie: Movie;
+}
+
+export default function MovieCard({ movie }: MovieCardProps) {
+  const posterUrl = `https://image.tmdb.org/t/p/w500`;
+
+  return (
+    <Link
+      href={`/movie/${movie.id}`}
+      className="group flex flex-col min-w-[200px] md:min-w-[250px] cursor-pointer transition-transform duration-300 hover:scale-105"
+    >
+      {/* Poster Image */}
+      <div className="relative aspect-2/3 overflow-hidden rounded-lg shadow-lg mb-3">
+        <Image
+          src={
+            movie.poster_path
+              ? posterUrl + movie.poster_path
+              : "/placeholder.jpg"
+          }
+          alt={movie.title}
+          fill
+          className="object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
+        />
+      </div>
+
+      {/* Movie Details */}
+      <div className="flex flex-col gap-2 px-1">
+        <h3 className="text-white font-semibold text-sm md:text-lg line-clamp-2 leading-tight">
+          {movie.title}
+        </h3>
+
+        <div className="flex flex-col gap-1">
+          <span className="text-gray-300 text-sm">
+            Release Date: {movie.release_date || "N/A"}
+          </span>
+          <div className="scale-75 origin-left text-sm">
+            <StarRating rating={movie.vote_average} />
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+export function StarRating({ rating }: { rating: number }) {
+  const stars = [];
+  const score = rating / 2; // Convert 0-10 to 0-5
+
+  for (let i = 1; i <= 5; i++) {
+    if (i <= score) {
+      stars.push(<FaStar key={i} size={23} className="text-yellow-400" />);
+    } else if (i === Math.ceil(score) && score % 1 >= 0.5) {
+      stars.push(<FaStarHalfAlt key={i} size={23} className="text-yellow-400" />);
+    } else {
+      stars.push(<FaRegStar key={i} size={23} className="text-gray-400" />);
+    }
+  }
+
+  return (
+    <div className="flex gap-1 items-center">
+      {stars}
+    </div>
+  );
+}
