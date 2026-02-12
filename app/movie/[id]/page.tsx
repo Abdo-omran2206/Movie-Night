@@ -1,0 +1,295 @@
+"use client";
+import Footer from "@/app/components/Footer";
+import Navbar from "@/app/components/Navbar";
+import Image from "next/image";
+import { fetchMovieDetails } from "@/app/lib/tmdb";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FaCirclePlay, FaPlay } from "react-icons/fa6";
+import CastList from "@/app/components/CastCard";
+import MovieMiniCard from "@/app/components/MovieMiniCard";
+import TrailerModal from "@/app/components/TrailerModel";
+import { FaStar, FaRegStar } from "react-icons/fa";
+import LoadingModel from "@/app/components/LoadingModel";
+
+export interface MovieDetail {
+  adult: boolean;
+  backdrop_path: string | null;
+  belongs_to_collection: {
+    id: number;
+    name: string;
+    poster_path: string | null;
+    backdrop_path: string | null;
+  } | null;
+  budget: number;
+  credits?: {
+    cast: Array<{
+      id: number;
+      name: string;
+      character: string;
+      profile_path: string | null;
+    }>;
+    crew: Array<{
+      id: number;
+      name: string;
+      job: string;
+      profile_path: string | null;
+    }>;
+  };
+  genres: {
+    id: number;
+    name: string;
+  }[];
+  homepage: string | null;
+  id: number;
+  imdb_id: string | null;
+  origin_country?: string[];
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string | null;
+  production_companies: {
+    id: number;
+    logo_path: string | null;
+    name: string;
+    origin_country: string;
+  }[];
+  production_countries: {
+    iso_3166_1: string;
+    name: string;
+  }[];
+  release_date: string;
+  revenue: number;
+  runtime: number | null;
+  similar?: {
+    page: number;
+    results: MovieDetail[]; // ممكن يكون recursive
+    total_pages: number;
+    total_results: number;
+  };
+  spoken_languages: {
+    english_name: string;
+    iso_639_1: string;
+    name: string;
+  }[];
+  status: string;
+  tagline: string | null;
+  title: string;
+  video: boolean;
+  videos?: {
+    results: {
+      iso_639_1: string;
+      iso_3166_1: string;
+      name: string;
+      key: string;
+      site: string;
+      size: number;
+      type: string;
+      official: boolean;
+      published_at: string;
+      id: string;
+    }[];
+  };
+  vote_average: number;
+  vote_count: number;
+}
+
+export default function MovieDetails() {
+  const [data, setData] = useState<MovieDetail | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        const res = await fetchMovieDetails(id);
+        setData(res);
+
+        document.title = `${res.title} (${res.release_date.split("-")[0]}) - Movie Night`;
+      } catch (error) {
+        console.error("Failed to fetch movie details:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [id]);
+  if (loading) {
+    return <LoadingModel message="Fetching Movie Details..." />;
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <p className="text-white text-xl">Movie not found.</p>
+      </div>
+    );
+  }
+
+  const trailerKey =
+    data.videos?.results?.find(
+      (v) => v.type === "Trailer" && v.site === "YouTube",
+    )?.key || data.videos?.results?.[0]?.key;
+
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-black text-white">
+        <section className="relative min-h-[60vh] md:min-h-screen">
+          <div className="absolute inset-0">
+            {data.backdrop_path && (
+              <Image
+                src={`https://image.tmdb.org/t/p/w1280${data.backdrop_path}`}
+                alt={data.title || "Movie backdrop"}
+                fill
+                className="object-cover"
+                priority
+              />
+            )}
+            <div className="absolute inset-0 bg-black/65" />
+          </div>
+
+          <div className="relative z-10 flex flex-col md:flex-row container mx-auto px-4 md:px-20 gap-10 min-h-[60vh] md:min-h-screen items-center py-10 md:py-0">
+            <div className="w-[200px] md:w-[350px] shrink-0">
+              <Image
+                src={`https://image.tmdb.org/t/p/w500${data?.poster_path}`}
+                alt={data?.title || "Movie poster"}
+                width={500}
+                height={750}
+                className="rounded-2xl shadow-2xl"
+              />
+            </div>
+
+            <div className="flex flex-col gap-8 text-center md:text-left">
+              <div className="flex flex-col gap-4">
+                <h1 className="text-4xl md:text-7xl font-bold text-white text-shadow-lg">
+                  {data?.title}
+                </h1>
+                <div className="flex flex-wrap gap-4 justify-center md:justify-start items-center text-sm md:text-base text-gray-200">
+                  <Ships ship={data?.release_date} />
+                  <Ships
+                    ship={
+                      data?.runtime
+                        ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m`
+                        : "N/A"
+                    }
+                  />
+                  <Ships
+                    ship={
+                      <span className="flex items-center gap-2">
+                        <span>{data?.vote_average.toFixed(1)}/10</span>
+                        <RatingStars rating={data?.vote_average} />
+                      </span>
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-wrap gap-4 justify-center md:justify-start items-center text-sm md:text-base text-gray-200">
+                  {data?.genres.map((item, idx) => (
+                    <GenresShips key={idx} ship={item.name} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <div>
+                  <h2 className="text-red-600 text-2xl md:text-3xl uppercase font-bold tracking-wider mb-2">
+                    Overview
+                  </h2>
+                  <p className="max-w-2xl text-gray-300 leading-relaxed text-sm md:text-lg mx-auto md:mx-0">
+                    {data?.overview
+                      ? data.overview.length > 250
+                        ? data.overview.slice(0, 400) + "..."
+                        : data.overview
+                      : "No description available."}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                  <button className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
+                    <FaPlay size={18} />
+                    Watch Now
+                  </button>
+                  {trailerKey && (
+                    <button
+                      onClick={() => setIsOpen(true)}
+                      className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-red-900/40 relative overflow-hidden group"
+                    >
+                      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity" />
+                      <FaCirclePlay size={20} />
+                      Watch Trailer
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {data.credits && data.credits.cast.length > 0 && (
+          <section className="py-16 px-10">
+            <div className="container mx-auto px-4">
+              <div className="mb-10">
+                <h2 className="text-4xl md:text-5xl font-bold mb-2">Cast</h2>
+                <div className="w-20 h-1.5 bg-red-600 rounded-full" />
+              </div>
+              <CastList limit={11} cast={data.credits.cast} movieId={id} />
+            </div>
+          </section>
+        )}
+
+        {data.similar && data.similar.results.length > 0 && (
+          <section className="py-16 px-10 bg-zinc-950/50">
+            <div className="container mx-auto px-4">
+              <div className="mb-10">
+                <h2 className="text-4xl md:text-5xl font-bold mb-2">
+                  Similar Movies
+                </h2>
+                <div className="w-20 h-1.5 bg-red-600 rounded-full" />
+              </div>
+              <MovieMiniCard limit={12} movies={data.similar.results} />
+            </div>
+          </section>
+        )}
+      </main>
+
+      {isOpen && trailerKey && (
+        <TrailerModal url={trailerKey} onClose={() => setIsOpen(false)} />
+      )}
+      <Footer />
+    </>
+  );
+}
+
+function Ships({ ship }: { ship: React.ReactNode }) {
+  return (
+    <div className="px-3 py-2 bg-red-800/20 rounded-full ring-1 ring-red-700">
+      <span className="text-sm flex items-center gap-1">{ship}</span>
+    </div>
+  );
+}
+function GenresShips({ ship }: { ship: React.ReactNode }) {
+  return (
+    <div className="px-3 py-2 bg-neutral-200/10 rounded-full ring-1 ring-neutral-200/50">
+      <span className="text-sm flex items-center gap-1">{ship}</span>
+    </div>
+  );
+}
+interface RatingStarsProps {
+  rating: number;
+}
+
+function RatingStars({ rating }: RatingStarsProps) {
+  const fullStars = Math.round(rating / 2); // 10 → 5
+
+  return (
+    <span className="flex items-center gap-1 text-neutral-200">
+      {[...Array(5)].map((_, i) =>
+        i < fullStars ? <FaStar key={i} /> : <FaRegStar key={i} />,
+      )}
+    </span>
+  );
+}

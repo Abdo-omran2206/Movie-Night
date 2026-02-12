@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchMovies } from "../lib/tmdb";
-import { Movie } from "./Banner";
+import { fetchMovies, Movie } from "../lib/tmdb";
 import MovieCard from "./MovieCard";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
@@ -16,8 +15,8 @@ export default function Section({ endpoint, title }: SectionProps) {
 
   useEffect(() => {
     async function loadMovies() {
-      const data = await fetchMovies(endpoint);
-      setMovies(data);
+      const { results } = await fetchMovies(endpoint);
+      setMovies(results);
     }
     loadMovies();
   }, [endpoint]);

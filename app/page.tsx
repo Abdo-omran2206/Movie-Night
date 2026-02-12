@@ -13,9 +13,9 @@ export default function Home() {
 
   return (
     <div className="overflow-x-hidden bg-black">
-      <header className="w-screen fixed z-50">
+      
         <Navbar />
-      </header>
+      
       <main className="min-h-screen pt-[5vh]">
         <Banner />
         {sections.map((section) => (

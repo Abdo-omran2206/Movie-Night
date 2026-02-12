@@ -6,26 +6,10 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { fetchGenres, fetchMovies } from "../lib/tmdb";
+import { fetchGenres, fetchMovies, Movie } from "../lib/tmdb";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import Link from "next/link";
 
-export interface Movie {
-  adult: boolean;
-  backdrop_path: string | null;
-  genre_ids: number[];
-  id: number;
-  media_type: "movie" | "tv" | string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string | null;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
 interface Genre {
   id: number;
   name: string;
@@ -37,9 +21,9 @@ export default function Banner() {
 
   useEffect(() => {
     async function fetchBanner() {
-      const movies = await fetchMovies("/trending/movie/week");
+      const { results } = await fetchMovies("/trending/movie/week");
       const genresData = await fetchGenres();
-      setData(movies);
+      setData(results);
       setGenres(genresData);
     }
     fetchBanner();
@@ -97,8 +81,8 @@ export default function Banner() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-5">
-                    <div className="space-y-5">
+                  <div className="flex flex-col gap-8">
+                    <div className="space-y-1">
                       <h2 className="text-3xl font-semibold text-red-700">
                         OVERVIEW
                       </h2>
@@ -108,15 +92,17 @@ export default function Banner() {
                     </div>
 
                     <div>
-                      <button className="px-8 py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30">
+                      <Link
+                        href={`/movie/${item.id}`}
+                        className="px-8 py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
+                      >
                         View Movie
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
           </SwiperSlide>
         ))}
       </Swiper>

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Movie } from "./Banner";
+import { Movie } from "../lib/tmdb";
 import Link from "next/link";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
@@ -14,10 +14,10 @@ export default function MovieCard({ movie }: MovieCardProps) {
   return (
     <Link
       href={`/movie/${movie.id}`}
-      className="group flex flex-col min-w-[200px] md:min-w-[250px] cursor-pointer transition-transform duration-300 hover:scale-105"
+      className="group flex flex-col min-w-[200px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
     >
       {/* Poster Image */}
-      <div className="relative aspect-2/3 overflow-hidden rounded-lg shadow-lg mb-3">
+      <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">
         <Image
           src={
             movie.poster_path
@@ -56,15 +56,13 @@ export function StarRating({ rating }: { rating: number }) {
     if (i <= score) {
       stars.push(<FaStar key={i} size={23} className="text-yellow-400" />);
     } else if (i === Math.ceil(score) && score % 1 >= 0.5) {
-      stars.push(<FaStarHalfAlt key={i} size={23} className="text-yellow-400" />);
+      stars.push(
+        <FaStarHalfAlt key={i} size={23} className="text-yellow-400" />,
+      );
     } else {
       stars.push(<FaRegStar key={i} size={23} className="text-gray-400" />);
     }
   }
 
-  return (
-    <div className="flex gap-1 items-center">
-      {stars}
-    </div>
-  );
+  return <div className="flex gap-1 items-center">{stars}</div>;
 }
