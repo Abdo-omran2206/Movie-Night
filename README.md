@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Movie Night
 
-## Getting Started
+Movie Night is a sleek, modern, and responsive web application for discovering movies. Built with **Next.js**, **Tailwind CSS**, and the **TMDB API**, it allows users to browse top-rated, popular, and upcoming films, watch trailers, and explore cast details.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Dynamic Home Page**: Showcases trending movies with a beautiful hero slider.
+- **Categorized Browsing**: Explore Top Rated, Popular, Upcoming, and Now Playing movies.
+- **Movie Details**: Get in-depth information about movies, including overview, rating, release date, and genres.
+- **Cast & Crew**: View cast members and their roles.
+- **Video Player**: Watch movie trailers and clips via embedded player support.
+- **Search Functionality**: Quickly find movies by title.
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices.
+- **Dark Mode**: A cinematic dark-themed UI.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [React Icons](https://react-icons.github.io/react-icons/)
+- **Slider**: [Swiper.js](https://swiperjs.com/)
+- **Data Source**: [TMDB API](https://www.themoviedb.org/documentation/api)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Installation
 
-## Learn More
+1.  **Clone the repository:**
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    git clone https://github.com/Start-0-Point/movie-night.git
+    cd movie-night
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2.  **Install dependencies:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
 
-## Deploy on Vercel
+3.  **Set up Environment Variables:**
+    Create a `.env` file in the root directory and add your API keys:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    ```env
+    NEXT_PUBLIC_API_KEY=your_tmdb_api_key_here
+    NEXT_PUBLIC_STREAM_API=your_stream_api
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4.  **Run the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+5.  **Open in Browser:**
+    Navigate to [http://localhost:3000](http://localhost:3000) to see the app in action.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📜 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+## 👤 Author
+
+**Akira Omran**
+
+- GitHub: [@Start-0-Point](https://github.com/Start-0-Point)

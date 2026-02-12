@@ -4,6 +4,7 @@ import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
 import { fetchMovieDetails } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaCirclePlay, FaPlay } from "react-icons/fa6";
 import CastList from "@/app/components/CastCard";
@@ -208,15 +209,18 @@ export default function MovieDetails() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                  <button className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group">
+                  <Link
+                    href={`/player/${id}`}
+                    className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"
+                  >
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
                     <FaPlay size={18} />
                     Watch Now
-                  </button>
+                  </Link>
                   {trailerKey && (
                     <button
                       onClick={() => setIsOpen(true)}
-                      className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-red-900/40 relative overflow-hidden group"
+                      className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:cursor-pointer hover:scale-105 active:scale-95 shadow-lg shadow-red-900/40 relative overflow-hidden group"
                     >
                       <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity" />
                       <FaCirclePlay size={20} />

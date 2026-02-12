@@ -59,6 +59,10 @@ function CategoryContent() {
     loadMovies();
   }, [endpoint, currentPage]);
 
+  useEffect(() => {
+    document.title = `${title} - Page ${currentPage} - Movie Night`;
+  }, [title, currentPage]);
+
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       router.push(`/category/${category}?page=${newPage}`);
