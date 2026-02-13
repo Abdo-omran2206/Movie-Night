@@ -17,6 +17,7 @@ interface Genre {
 export default function Banner() {
   const [data, setData] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [loading, setLoading] = useState(true);
   const backdropUrl = `https://image.tmdb.org/t/p/w1280`;
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function Banner() {
       const genresData = await fetchGenres();
       setData(results);
       setGenres(genresData);
+      setLoading(false);
     }
     fetchBanner();
   }, []);
@@ -35,10 +37,26 @@ export default function Banner() {
       .filter((name): name is string => !!name);
   };
 
+  if (loading) {
+    return (
+      <div className="w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+        <div className="relative flex flex-col items-center">
+          <div className="absolute inset-0 -m-8 rounded-full border-4 border-red-600/40 animate-ping"></div>
+          <h1 className="text-6xl md:text-8xl font-bebas font-black text-red-700/70 tracking-widest">
+            Movie Night
+          </h1>
+          <p className="mt-4 text-zinc-500 font-bold uppercase tracking-widest text-xs animate-pulse">
+            Summoning Stars...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!data.length) return null;
 
   return (
-    <div className="w-full h-[95vh] max-sm:h-screen relative group">
+    <div className="w-full min-h-[95vh] h-[95vh] max-sm:h-screen relative group">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -61,32 +79,32 @@ export default function Banner() {
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent" />
 
-              <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 lg:px-24">
-                <div className="max-w-3xl space-y-5 flex flex-col gap-10">
-                  <div className="flex flex-col gap-5">
-                    <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg">
+              <div className="absolute inset-0 flex flex-col justify-center items-center md:items-start px-4 sm:px-8 md:px-16 lg:px-24">
+                <div className="max-w-3xl space-y-3 md:space-y-5 flex flex-col items-center md:items-start gap-4 md:gap-10">
+                  <div className="flex flex-col items-center md:items-start gap-2 md:gap-5">
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white drop-shadow-lg leading-tight text-center">
                       {item.title}
                     </h1>
 
-                    <div className="flex flex-wrap gap-4 items-center text-sm md:text-base text-gray-200">
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
                       <Ships ship={item.release_date} />
                       <Ships ship={<StarRating rating={item.vote_average} />} />
                       <Ships ship={`(${item.vote_count} Votes)`} />
                     </div>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
                       {getGenreNames(item.genre_ids).map((name, idx) => (
                         <Ships key={idx} ship={name} />
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-8">
-                    <div className="space-y-1">
-                      <h2 className="text-3xl font-semibold text-red-700">
+                  <div className="flex flex-col items-center md:items-start gap-4 md:gap-8">
+                    <div className="space-y-1 text-center md:text-left">
+                      <h2 className="text-xl md:text-3xl font-semibold text-red-700">
                         OVERVIEW
                       </h2>
-                      <p className="text-gray-300 line-clamp-3 md:line-clamp-4 max-w-2xl text-sm md:text-base">
+                      <p className="text-gray-300 line-clamp-3 md:line-clamp-4 max-w-xl md:max-w-2xl text-xs sm:text-sm md:text-base">
                         {item.overview}
                       </p>
                     </div>
@@ -94,7 +112,7 @@ export default function Banner() {
                     <div>
                       <Link
                         href={`/movie/${item.id}`}
-                        className="px-8 py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
+                        className="inline-block px-6 py-2 md:px-8 md:py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white text-sm md:text-base font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
                       >
                         View Movie
                       </Link>

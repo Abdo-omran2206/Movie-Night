@@ -118,6 +118,15 @@ export default function MovieDetails() {
     }
     loadData();
   }, [id]);
+
+  function formatDate(dateString: string) {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
   if (loading) {
     return <LoadingModel message="Fetching Movie Details..." />;
   }
@@ -153,24 +162,24 @@ export default function MovieDetails() {
             <div className="absolute inset-0 bg-black/65" />
           </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row container mx-auto px-4 md:px-20 gap-10 min-h-[60vh] md:min-h-screen items-center py-10 md:py-0">
-            <div className="w-[200px] md:w-[350px] shrink-0">
+          <div className="relative z-10 flex flex-col md:flex-row container mx-auto px-4 md:px-20 gap-6 md:gap-10 min-h-[60vh] md:min-h-screen items-center py-20 md:py-0">
+            <div className="w-[180px] sm:w-[250px] md:w-[350px] shrink-0">
               <Image
                 src={`https://image.tmdb.org/t/p/w500${data?.poster_path}`}
                 alt={data?.title || "Movie poster"}
                 width={500}
                 height={750}
-                className="rounded-2xl shadow-2xl"
+                className="rounded-2xl shadow-2xl hover:scale-105 transition-all duration-200"
               />
             </div>
 
             <div className="flex flex-col gap-8 text-center md:text-left">
               <div className="flex flex-col gap-4">
-                <h1 className="text-4xl md:text-7xl font-bold text-white text-shadow-lg">
+                <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold text-white text-shadow-lg leading-tight">
                   {data?.title}
                 </h1>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start items-center text-sm md:text-base text-gray-200">
-                  <Ships ship={data?.release_date} />
+                  <Ships ship={formatDate(data?.release_date)} />
                   <Ships
                     ship={
                       data?.runtime
@@ -234,11 +243,13 @@ export default function MovieDetails() {
         </section>
 
         {data.credits && data.credits.cast.length > 0 && (
-          <section className="py-16 px-10">
-            <div className="container mx-auto px-4">
-              <div className="mb-10">
-                <h2 className="text-4xl md:text-5xl font-bold mb-2">Cast</h2>
-                <div className="w-20 h-1.5 bg-red-600 rounded-full" />
+          <section className="py-10 md:py-16 px-4 md:px-10">
+            <div className="container mx-auto px-0 md:px-4">
+              <div className="mb-6 md:mb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
+                  Cast
+                </h2>
+                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
               <CastList limit={11} cast={data.credits.cast} movieId={id} />
             </div>
@@ -246,13 +257,13 @@ export default function MovieDetails() {
         )}
 
         {data.similar && data.similar.results.length > 0 && (
-          <section className="py-16 px-10 bg-zinc-950/50">
-            <div className="container mx-auto px-4">
-              <div className="mb-10">
-                <h2 className="text-4xl md:text-5xl font-bold mb-2">
+          <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
+            <div className="container mx-auto px-0 md:px-4">
+              <div className="mb-6 md:mb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
                   Similar Movies
                 </h2>
-                <div className="w-20 h-1.5 bg-red-600 rounded-full" />
+                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
               <MovieMiniCard limit={12} movies={data.similar.results} />
             </div>

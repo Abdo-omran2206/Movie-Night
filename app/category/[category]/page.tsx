@@ -77,9 +77,9 @@ function CategoryContent() {
 
       <main className="grow pt-[10vh] px-4 md:px-8 lg:px-16">
         {/* Header Section */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-1 md:w-1.5 h-10 md:h-14 bg-red-700 rounded-full shadow-lg shadow-red-700/50" />
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white tracking-wide drop-shadow-lg">
+        <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-8">
+          <div className="w-1 md:w-1.5 h-8 md:h-14 bg-red-700 rounded-full shadow-lg shadow-red-700/50" />
+          <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-white tracking-wide drop-shadow-lg">
             {title}
           </h1>
         </div>
@@ -93,34 +93,36 @@ function CategoryContent() {
           </div>
         ) : movies.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-6 md:gap-x-6 md:gap-y-10">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
             </div>
             {/* Pagination */}
-            <div className="flex items-center justify-center gap-6 mt-12">
+            <div className="flex items-center justify-center gap-4 md:gap-6 mt-8 md:mt-12">
               <button
                 disabled={currentPage <= 1}
                 onClick={() => handlePageChange(currentPage - 1)}
-                className="flex items-center gap-2 px-6 py-3 bg-neutral-900 border border-neutral-800 rounded-full hover:bg-red-600 transition-all disabled:opacity-50 disabled:hover:bg-neutral-900"
+                className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-neutral-900 border border-neutral-800 rounded-full hover:bg-red-600 transition-all disabled:opacity-50 disabled:hover:bg-neutral-900 text-sm md:text-base"
               >
                 <FaChevronLeft />
                 <span>Prev</span>
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="text-red-600 font-bold text-lg">
+                <span className="text-red-600 font-bold text-base md:text-lg">
                   {currentPage}
                 </span>
                 <span className="text-gray-500">/</span>
-                <span className="text-gray-400">{totalPages}</span>
+                <span className="text-gray-400 text-sm md:text-base">
+                  {totalPages}
+                </span>
               </div>
 
               <button
                 disabled={currentPage >= totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
-                className="flex items-center gap-2 px-6 py-3 bg-neutral-900 border border-neutral-800 rounded-full hover:bg-red-600 transition-all disabled:opacity-50 disabled:hover:bg-neutral-900"
+                className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-neutral-900 border border-neutral-800 rounded-full hover:bg-red-600 transition-all disabled:opacity-50 disabled:hover:bg-neutral-900 text-sm md:text-base"
               >
                 <span>Next</span>
                 <FaChevronRight />
