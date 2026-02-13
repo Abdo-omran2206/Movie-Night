@@ -1,73 +1,164 @@
-# Movie Night
+<p align="center">
+  <img src="./public/favicon.png" width="160" height="160" alt="Movie Night Logo" />
+</p>
 
-Movie Night is a sleek, modern, and responsive web application for discovering movies. Built with **Next.js**, **Tailwind CSS**, and the **TMDB API**, it allows users to browse top-rated, popular, and upcoming films, watch trailers, and explore cast details.
+# 🎬 Movie Night
 
-## 🚀 Features
+**Movie Night** is a premium, high-performance web application designed for cinema lovers. Discover trending films, explore detailed movie analytics, and watch the latest trailers through a stunning, cinematic interface built with **Next.js 15**, **Tailwind CSS**, and the **TMDB API**.
 
-- **Dynamic Home Page**: Showcases trending movies with a beautiful hero slider.
-- **Categorized Browsing**: Explore Top Rated, Popular, Upcoming, and Now Playing movies.
-- **Movie Details**: Get in-depth information about movies, including overview, rating, release date, and genres.
-- **Cast & Crew**: View cast members and their roles.
-- **Video Player**: Watch movie trailers and clips via embedded player support.
-- **Search Functionality**: Quickly find movies by title.
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices.
-- **Dark Mode**: A cinematic dark-themed UI.
+**Live Demo:** [https://movie-night-app.vercel.app](https://movie-night-app.vercel.app)
+
+**📱 Mobile App:** Check out the React Native version of this project here: [Movie Night App](https://github.com/Abdo-omran2206/Movie-Night-App)
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://movie-night-app.vercel.app)
+
+---
+
+## 📝 Description
+
+**Movie Night** brings the magic of cinema directly to your browser. It offers an intuitive and immersive interface for discovering, searching, and exploring the world of film. Whether you're hunting for the latest trending blockbusters, critically acclaimed masterpieces, or upcoming releases, Movie Night provides a comprehensive experience. Powered by the TMDB API, the app delivers detailed movie specifications, cast listings, ratings, and plot summaries in a beautiful, Netflix-inspired responsive UI.
+
+---
+
+## ✨ Features
+
+### 🏠 Home Page
+
+- **Cinematic Hero Slider**: Trending movies featured with high-quality backdrops.
+- **Dynamic Categories**: Instant access to Top Rated, Popular, Upcoming, and Now Playing sections.
+- **Glassmorphic UI**: Modern backdrop blur effects and premium typography.
+
+### 🔍 Search & Discovery
+
+- **Global Search**: Find any movie in the TMDB database instantly.
+- **Real-time Results**: Fast API integration with dedicated loading states.
+- **Pagination**: Seamlessly browse through thousands of search results.
+
+### 📱 Movie Details
+
+- **Full Analytics**: Ratings, runtime, release dates, and localized genre tags.
+- **Interactive Trailers**: Integrated YouTube player for the latest movie clips.
+- **Similar Recommendations**: AI-driven suggestions based on the current film.
+
+### 👥 Cast & Crew
+
+- **Actor Profiles**: Explore full biographies and personal facts.
+- **Filmography**: Interactive lists of an actor's past and upcoming works.
+
+### 🎨 Design & Experience
+
+- **Fluid Responsiveness**: Optimized for Mobile, Tablet, and Desktop.
+- **Animations**: Smooth transitions and hover effects using Tailwind and Swiper.js.
+- **SEO Optimized**: Dynamic sitemaps and robots.txt for maximum visibility.
+
+---
 
 ## 🛠 Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Core**: [Next.js 15](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Icons**: [React Icons](https://react-icons.github.io/react-icons/)
-- **Slider**: [Swiper.js](https://swiperjs.com/)
-- **Data Source**: [TMDB API](https://www.themoviedb.org/documentation/api)
+- **Interactions**: [Swiper.js](https://swiperjs.com/) & [React Icons](https://react-icons.github.io/react-icons/)
+- **Data Architecture**: [The Movie Database (TMDB) API](https://www.themoviedb.org/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
-## 📦 Installation
+---
 
-1.  **Clone the repository:**
+## 🚀 Getting Started
 
-    ```bash
-    git clone https://github.com/Start-0-Point/movie-night.git
-    cd movie-night
-    ```
+### 1. Prerequisites
 
-2.  **Install dependencies:**
+- Node.js 18.x or later
+- A TMDB API Key (Get one [here](https://www.themoviedb.org/documentation/api))
 
-    ```bash
-    npm install
-    # or
-    yarn install
-    # or
-    pnpm install
-    ```
+### 2. Installation
 
-3.  **Set up Environment Variables:**
-    Create a `.env` file in the root directory and add your API keys:
+```bash
+git clone https://github.com/Abdo-omran2206/Movie-Night.git
+cd movie-night
+npm install
+```
 
-    ```env
-    NEXT_PUBLIC_API_KEY=your_tmdb_api_key_here
-    NEXT_PUBLIC_STREAM_API=your_stream_api
-    ```
+### 3. Environment Setup
 
-4.  **Run the development server:**
+Create a `.env.local` file in the root:
 
-    ```bash
-    npm run dev
-    ```
+```env
+NEXT_PUBLIC_API_KEY=your_tmdb_api_key
+NEXT_PUBLIC_STREAM_API=your_streaming_api_url
+```
 
-5.  **Open in Browser:**
-    Navigate to [http://localhost:3000](http://localhost:3000) to see the app in action.
+### 4. Launch
+
+```bash
+npm run dev
+```
+
+---
+
+## 🎨 Design System
+
+### Color Palette
+
+- **Background**: `#000000` (Pitch Black)
+- **Primary Accent**: `#e50914` (Netflix Red)
+- **Secondary**: `#b3b3b3` (Slate Gray)
+- **Transitions**: 300ms ease-in-out
+
+### Typography
+
+- **Headers**: `Bebas Neue` (Cinematic, bold, and authoritative)
+- **Body**: `Roboto Slab` (Readable, elegant, and modern)
+
+---
+
+## 🎯 Key Features Breakdown
+
+### **API Integration**
+
+- **Dynamic Fetching**: Custom hooks/utilities for handling TMDB endpoints.
+- **Endpoints**: trending, top-rated, popular, upcoming, now-playing, search.
+- **Error Boundaries**: Graceful handling of network failures and empty states.
+
+### **URL Structure**
+
+- Home: `/`
+- Search: `/search?q=Inception&page=1`
+- Category: `/category/top_rated?page=1`
+- Movie Details: `/movie/[id]`
+- Actor Details: `/actor/[id]`
+
+---
+
+## 🚀 Future Enhancements
+
+- [ ] User Authentication & Personalized Watchlists.
+- [ ] Multi-language support (i18n).
+- [ ] Offline caching with Service Workers.
+- [ ] Enhanced social sharing features.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## 📜 License
-
-This project is open-source and available under the [MIT License](LICENSE).
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
 ## 👤 Author
 
 **Akira Omran**
 
-- GitHub: [@Start-0-Point](https://github.com/Start-0-Point)
+- GitHub: [@Abdo-omran2206](https://github.com/Abdo-omran2206)
+- Project Link: [Movie-Night](https://github.com/Abdo-omran2206/Movie-Night)
+
+---
+
+**Made with ❤️ for movie lovers everywhere** 🍿
+
+_Powered by [The Movie Database (TMDB) API](https://www.themoviedb.org/)._

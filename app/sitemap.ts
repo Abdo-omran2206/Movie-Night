@@ -1,29 +1,35 @@
-export default function Sitemap() {
+import { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://movie-night-app.vercel.app';
+  
+  const categories = [
+    'popular',
+    'top_rated',
+    'upcoming',
+    'now_playing'
+  ];
+
+  const categoryUrls = categories.map((category) => ({
+    url: `${baseUrl}/category/${category}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }));
+
   return [
     {
-      url: 'https://movie-night-app.vercel.app',
+      url: baseUrl,
       lastModified: new Date(),
+      changeFrequency: 'always' as const,
       priority: 1,
     },
+    ...categoryUrls,
     {
-      url: 'https://movie-night-app.vercel.app/movie/popular',
+      url: `${baseUrl}/trending`,
       lastModified: new Date(),
-      priority: 0.8,
-    },
-    {
-      url: 'https://movie-night-app.vercel.app/movie/top_rated',
-      lastModified: new Date(),
-      priority: 0.8,
-    },
-    {
-      url: 'https://movie-night-app.vercel.app/movie/upcoming',
-      lastModified: new Date(),
-      priority: 0.8,
-    },
-    {
-      url: 'https://movie-night-app.vercel.app/movie/now_playing',
-      lastModified: new Date(),
-      priority: 0.8,
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
     },
   ];
 }
