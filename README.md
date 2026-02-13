@@ -6,14 +6,14 @@
 
 **Movie Night** is a premium, high-performance web application designed for cinema lovers. Discover trending films, explore detailed movie analytics, and watch the latest trailers through a stunning, cinematic interface built with **Next.js 15**, **Tailwind CSS**, and the **TMDB API**.
 
-**Live Demo:** [https://movie-night-app.vercel.app](https://movie-night-app.vercel.app)
+**Live Demo:** [https://movie-night-self.vercel.app](https://movie-night-self.vercel.app)
 
 **📱 Mobile App:** Check out the React Native version of this project here: [Movie Night App](https://github.com/Abdo-omran2206/Movie-Night-App)
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://movie-night-app.vercel.app)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://movie-night-self.vercel.app)
 
 ---
 

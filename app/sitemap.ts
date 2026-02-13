@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://movie-night-app.vercel.app';
+  const baseUrl = 'https://movie-night-self.vercel.app';
   
   const categories = [
     'popular',

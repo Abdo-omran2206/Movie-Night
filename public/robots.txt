@@ -4,4 +4,4 @@ Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
 
-Sitemap: https://movie-night-app.vercel.app/sitemap.xml
+Sitemap: https://movie-night-self.vercel.app/sitemap.xml

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/_next/', '/static/'],
     },
-    sitemap: 'https://movie-night-app.vercel.app/sitemap.xml',
+    sitemap: 'https://movie-night-self.vercel.app/sitemap.xml',
   };
 }

@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Movie Night - Discover Your Next Favorite Film",
     description:
       "Explore the world of cinema with Movie Night. Find your next favorite movie, watch trailers, and get detailed info on cast and crew.",
-    url: "https://movie-night-app.vercel.app", // Replace with your actual domain if available
+    url: "https://movie-night-self.vercel.app/", // Replace with your actual domain if available
     siteName: "Movie Night",
     images: [
       {
@@ -72,6 +72,9 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
+  },
+  verification: {
+    google: "hlHSbQJzQ4VDUcjMonNN_7QiWcxdSefIYRkBV96LT4w",
   },
 };
 
