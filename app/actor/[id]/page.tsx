@@ -2,19 +2,11 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
-import { getActorById } from "@/app/lib/tmdb";
+import { getActorById, MovieSummary } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MovieMiniCard from "@/app/components/MovieMiniCard";
 import LoadingModel from "@/app/components/LoadingModel";
-
-interface MovieCredit {
-  id: number;
-  original_title: string;
-  poster_path: string | null;
-  release_date: string;
-  vote_average: number;
-}
 
 interface ActorDetail {
   id: number;
@@ -25,7 +17,7 @@ interface ActorDetail {
   profile_path: string | null;
   known_for_department: string;
   movie_credits?: {
-    cast: MovieCredit[];
+    cast: MovieSummary[];
   };
 }
 

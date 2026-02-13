@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
-import { Movie } from "../lib/tmdb";
+import { MovieSummary } from "../lib/tmdb";
 
 type Props = {
-  movies: Movie[];
+  movies: MovieSummary[];
   limit?: number;
 };
 
