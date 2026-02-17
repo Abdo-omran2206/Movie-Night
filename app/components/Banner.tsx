@@ -130,7 +130,7 @@ export default function Banner() {
 
 function Ships({ ship }: { ship: React.ReactNode }) {
   return (
-    <div className="px-3 py-2 bg-red-800/20 rounded-full ring-1 ring-red-700">
+    <div className="px-2 py-1 md:py-2 md:px-3 bg-red-800/20 rounded-full ring-1 ring-red-700">
       <span className="text-sm flex items-center gap-1">{ship}</span>
     </div>
   );

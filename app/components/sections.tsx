@@ -32,7 +32,7 @@ export default function Section({ endpoint, title }: SectionProps) {
         <div className="flex items-center gap-2 md:gap-3">
           <div className="w-1 md:w-1.5 h-8 md:h-16 bg-red-700 rounded-full shadow-lg shadow-red-700/50" />
 
-          <h2 className="text-lg md:text-3xl lg:text-4xl font-bold text-white tracking-wide md:tracking-widest drop-shadow-lg">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-wide md:tracking-widest drop-shadow-lg">
             {title}
           </h2>
         </div>

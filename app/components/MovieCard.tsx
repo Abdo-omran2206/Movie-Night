@@ -14,7 +14,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
   return (
     <Link
       href={`/movie/${movie.id}`}
-      className="group flex flex-col min-w-[136px] sm:min-w-[200px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
+      className="group flex flex-col mx-1 md:mx-0 min-w-[200px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
     >
       {/* Poster Image */}
       <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">
@@ -32,7 +32,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
       {/* Movie Details */}
       <div className="flex flex-col gap-2 px-1">
-        <h3 className="text-white font-semibold text-xs sm:text-sm md:text-lg line-clamp-2 leading-tight">
+        <h3 className="text-white font-semibold text-sm md:text-lg line-clamp-2 leading-tight">
           {movie.title}
         </h3>
 
