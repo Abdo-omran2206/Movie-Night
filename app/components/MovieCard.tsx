@@ -15,7 +15,7 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
   return (
     <Link
       href={`/movie/${movie.id}`}
-      className={`group flex flex-col mx-1 md:mx-0  md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" :"min-w-[200px]"}`}
+      className={`group flex flex-col mx-1 md:mx-0 w-[250px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" :"min-w-[200px]"}`}
     >
       {/* Poster Image */}
       <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">

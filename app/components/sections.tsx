@@ -56,7 +56,7 @@ export default function Section({ endpoint, title }: SectionProps) {
         className="flex gap-2 sm:gap-4 overflow-x-auto scroll-smooth pb-6 sm:pb-10 pt-2 sm:pt-5 custom-scrollbar"
       >
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard key={movie.id} movie={movie} size="large"/>
         ))}
       </div>
     </section>

@@ -13,7 +13,7 @@ export default function Footer() {
   ];
 
   const quickLinks = [
-    { href: "/trending", label: "Trending Page" },
+    { href: "/category/trending", label: "Trending Page" },
     { href: "/category/top_rated", label: "Top Rated Page" },
     { href: "/category/popular", label: "Popular Page" },
     { href: "/category/upcoming", label: "Upcoming Page" },

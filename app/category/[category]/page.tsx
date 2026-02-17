@@ -25,6 +25,8 @@ function CategoryContent() {
   // Map category slug to API endpoint and Display Title
   const getCategoryInfo = (cat: string) => {
     switch (cat) {
+      case "trending":
+        return { endpoint: "/trending/movie/week", title: "Trending Movies" };
       case "top_rated":
         return { endpoint: "/movie/top_rated", title: "Top Rated Movies" };
       case "popular":
@@ -86,14 +88,14 @@ function CategoryContent() {
 
         {/* Movies Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-pulse">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-pulse">
             {[...Array(10)].map((_, i) => (
               <div key={i} className="aspect-2/3 bg-neutral-800 rounded-2xl" />
             ))}
           </div>
         ) : movies.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-6 md:gap-x-6 md:gap-y-10">
+            <div className="flex flex-wrap gap-4 gap-y-6 md:gap-5 justify-center items-center">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} size="small" />
               ))}

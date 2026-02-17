@@ -7,7 +7,7 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://movie-night-self.vercel.app/trending</loc>
+    <loc>https://movie-night-self.vercel.app/category/trending</loc>
     <lastmod>2026-02-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>

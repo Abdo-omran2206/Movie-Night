@@ -83,7 +83,7 @@ function SearchContent() {
           <LoadingModel message="Searching the Galaxy..." />
         ) : movies.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-6 mb-10 md:mb-16">
+            <div className="flex flex-wrap gap-4 gap-y-6 md:gap-5 justify-center items-center">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
