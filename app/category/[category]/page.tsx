@@ -95,7 +95,7 @@ function CategoryContent() {
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-6 md:gap-x-6 md:gap-y-10">
               {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <MovieCard key={movie.id} movie={movie} size="small" />
               ))}
             </div>
             {/* Pagination */}

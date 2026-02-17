@@ -6,15 +6,16 @@ import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 interface MovieCardProps {
   movie: Movie;
+  size?: "small" | "medium" | "large";
 }
 
-export default function MovieCard({ movie }: MovieCardProps) {
+export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
   const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
   return (
     <Link
       href={`/movie/${movie.id}`}
-      className="group flex flex-col mx-1 md:mx-0 min-w-[200px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
+      className={`group flex flex-col mx-1 md:mx-0  md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" :"min-w-[200px]"}`}
     >
       {/* Poster Image */}
       <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">
