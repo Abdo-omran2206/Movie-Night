@@ -45,7 +45,7 @@ export async function fetchGenres() {
 export async function fetchMovieDetails(movieID: string) {
   try {
     const response = await axios.get(
-      `${BASE_URL}/movie/${movieID}?api_key=${API_KEY}&language=en-US&append_to_response=credits,similar,videos`,
+      `${BASE_URL}/movie/${movieID}?api_key=${API_KEY}&language=en-US&append_to_response=credits,similar,videos,recommendations,keywords`,
     );
     return response.data;
   } catch (error) {

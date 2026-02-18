@@ -58,6 +58,12 @@ export interface MovieDetail {
     total_pages: number;
     total_results: number;
   };
+  recommendations?: {
+    page: number;
+    results: MovieDetail[];
+    total_pages: number;
+    total_results: number;
+  };
   spoken_languages: {
     english_name: string;
     iso_639_1: string;
@@ -83,6 +89,12 @@ export interface MovieDetail {
   };
   vote_average: number;
   vote_count: number;
+  keywords?: {
+    keywords: Array<{
+      id: number;
+      name: string;
+    }>;
+  };
 }
 
 export async function generateMetadata({
@@ -96,6 +108,10 @@ export async function generateMetadata({
     return {
       title: `${data.title} (${data.release_date.split("-")[0]}) - Movie Night`,
       description: data.overview || "No description available.",
+      keywords:
+        data.keywords?.keywords
+          ?.map((k: { name: string }) => k.name)
+          .join(", ") || "",
       openGraph: {
         title: `${data.title} (${data.release_date.split("-")[0]}) - Movie Night`,
         description: data.overview || "No description available.",

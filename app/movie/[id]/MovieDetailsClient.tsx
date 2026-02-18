@@ -172,6 +172,20 @@ export default function MovieDetailsClient() {
           </section>
         )}
 
+        {data.recommendations && data.recommendations.results.length > 0 && (
+          <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
+            <div className="container mx-auto px-0 md:px-4">
+              <div className="mb-6 md:mb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
+                  recommendations Movies
+                </h2>
+                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
+              </div>
+              <MovieMiniCard limit={12} movies={data.recommendations.results} />
+            </div>
+          </section>
+        )}
+
         {data.similar && data.similar.results.length > 0 && (
           <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
             <div className="container mx-auto px-0 md:px-4">
