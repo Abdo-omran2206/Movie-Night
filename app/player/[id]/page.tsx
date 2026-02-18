@@ -12,8 +12,7 @@ export default function PlayerPage() {
   const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const streamApi =
-    process.env.NEXT_PUBLIC_STREAM_API ;
+  const streamApi = process.env.NEXT_PUBLIC_STREAM_API;
   const embedUrl = `${streamApi}?video_id=${id}&tmdb=1`;
 
   useEffect(() => {

@@ -13,9 +13,7 @@ export default function Home() {
 
   return (
     <div className="overflow-x-hidden bg-black">
-      
-        <Navbar />
-      
+      <Navbar />
       <main className="min-h-screen pt-[5vh]">
         <Banner />
         {sections.map((section) => (
@@ -26,7 +24,7 @@ export default function Home() {
           />
         ))}
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
