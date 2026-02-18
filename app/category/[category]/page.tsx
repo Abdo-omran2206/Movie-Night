@@ -37,6 +37,12 @@ function CategoryContent() {
       case "now_playing":
         return { endpoint: "/movie/now_playing", title: "Now Playing" };
       default:
+        if (/^\d+$/.test(cat)) {
+          return {
+            endpoint: `/discover/movie?with_genres=${cat}`,
+            title: "Movies", // Fallback, will be updated by useEffect
+          };
+        }
         // Generic fallback if user adds more categories
         return {
           endpoint: `/movie/${cat}`,
@@ -47,7 +53,8 @@ function CategoryContent() {
     }
   };
 
-  const { endpoint, title } = getCategoryInfo(category);
+  const { endpoint, title: initialTitle } = getCategoryInfo(category);
+  const [displayTitle, setDisplayTitle] = useState(initialTitle);
 
   useEffect(() => {
     async function loadMovies() {
@@ -62,8 +69,26 @@ function CategoryContent() {
   }, [endpoint, currentPage]);
 
   useEffect(() => {
-    document.title = `${title} - Page ${currentPage} - Movie Night`;
-  }, [title, currentPage]);
+    async function updateGenreTitle() {
+      if (/^\d+$/.test(category)) {
+        const { fetchGenres } = await import("../../lib/tmdb");
+        const genres = await fetchGenres();
+        const genre = genres.find(
+          (g: { id: number; name: string }) => g.id.toString() === category,
+        );
+        if (genre) {
+          setDisplayTitle(genre.name);
+        }
+      } else {
+        setDisplayTitle(initialTitle);
+      }
+    }
+    updateGenreTitle();
+  }, [category, initialTitle]);
+
+  useEffect(() => {
+    document.title = `${displayTitle} - Page ${currentPage} - Movie Night`;
+  }, [displayTitle, currentPage]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -82,7 +107,7 @@ function CategoryContent() {
         <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-8">
           <div className="w-1 md:w-1.5 h-8 md:h-14 bg-red-700 rounded-full shadow-lg shadow-red-700/50" />
           <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-white tracking-wide drop-shadow-lg">
-            {title}
+            {displayTitle}
           </h1>
         </div>
 

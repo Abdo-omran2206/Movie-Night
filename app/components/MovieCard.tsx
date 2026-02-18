@@ -27,7 +27,7 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
           }
           alt={movie.title}
           fill
-          className="object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
+          className="object-cover brightness-85 group-hover:brightness-105 transition-all duration-300"
         />
       </div>
 

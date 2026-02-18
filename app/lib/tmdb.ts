@@ -13,8 +13,9 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 export async function fetchMovies(endpoint: string , page = 1) {
 
   try {
+    const separator = endpoint.includes("?") ? "&" : "?";
     const res = await axios.get(
-      `${BASE_URL}${endpoint}?api_key=${API_KEY}&language=en-US&page=${page}`,
+      `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}&language=en-US&page=${page}`,
     );
     // axios بيرجع البيانات هنا في res.data
     return {
