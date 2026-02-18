@@ -5,6 +5,7 @@ import Navbar from "@/app/components/Navbar";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "@/app/lib/tmdb";
 import LoadingModel from "@/app/components/LoadingModel";
+import Link from "next/link";
 
 export default function PlayerPage() {
   const params = useParams();
@@ -38,6 +39,9 @@ export default function PlayerPage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center text-white">
         Movie not found
+        <Link href="/" className="text-red-500 hover:underline mt-4">
+          Back to Home
+        </Link>
       </div>
     );
   }

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import MovieMiniCard from "@/app/components/MovieMiniCard";
 import LoadingModel from "@/app/components/LoadingModel";
 import { ActorDetail } from "./page";
+import Link from "next/link";
 
 export default function ActorDetailsClient() {
   const [data, setData] = useState<ActorDetail | null>(null);
@@ -37,6 +38,9 @@ export default function ActorDetailsClient() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center text-white">
         <p className="text-xl">Actor not found.</p>
+        <Link href="/" className="text-red-500 hover:underline mt-4">
+          Back to Home
+        </Link>
       </div>
     );
   }

@@ -51,6 +51,9 @@ export default function MovieDetailsClient() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <p className="text-white text-xl">Movie not found.</p>
+        <Link href="/" className="text-red-500 hover:underline mt-4">
+          Back to Home
+        </Link>
       </div>
     );
   }
