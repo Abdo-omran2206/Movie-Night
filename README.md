@@ -11,7 +11,7 @@
 **📱 Mobile App:** Check out the React Native version of this project here: [Movie Night App](https://github.com/Abdo-omran2206/Movie-Night-App)
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://movie-night-self.vercel.app)
 
@@ -51,8 +51,9 @@
 ### 🎨 Design & Experience
 
 - **Fluid Responsiveness**: Optimized for Mobile, Tablet, and Desktop.
-- **Animations**: Smooth transitions and hover effects using Tailwind and Swiper.js.
-- **SEO Optimized**: Dynamic sitemaps and robots.txt for maximum visibility.
+- **Animated Sidebar**: Premium slide-in menu with smooth backdrop transitions.
+- **Micro-interactions**: Hover effects and icon animations using Tailwind and Swiper.js.
+- **SEO Optimized**: Dynamic sitemaps, robots.txt, and structured metadata for maximum visibility.
 
 ---
 
@@ -128,6 +129,7 @@ npm run dev
 - Home: `/`
 - Search: `/search?q=Inception&page=1`
 - Category: `/category/top_rated?page=1`
+- Genre: `/category/28` (Action), `/category/12` (Adventure), etc.
 - Movie Details: `/movie/[id]`
 - Actor Details: `/actor/[id]`
 
