@@ -4,6 +4,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://movie-night-self.vercel.app';
   
   const categories = [
+    'trending',
     'popular',
     'top_rated',
     'upcoming',
@@ -25,11 +26,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...categoryUrls,
-    {
-      url: `${baseUrl}/trending`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.7,
-    },
   ];
 }
