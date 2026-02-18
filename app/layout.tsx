@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     siteName: "Movie Night",
     images: [
       {
-        url: "/summary-large-image.png",
+        url: "/favicon.png",
         width: 1200,
         height: 630,
         alt: "Movie Night - Your Ultimate Movie Destination",
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
     title: "Movie Night - Discover Your Next Favorite Film",
     description:
       "Your ultimate destination for movie enthusiasts. Discover, watch, and enjoy cinema like never before.",
-    images: ["/summary-large-image.png"],
+    images: ["/favicon.png"],
     creator: "@MovieNight",
     site: "@MovieNight",
   },
@@ -128,7 +128,7 @@ export default function RootLayout({
     description:
       "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies.",
     url: siteUrl,
-    image: "/summary-large-image.png",
+    image: "/favicon.png",
     logo: {
       "@type": "ImageObject",
       url: "/favicon.png",
