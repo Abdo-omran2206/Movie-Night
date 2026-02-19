@@ -3,31 +3,37 @@ import Image from "next/image";
 import { Movie } from "../lib/tmdb";
 import Link from "next/link";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
-
+import { useState } from "react";
+import generateMovieAvatar from "../lib/generateMovieAvatar";
 interface MovieCardProps {
   movie: Movie;
   size?: "small" | "medium" | "large";
 }
 
 export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
+  const [imgError, setImgError] = useState(false);
   const posterUrl = `https://image.tmdb.org/t/p/w500`;
+
+  const fallbackAvatar = generateMovieAvatar(movie.title);
+
+  const imageSrc =
+    !imgError && movie.poster_path
+      ? posterUrl + movie.poster_path
+      : fallbackAvatar;
 
   return (
     <Link
       href={`/movie/${movie.id}`}
-      className={`group flex flex-col mx-1 md:mx-0 w-[250px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" :"min-w-[200px]"}`}
+      className={`group flex flex-col mx-1 md:mx-0 w-[250px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" : "min-w-[200px]"}`}
     >
       {/* Poster Image */}
       <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">
         <Image
-          src={
-            movie.poster_path
-              ? posterUrl + movie.poster_path
-              : "/placeholder.jpg"
-          }
+          src={imageSrc}
           alt={movie.title}
           fill
           className="object-cover brightness-85 group-hover:brightness-105 transition-all duration-300"
+          onError={() => setImgError(true)}
         />
       </div>
 

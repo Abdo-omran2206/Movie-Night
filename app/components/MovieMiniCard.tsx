@@ -1,12 +1,41 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
+import { useState } from "react";
 import { MovieSummary } from "../lib/tmdb";
+import generateMovieAvatar from "../lib/generateMovieAvatar";
 
 type Props = {
   movies: MovieSummary[];
   limit?: number;
 };
+
+const posterUrl = "https://image.tmdb.org/t/p/w500";
+
+function MovieImage({ item }: { item: MovieSummary }) {
+  const [imgError, setImgError] = useState(false);
+
+
+  const fallbackAvatar = generateMovieAvatar(item.original_title);
+
+  const imageSrc =
+    !imgError && item.poster_path
+      ? posterUrl + item.poster_path
+      : fallbackAvatar;
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={item.original_title}
+      fill
+      sizes="(max-width:768px) 50vw, (max-width:1200px) 33vw, 16vw"
+      className="object-cover"
+      onError={() => setImgError(true)}
+    />
+  );
+}
 
 export default function MovieMiniCard({ movies, limit }: Props) {
   return (
@@ -15,28 +44,18 @@ export default function MovieMiniCard({ movies, limit }: Props) {
         .sort(
           (a, b) =>
             new Date(b.release_date).getTime() -
-            new Date(a.release_date).getTime(),
+            new Date(a.release_date).getTime()
         )
         .slice(0, limit ?? movies.length)
         .map((item) => (
           <Link
             href={`/movie/${item.id}`}
             key={item.id}
-            className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group "
+            className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group"
           >
             {/* Image */}
             <div className="relative aspect-2/3 w-full">
-              <Image
-                src={
-                  item.poster_path
-                    ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                    : "/no-avatar.png"
-                }
-                alt={item.original_title}
-                fill
-                sizes="(max-width:768px) 50vw, (max-width:1200px) 33vw, 16vw"
-                className="object-cover"
-              />
+              <MovieImage item={item} />
             </div>
 
             {/* Content */}

@@ -13,13 +13,15 @@ import TrailerModal from "@/app/components/TrailerModel";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import LoadingModel from "@/app/components/LoadingModel";
 import { MovieDetail } from "./page";
+import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 
 export default function MovieDetailsClient() {
   const [data, setData] = useState<MovieDetail | null>(null);
   const { id } = useParams<{ id: string }>();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [imgError, setImgError] = useState(false);
+  const posterUrl = "https://image.tmdb.org/t/p/w500";
   useEffect(() => {
     async function loadData() {
       setLoading(true);
@@ -35,6 +37,13 @@ export default function MovieDetailsClient() {
     loadData();
   }, [id]);
 
+  const imageSrc =
+    !imgError && data?.poster_path
+      ? posterUrl + data?.poster_path
+      : data
+        ? generateMovieAvatar(data.original_title)
+        : "";
+  const isAvailable = data?.runtime && data.runtime > 0;
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -71,7 +80,7 @@ export default function MovieDetailsClient() {
           <div className="absolute inset-0">
             {data.backdrop_path && (
               <Image
-                src={`https://image.tmdb.org/t/p/w1280${data.backdrop_path}`}
+                src={imageSrc}
                 alt={data.title || "Movie backdrop"}
                 fill
                 className="object-cover"
@@ -84,11 +93,12 @@ export default function MovieDetailsClient() {
           <div className="relative z-10 flex flex-col md:flex-row container mx-auto px-4 md:px-20 gap-6 md:gap-10 min-h-[60vh] md:min-h-screen items-center py-20 md:py-0">
             <div className="w-[180px] sm:w-[250px] md:w-[350px] shrink-0">
               <Image
-                src={`https://image.tmdb.org/t/p/w500${data?.poster_path}`}
+                src={imageSrc}
                 alt={data?.title || "Movie poster"}
                 width={500}
                 height={750}
                 className="rounded-2xl shadow-2xl hover:scale-105 transition-all duration-200"
+                onError={() => setImgError(true)}
               />
             </div>
 
@@ -138,13 +148,14 @@ export default function MovieDetailsClient() {
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <Link
-                    href={`/player/${id}`}
+                    href={isAvailable ? `/player/${id}` : "#"}
                     className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"
                   >
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
                     <FaPlay size={18} />
-                    Watch Now
+                    {isAvailable ? "Watch Now" : "Coming Soon"}
                   </Link>
+
                   {trailerKey && (
                     <button
                       onClick={() => setIsOpen(true)}

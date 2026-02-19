@@ -4,6 +4,7 @@ import { fetchMovies, Movie } from "../lib/tmdb";
 import MovieCard from "./MovieCard";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
+import { SectionSkeleton } from "./Skeleton";
 
 interface SectionProps {
   endpoint: string;
@@ -12,15 +13,19 @@ interface SectionProps {
 
 export default function Section({ endpoint, title }: SectionProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadMovies() {
+      setLoading(true);
       const { results } = await fetchMovies(endpoint);
       setMovies(results);
+      setLoading(false);
     }
     loadMovies();
   }, [endpoint]);
 
+  if (loading) return <SectionSkeleton />;
   if (!movies.length) return null;
 
   // Extract category from endpoint for the "View all" link
@@ -56,7 +61,7 @@ export default function Section({ endpoint, title }: SectionProps) {
         className="flex gap-2 sm:gap-4 overflow-x-auto scroll-smooth pb-6 sm:pb-10 pt-2 sm:pt-5 custom-scrollbar"
       >
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} size="large"/>
+          <MovieCard key={movie.id} movie={movie} size="large" />
         ))}
       </div>
     </section>
