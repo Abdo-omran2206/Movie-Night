@@ -27,6 +27,14 @@ export default function PlayerPage() {
       Domain: process.env.NEXT_PUBLIC_STREAM3_API,
       slug: `embed/${id}`,
     },
+    {
+      Domain: process.env.NEXT_PUBLIC_STREAM4_API,
+      slug: `player/${id}`,
+    },
+    {
+      Domain: process.env.NEXT_PUBLIC_STREAM5_API,
+      slug: `embed/movie/${id}`,
+    },
   ];
   
   useEffect(() => {
