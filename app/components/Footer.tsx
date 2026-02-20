@@ -4,20 +4,22 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const navigationLinks = [
-    { href: "/", label: "Home" },
-    { href: "/#Top Rated Movies", label: "Top Rated" },
-    { href: "/#Popular Now", label: "Popular" },
-    { href: "/#Coming Soon", label: "Upcoming" },
-    { href: "/#Now Playing", label: "Now Playing" },
+  const genres = [
+    { href: "/category/action", label: "Action" },
+    { href: "/category/comedy", label: "Comedy" },
+    { href: "/category/drama", label: "Drama" },
+    { href: "/category/sci-fi", label: "Sci-Fi" },
+    { href: "/category/horror", label: "Horror" },
+    { href: "/category/romance", label: "Romance" },
   ];
 
-  const quickLinks = [
-    { href: "/category/trending", label: "Trending Page" },
-    { href: "/category/top_rated", label: "Top Rated Page" },
-    { href: "/category/popular", label: "Popular Page" },
-    { href: "/category/upcoming", label: "Upcoming Page" },
-    { href: "/category/now_playing", label: "Now Playing Page" },
+  const navigationLinks = [
+    { href: "/", label: "Home" },
+    { href: "/category/trending", label: "Trending" },
+    { href: "/category/top_rated", label: "Top Rated" },
+    { href: "/category/popular", label: "Popular" },
+    { href: "/category/upcoming", label: "Upcoming" },
+    { href: "/category/now_playing", label: "Now Playing" },
   ];
 
   const socialMedia = [
@@ -83,7 +85,7 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-2">
-              {quickLinks.map((link) => (
+              {genres.map((link) => (
                 <li key={link.href + link.label}>
                   <Link
                     href={link.href}
