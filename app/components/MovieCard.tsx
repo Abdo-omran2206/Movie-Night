@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useState } from "react";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
+import { slugify } from "../lib/slugify";
 interface MovieCardProps {
   movie: Movie;
   size?: "small" | "medium" | "large";
@@ -23,7 +24,7 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
 
   return (
     <Link
-      href={`/movie/${movie.id}`}
+      href={`/movie/${slugify(movie.title)}/${movie.id}`}
       className={`group flex flex-col mx-1 md:mx-0 w-[250px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" : "min-w-[200px]"}`}
     >
       {/* Poster Image */}

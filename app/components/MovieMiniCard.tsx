@@ -6,6 +6,7 @@ import { FaStar } from "react-icons/fa";
 import { useState } from "react";
 import { MovieSummary } from "../lib/tmdb";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
+import { slugify } from "../lib/slugify";
 
 type Props = {
   movies: MovieSummary[];
@@ -16,7 +17,6 @@ const posterUrl = "https://image.tmdb.org/t/p/w500";
 
 function MovieImage({ item }: { item: MovieSummary }) {
   const [imgError, setImgError] = useState(false);
-
 
   const fallbackAvatar = generateMovieAvatar(item.original_title);
 
@@ -44,12 +44,12 @@ export default function MovieMiniCard({ movies, limit }: Props) {
         .sort(
           (a, b) =>
             new Date(b.release_date).getTime() -
-            new Date(a.release_date).getTime()
+            new Date(a.release_date).getTime(),
         )
         .slice(0, limit ?? movies.length)
         .map((item) => (
           <Link
-            href={`/movie/${item.id}`}
+            href={`/movie/${slugify(item.title)}/${item.id}`}
             key={item.id}
             className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group"
           >

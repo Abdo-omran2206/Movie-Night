@@ -9,16 +9,23 @@ import { SectionSkeleton } from "./Skeleton";
 interface SectionProps {
   endpoint: string;
   title: string;
+  categorySlug?: string;
 }
 
-export default function Section({ endpoint, title }: SectionProps) {
+export default function Section({
+  endpoint,
+  title,
+  categorySlug,
+}: SectionProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadMovies() {
       setLoading(true);
-      const { results } = await fetchMovies(endpoint);
+      const language =
+        typeof window !== "undefined" ? navigator.language : "en-US";
+      const { results } = await fetchMovies(endpoint, 1, language);
       setMovies(results);
       setLoading(false);
     }
@@ -28,8 +35,8 @@ export default function Section({ endpoint, title }: SectionProps) {
   if (loading) return <SectionSkeleton />;
   if (!movies.length) return null;
 
-  // Extract category from endpoint for the "View all" link
-  const category = endpoint.split("/").pop() || "";
+  // Final category for the URL
+  const category = categorySlug || endpoint.split("/").pop() || "";
 
   return (
     <section className="py-4 md:py-8 px-2 sm:px-4 relative" id={title}>

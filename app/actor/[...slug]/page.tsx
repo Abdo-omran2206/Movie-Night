@@ -1,6 +1,8 @@
 import { getActorById, MovieSummary } from "@/app/lib/tmdb";
 import { Metadata } from "next";
-import ActorDetailsClient from "./ActorDetailsClient";
+import ActorDetailsClient from "../ActorDetailsClient";
+import { slugify } from "@/app/lib/slugify";
+import { permanentRedirect, notFound } from "next/navigation";
 
 export interface ActorDetail {
   id: number;
@@ -18,10 +20,11 @@ export interface ActorDetail {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
+  const id = slug[slug.length - 1];
   try {
-    const { id } = await params;
     const data: ActorDetail = await getActorById(id);
     return {
       title: `${data.name} - Movie Night`,
@@ -54,6 +57,33 @@ export async function generateMetadata({
   }
 }
 
-export default function ActorPage() {
-  return <ActorDetailsClient />;
+export default async function ActorPage({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}) {
+  const { slug } = await params;
+  if (slug.length === 1) {
+    const id = slug[0];
+    const data = await getActorById(id);
+    if (!data) notFound();
+    const expectedSlug = slugify(data.name);
+    if (slug[0] !== expectedSlug) {
+      permanentRedirect(`/actor/${expectedSlug}/${id}`);
+    }
+  }
+  // Handle /movie/[name]/[id]
+  if (slug.length === 2) {
+    const [name, id] = slug;
+    const data = await getActorById(id);
+    if (!data) notFound();
+
+    const expectedSlug = slugify(data.name);
+    if (name !== expectedSlug) {
+      permanentRedirect(`/actor/${expectedSlug}/${id}`);
+    }
+
+    return <ActorDetailsClient />;
+  }
+  notFound();
 }

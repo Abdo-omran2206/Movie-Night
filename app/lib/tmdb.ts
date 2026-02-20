@@ -10,12 +10,12 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 // /movie/upcoming
 // /movie/now_playing
 
-export async function fetchMovies(endpoint: string , page = 1) {
+export async function fetchMovies(endpoint: string , page = 1 , language = "en-US") {
 
   try {
     const separator = endpoint.includes("?") ? "&" : "?";
     const res = await axios.get(
-      `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}&language=en-US&page=${page}`,
+      `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}&language=${language}&page=${page}`,
     );
     // axios بيرجع البيانات هنا في res.data
     return {
@@ -69,6 +69,7 @@ export async function getActorById(actorId: string) {
 export interface MovieSummary {
   id: number;
   original_title: string;
+  title: string;
   poster_path: string | null;
   release_date: string;
   vote_average: number;
@@ -92,6 +93,128 @@ export interface TMDBResponse<T> {
   results: T[];
   total_pages: number;
   total_results: number;
+}
+
+export interface MovieDetail {
+  adult: boolean;
+  backdrop_path: string | null;
+  belongs_to_collection: {
+    id: number;
+    name: string;
+    poster_path: string | null;
+    backdrop_path: string | null;
+  } | null;
+  budget: number;
+  credits?: {
+    cast: Array<{
+      id: number;
+      name: string;
+      character: string;
+      profile_path: string | null;
+    }>;
+    crew: Array<{
+      id: number;
+      name: string;
+      job: string;
+      profile_path: string | null;
+    }>;
+  };
+  genres: {
+    id: number;
+    name: string;
+  }[];
+  homepage: string | null;
+  id: number;
+  imdb_id: string | null;
+  origin_country?: string[];
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string | null;
+  production_companies: {
+    id: number;
+    logo_path: string | null;
+    name: string;
+    origin_country: string;
+  }[];
+  production_countries: {
+    iso_3166_1: string;
+    name: string;
+  }[];
+  release_date: string;
+  revenue: number;
+  runtime: number | null;
+  similar?: {
+    page: number;
+    results: MovieDetail[];
+    total_pages: number;
+    total_results: number;
+  };
+  recommendations?: {
+    page: number;
+    results: MovieDetail[];
+    total_pages: number;
+    total_results: number;
+  };
+  spoken_languages: {
+    english_name: string;
+    iso_639_1: string;
+    name: string;
+  }[];
+  status: string;
+  tagline: string | null;
+  title: string;
+  video: boolean;
+  videos?: {
+    results: {
+      iso_639_1: string;
+      iso_3166_1: string;
+      name: string;
+      key: string;
+      site: string;
+      size: number;
+      type: string;
+      official: boolean;
+      published_at: string;
+      id: string;
+    }[];
+  };
+  vote_average: number;
+  vote_count: number;
+  keywords?: {
+    keywords: Array<{
+      id: number;
+      name: string;
+    }>;
+  };
+}
+
+export const GENRE_MAP: Record<string, number> = {
+  action: 28,
+  adventure: 12,
+  animation: 16,
+  comedy: 35,
+  crime: 80,
+  documentary: 99,
+  drama: 18,
+  family: 10751,
+  fantasy: 14,
+  history: 36,
+  horror: 27,
+  music: 10402,
+  mystery: 9648,
+  romance: 10749,
+  science_fiction: 878,
+  "sci-fi": 878,
+  tv_movie: 10770,
+  thriller: 53,
+  war: 10752,
+  western: 37,
+};
+
+export function getGenreSlug(id: number): string | undefined {
+  return Object.keys(GENRE_MAP).find((key) => GENRE_MAP[key] === id);
 }
 
 export async function search(query: string, page: number): Promise<TMDBResponse<Movie>> {

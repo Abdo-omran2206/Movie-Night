@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { fetchMovies, Movie } from "../../lib/tmdb";
+import { fetchMovies, Movie, GENRE_MAP } from "../../lib/tmdb";
 import MovieCard from "../../components/MovieCard";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -24,6 +24,8 @@ function CategoryContent() {
 
   // Map category slug to API endpoint and Display Title
   const getCategoryInfo = (cat: string) => {
+    const slug = cat.toLowerCase().replace(/-/g, "_");
+
     switch (cat) {
       case "trending":
         return { endpoint: "/trending/movie/week", title: "Trending Movies" };
@@ -36,25 +38,37 @@ function CategoryContent() {
         return { endpoint: "/movie/upcoming", title: "Upcoming Movies" };
       case "now_playing":
         return { endpoint: "/movie/now_playing", title: "Now Playing" };
-      default:
+      default: {
+        // Try mapping name to ID
+        const genreId = GENRE_MAP[slug] || GENRE_MAP[cat];
+        if (genreId) {
+          return {
+            endpoint: `/discover/movie?with_genres=${genreId}`,
+            title: cat
+              .replace(/_/g, " ")
+              .replace(/-/g, " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase()),
+          };
+        }
+
         if (/^\d+$/.test(cat)) {
           return {
             endpoint: `/discover/movie?with_genres=${cat}`,
-            title: "Movies", // Fallback, will be updated by useEffect
+            title: "Movies", // Fallback
           };
         }
-        // Generic fallback if user adds more categories
+        // Generic fallback
         return {
           endpoint: `/movie/${cat}`,
           title: cat
             ? cat.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
             : "Movies",
         };
+      }
     }
   };
 
-  const { endpoint, title: initialTitle } = getCategoryInfo(category);
-  const [displayTitle, setDisplayTitle] = useState(initialTitle);
+  const { endpoint, title: displayTitle } = getCategoryInfo(category);
 
   useEffect(() => {
     async function loadMovies() {
@@ -67,24 +81,6 @@ function CategoryContent() {
     }
     loadMovies();
   }, [endpoint, currentPage]);
-
-  useEffect(() => {
-    async function updateGenreTitle() {
-      if (/^\d+$/.test(category)) {
-        const { fetchGenres } = await import("../../lib/tmdb");
-        const genres = await fetchGenres();
-        const genre = genres.find(
-          (g: { id: number; name: string }) => g.id.toString() === category,
-        );
-        if (genre) {
-          setDisplayTitle(genre.name);
-        }
-      } else {
-        setDisplayTitle(initialTitle);
-      }
-    }
-    updateGenreTitle();
-  }, [category, initialTitle]);
 
   useEffect(() => {
     document.title = `${displayTitle} - Page ${currentPage} - Movie Night`;

@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { fetchGenres, fetchMovies, Movie } from "../lib/tmdb";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import Link from "next/link";
+import { slugify } from "../lib/slugify";
 
 interface Genre {
   id: number;
@@ -111,7 +112,7 @@ export default function Banner() {
 
                     <div>
                       <Link
-                        href={`/movie/${item.id}`}
+                        href={`/movie/${slugify(item.title)}/${item.id}`}
                         className="inline-block px-6 py-2 md:px-8 md:py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white text-sm md:text-base font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
                       >
                         View Movie

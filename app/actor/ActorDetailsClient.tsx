@@ -7,12 +7,14 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MovieMiniCard from "@/app/components/MovieMiniCard";
 import LoadingModel from "@/app/components/LoadingModel";
-import { ActorDetail } from "./page";
+import { ActorDetail } from "./[...slug]/page";
 import Link from "next/link";
 
 export default function ActorDetailsClient() {
   const [data, setData] = useState<ActorDetail | null>(null);
-  const { id } = useParams<{ id: string }>();
+  const params = useParams();
+  const slug = params?.slug;
+  const id = Array.isArray(slug) ? slug[slug.length - 1] : (slug as string);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function ActorDetailsClient() {
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center text-white">
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white">
         <p className="text-xl">Actor not found.</p>
         <Link href="/" className="text-red-500 hover:underline mt-4">
           Back to Home

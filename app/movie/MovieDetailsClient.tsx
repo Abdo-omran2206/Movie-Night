@@ -2,7 +2,7 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
-import { fetchMovieDetails } from "@/app/lib/tmdb";
+import { fetchMovieDetails, MovieDetail } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,12 +12,14 @@ import MovieMiniCard from "@/app/components/MovieMiniCard";
 import TrailerModal from "@/app/components/TrailerModel";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import LoadingModel from "@/app/components/LoadingModel";
-import { MovieDetail } from "./page";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
+import { slugify } from "@/app/lib/slugify";
 
 export default function MovieDetailsClient() {
   const [data, setData] = useState<MovieDetail | null>(null);
-  const { id } = useParams<{ id: string }>();
+  const params = useParams();
+  const slug = params?.slug;
+  const id = Array.isArray(slug) ? slug[slug.length - 1] : (slug as string);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
@@ -58,7 +60,7 @@ export default function MovieDetailsClient() {
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center">
         <p className="text-white text-xl">Movie not found.</p>
         <Link href="/" className="text-red-500 hover:underline mt-4">
           Back to Home
@@ -148,7 +150,7 @@ export default function MovieDetailsClient() {
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <Link
-                    href={isAvailable ? `/player/${id}` : "#"}
+                    href={isAvailable ? `/player/${slugify(data?.title || "")}/${id}` : "#"}
                     className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"
                   >
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
