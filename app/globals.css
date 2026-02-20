@@ -89,3 +89,9 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #e50914 #1a1a1a;
 }
+@media (max-width: 767px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none !important;
+  }
+}

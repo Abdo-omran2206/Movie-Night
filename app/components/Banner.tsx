@@ -57,7 +57,7 @@ export default function Banner() {
   if (!data.length) return null;
 
   return (
-    <div className="w-full min-h-[95vh] h-[95vh] max-sm:h-screen relative group">
+    <div className="w-full max-h-[55vh] h-[55vh] md:max-h-[95vh] md:h-[95vh] max-sm:h-screen relative group">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -80,28 +80,28 @@ export default function Banner() {
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent" />
 
-              <div className="absolute inset-0 flex flex-col justify-center items-center md:items-start px-4 sm:px-8 md:px-16 lg:px-24">
-                <div className="max-w-3xl space-y-3 md:space-y-5 flex flex-col items-center md:items-start gap-4 md:gap-10">
-                  <div className="flex flex-col items-center md:items-start gap-2 md:gap-5">
-                    <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white drop-shadow-lg leading-tight text-center">
+              <div className="absolute inset-0 flex flex-col justify-center items-start md:items-start px-4 sm:px-8 md:px-16 lg:px-24">
+                <div className="max-w-3xl space-y-3 md:space-y-5 flex flex-col items-start md:items-start gap-4 md:gap-10">
+                  <div className="flex flex-col items-start md:items-start gap-2 md:gap-5">
+                    <h1 className="text-3xl md:text-6xl font-bold text-white drop-shadow-lg leading-tight text-center">
                       {item.title || item.name}
                     </h1>
 
-                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-start md:items-center text-xs sm:text-sm md:text-base text-gray-200">
                       <Ships ship={item.release_date} />
                       <Ships ship={<StarRating rating={item.vote_average} />} />
                       <Ships ship={`(${item.vote_count} Votes)`} />
                     </div>
 
                     <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
-                      {getGenreNames(item.genre_ids).map((name, idx) => (
+                      {getGenreNames(item.genre_ids).slice(0,4).map((name, idx) => (
                         <Ships key={idx} ship={name} />
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center md:items-start gap-4 md:gap-8">
-                    <div className="space-y-1 text-center md:text-left">
+                  <div className="flex flex-col items-start md:items-start gap-4 md:gap-8">
+                    <div className="space-y-1 text-left md:text-left">
                       <h2 className="text-xl md:text-3xl font-semibold text-red-700">
                         OVERVIEW
                       </h2>
@@ -113,7 +113,7 @@ export default function Banner() {
                     <div>
                       <Link
                         href={`/movie/${slugify(item.title || item.name)}/${item.id}`}
-                        className="inline-block px-6 py-2 md:px-8 md:py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white text-sm md:text-base font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
+                        className="inline-block px-6 py-2 md:px-8 md:py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white text-xs md:text-base font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
                       >
                         View Movie
                       </Link>
@@ -132,7 +132,7 @@ export default function Banner() {
 function Ships({ ship }: { ship: React.ReactNode }) {
   return (
     <div className="px-2 py-1 md:py-2 md:px-3 bg-red-800/20 rounded-full ring-1 ring-red-700">
-      <span className="text-sm flex items-center gap-1">{ship}</span>
+      <span className="text-xs md:text-sm flex items-center gap-1">{ship}</span>
     </div>
   );
 }
@@ -153,8 +153,14 @@ function StarRating({ rating }: { rating: number }) {
 
   return (
     <div className="flex gap-1 items-center">
-      <span className="ml-1 text-sm">{rating.toFixed(1)}/10</span>
-      {stars}
+      <div className="hidden md:flex items-center gap-1">
+        <span className="ml-1 text-xs md:text-sm">{rating.toFixed(1)}/10</span>
+        {stars}
+      </div>
+      <div className="flex md:hidden items-center gap-1">
+        <span className="ml-1 text-xs md:text-sm">{rating.toFixed(1)}</span>
+        <FaStar className="text-yellow-400" />
+      </div>
     </div>
   );
 }
