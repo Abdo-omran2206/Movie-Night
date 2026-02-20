@@ -15,7 +15,15 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
   const [imgError, setImgError] = useState(false);
   const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
-  const fallbackAvatar = generateMovieAvatar(movie.title);
+  // Determine if it's a TV show
+  const isTv = movie.media_type === "tv" || (!movie.title && !!movie.name);
+  const title = isTv ? movie.name : movie.title;
+  const date = isTv ? movie.first_air_date : movie.release_date;
+  const href = isTv
+    ? `/tv/${slugify(title || "")}/${movie.id}`
+    : `/movie/${slugify(title || "")}/${movie.id}`;
+
+  const fallbackAvatar = generateMovieAvatar(title || "Unknown");
 
   const imageSrc =
     !imgError && movie.poster_path
@@ -24,14 +32,14 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
 
   return (
     <Link
-      href={`/movie/${slugify(movie.title)}/${movie.id}`}
+      href={href}
       className={`group flex flex-col mx-1 md:mx-0 w-[250px] md:min-w-[250px] cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 ${size === "small" ? "min-w-[130px]" : "min-w-[200px]"}`}
     >
       {/* Poster Image */}
       <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">
         <Image
           src={imageSrc}
-          alt={movie.title}
+          alt={title || "Poster"}
           fill
           className="object-cover brightness-85 group-hover:brightness-105 transition-all duration-300"
           onError={() => setImgError(true)}
@@ -41,12 +49,12 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
       {/* Movie Details */}
       <div className="flex flex-col gap-2 px-1">
         <h3 className="text-white font-semibold text-sm md:text-lg line-clamp-2 leading-tight">
-          {movie.title}
+          {title}
         </h3>
 
         <div className="flex flex-col gap-1">
           <span className="text-gray-300 text-xs md:text-sm">
-            Release Date: {movie.release_date || "N/A"}
+            {isTv ? "First Air Date" : "Release Date"}: {date || "N/A"}
           </span>
           <div className="scale-75 md:scale-90 origin-left text-xs md:text-sm">
             <StarRating rating={movie.vote_average} />

@@ -24,23 +24,61 @@ export default async function Home() {
     : "Global";
 
   const sections = [
+    // Trending / Popular
+    { endpoint: "/movie/popular", title: "Popular Movies", slug: "popular" },
+    { endpoint: "/tv/popular", title: "Popular TV Shows", slug: "popular" },
+    {
+      endpoint: `/discover/movie?region=${region || "US"}&sort_by=popularity.desc&with_original_language=${lang || "en"}`,
+      title: `Trending in ${locationName}`,
+      slug: "trending",
+    },
+    // Top Rated
     {
       endpoint: "/movie/top_rated",
       title: "Top Rated Movies",
       slug: "top_rated",
     },
-    { endpoint: "/movie/popular", title: "Popular Now", slug: "popular" },
-    { endpoint: "/movie/upcoming", title: "Coming Soon", slug: "upcoming" },
+    {
+      endpoint: "/tv/top_rated",
+      title: "Top Rated TV Shows",
+      slug: "top_rated",
+    },
+
+    // Recently Released / Now Playing
     {
       endpoint: "/movie/now_playing",
-      title: "Now Playing",
+      title: "Now Playing Movies",
       slug: "now_playing",
     },
     {
+      endpoint: "/tv/now_playing",
+      title: "Now Playing TV Shows",
+      slug: "now_playing",
+    },
+    {
+      endpoint: "/tv/airing_today",
+      title: "Airing Today TV Shows",
+      slug: "airing_today",
+    },
+    {
+      endpoint: "/movie/upcoming",
+      title: "Coming Soon Movies",
+      slug: "upcoming",
+    },
+    {
+      endpoint: "/tv/on_the_air",
+      title: "Coming Soon TV Shows",
+      slug: "on_the_air",
+    },
+
+    // Critically Acclaimed
+    {
       endpoint: "/discover/movie?vote_average.gte=7.5&vote_count.gte=1000",
-      title: "Critically Acclaimed",
+      title: "Critically Acclaimed Movies",
       slug: "top_rated",
     },
+
+    // Genres
     {
       endpoint: "/discover/movie?with_genres=28",
       title: "Action Movies",
@@ -50,11 +88,6 @@ export default async function Home() {
       endpoint: "/discover/movie?with_genres=35",
       title: "Comedy Movies",
       slug: "comedy",
-    },
-    {
-      endpoint: `/discover/movie?region=${region || "US"}&sort_by=popularity.desc&with_original_language=${lang || "en"}`,
-      title: `Trending in ${locationName}`,
-      slug: "trending",
     },
   ];
 

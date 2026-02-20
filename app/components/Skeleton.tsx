@@ -65,3 +65,11 @@ export function SectionSkeleton() {
     </section>
   );
 }
+export function StreamButtonSkeleton() {
+  return (
+    <div className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg bg-neutral-800/50 w-32 animate-pulse">
+      <Skeleton circle width={24} height={24} />
+      <Skeleton width={60} height={16} />
+    </div>
+  );
+}

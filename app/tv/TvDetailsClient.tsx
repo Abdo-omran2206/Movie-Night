@@ -2,7 +2,7 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
-import { fetchMovieDetails, MovieDetail } from "@/app/lib/tmdb";
+import { fetchTvDetails, TvDetail } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,8 +15,8 @@ import LoadingModel from "@/app/components/LoadingModel";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { slugify } from "@/app/lib/slugify";
 
-export default function MovieDetailsClient() {
-  const [data, setData] = useState<MovieDetail | null>(null);
+export default function TvDetailsClient() {
+  const [data, setData] = useState<TvDetail | null>(null);
   const params = useParams();
   const slug = params?.slug;
   const id = Array.isArray(slug) ? slug[slug.length - 1] : (slug as string);
@@ -24,14 +24,16 @@ export default function MovieDetailsClient() {
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
   const posterUrl = "https://image.tmdb.org/t/p/w500";
+
   useEffect(() => {
     async function loadData() {
+      if (!id) return;
       setLoading(true);
       try {
-        const res = await fetchMovieDetails(id);
+        const res = await fetchTvDetails(id);
         setData(res);
       } catch (error) {
-        console.error("Failed to fetch movie details:", error);
+        console.error("Failed to fetch tv details:", error);
       } finally {
         setLoading(false);
       }
@@ -43,10 +45,13 @@ export default function MovieDetailsClient() {
     !imgError && data?.poster_path
       ? posterUrl + data?.poster_path
       : data
-        ? generateMovieAvatar(data.original_title)
+        ? generateMovieAvatar(data.name)
         : "";
-  const isAvailable = data?.runtime && data.runtime > 0;
+
+  const isAvailable = true; // Most TV shows are available or we can check status
+
   function formatDate(dateString: string) {
+    if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -55,13 +60,13 @@ export default function MovieDetailsClient() {
   }
 
   if (loading) {
-    return <LoadingModel message="Fetching Movie Details..." />;
+    return <LoadingModel message="Fetching TV Show Details..." />;
   }
 
   if (!data) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center">
-        <p className="text-white text-xl">Movie not found.</p>
+        <p className="text-white text-xl">TV Show not found.</p>
         <Link href="/" className="text-red-500 hover:underline mt-4">
           Back to Home
         </Link>
@@ -82,10 +87,10 @@ export default function MovieDetailsClient() {
           <div className="absolute inset-0">
             {data.backdrop_path && (
               <Image
-                src={imageSrc}
-                alt={data.title || "Movie backdrop"}
+                src={`https://image.tmdb.org/t/p/w1280${data.backdrop_path}`}
+                alt={data.name || "TV Show backdrop"}
                 fill
-                className="object-cover"
+                className="object-cover opacity-60"
                 priority
               />
             )}
@@ -96,7 +101,7 @@ export default function MovieDetailsClient() {
             <div className="w-[180px] sm:w-[250px] md:w-[350px] shrink-0">
               <Image
                 src={imageSrc}
-                alt={data?.title || "Movie poster"}
+                alt={data?.name || "TV Show poster"}
                 width={500}
                 height={750}
                 className="rounded-2xl shadow-2xl hover:scale-105 transition-all duration-200"
@@ -107,17 +112,12 @@ export default function MovieDetailsClient() {
             <div className="flex flex-col gap-8 text-center lg:text-left">
               <div className="flex flex-col gap-4">
                 <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold text-white text-shadow-lg leading-tight">
-                  {data?.title}
+                  {data?.name}
                 </h1>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start items-center text-sm md:text-base text-gray-200">
-                  <Ships ship={formatDate(data?.release_date)} />
-                  <Ships
-                    ship={
-                      data?.runtime
-                        ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m`
-                        : "N/A"
-                    }
-                  />
+                  <Ships ship={formatDate(data?.first_air_date)} />
+                  <Ships ship={`${data?.number_of_seasons} Seasons`} />
+                  <Ships ship={`${data?.number_of_episodes} Episodes`} />
                   <Ships
                     ship={
                       <span className="flex items-center gap-2">
@@ -141,22 +141,22 @@ export default function MovieDetailsClient() {
                     Overview
                   </h2>
                   <p className="max-w-2xl text-gray-300 leading-relaxed text-sm md:text-lg mx-auto md:mx-0">
-                    {data?.overview
-                      ? data.overview.length > 250
-                        ? data.overview.slice(0, 400) + "..."
-                        : data.overview
-                      : "No description available."}
+                    {data?.overview || "No description available."}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                  <Link
-                    href={isAvailable ? `/player/${slugify(data?.title || "")}/${id}` : "#"}
+                  {/* <Link
+                    href={
+                      isAvailable
+                        ? `/player/${slugify(data?.name || "")}/${id}`
+                        : "#"
+                    }
                     className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"
                   >
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
                     <FaPlay size={18} />
                     {isAvailable ? "Watch Now" : "Coming Soon"}
-                  </Link>
+                  </Link> */}
 
                   {trailerKey && (
                     <button
@@ -193,7 +193,7 @@ export default function MovieDetailsClient() {
             <div className="container mx-auto px-0 md:px-4">
               <div className="mb-6 md:mb-10">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
-                  recommendations Movies
+                  Recommendations
                 </h2>
                 <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
@@ -207,7 +207,7 @@ export default function MovieDetailsClient() {
             <div className="container mx-auto px-0 md:px-4">
               <div className="mb-6 md:mb-10">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
-                  Similar Movies
+                  Similar Shows
                 </h2>
                 <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
@@ -232,6 +232,7 @@ function Ships({ ship }: { ship: React.ReactNode }) {
     </div>
   );
 }
+
 function GenresShips({ ship }: { ship: React.ReactNode }) {
   return (
     <div className="px-3 py-2 bg-neutral-200/10 rounded-full ring-1 ring-neutral-200/50">
@@ -239,13 +240,13 @@ function GenresShips({ ship }: { ship: React.ReactNode }) {
     </div>
   );
 }
+
 interface RatingStarsProps {
   rating: number;
 }
 
 function RatingStars({ rating }: RatingStarsProps) {
-  const fullStars = Math.round(rating / 2); // 10 → 5
-
+  const fullStars = Math.round(rating / 2);
   return (
     <span className="flex items-center gap-1 text-neutral-200">
       {[...Array(5)].map((_, i) =>

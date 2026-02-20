@@ -1,5 +1,5 @@
 import { createAvatar } from "@dicebear/core";
-import { initials } from "@dicebear/collection";
+import { initials , bottts } from "@dicebear/collection";
 
 export default function generateMovieAvatar(title: string) {
   const avatar = createAvatar(initials, {
@@ -12,6 +12,19 @@ export default function generateMovieAvatar(title: string) {
     radius: 20, // يخليها شبه poster rounded
     size: 512,
 
+    // يخلي الحروف كبيرة ومركزة
+    scale: 80,
+  });
+
+  return avatar.toDataUri();
+}
+export function generateServerAvatar(title: string) {
+  const avatar = createAvatar(bottts, {
+    seed: title,
+
+    backgroundColor: ["0f172a", "1e293b", "020617","0000000"], // dark gradient vibe
+    radius: 20, // يخليها شبه poster rounded
+    size: 512,
     // يخلي الحروف كبيرة ومركزة
     scale: 80,
   });

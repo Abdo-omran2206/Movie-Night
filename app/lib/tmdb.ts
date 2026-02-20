@@ -54,6 +54,32 @@ export async function fetchMovieDetails(movieID: string) {
   }
 }
 
+// Fetch tv details
+export async function fetchTvDetails(tvID: string) {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/tv/${tvID}?api_key=${API_KEY}&language=en-US&append_to_response=credits,similar,videos,recommendations,keywords`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching tv details:", error);
+    return null;
+  }
+}
+
+export async function fetchTvGenres() {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/genre/tv/list?api_key=${API_KEY}&language=en-US`,
+    );
+
+    return response.data.genres || [];
+  } catch (error) {
+    console.error("Error fetching tv genres:", error);
+    return [];
+  }
+}
+
 export async function getActorById(actorId: string) {
   try {
     const response = await axios.get(
@@ -68,10 +94,12 @@ export async function getActorById(actorId: string) {
 
 export interface MovieSummary {
   id: number;
-  original_title: string;
-  title: string;
+  original_title?: string;
+  title?: string;
+  name?: string;
   poster_path: string | null;
-  release_date: string;
+  release_date?: string;
+  first_air_date?: string;
   vote_average: number;
 }
 
@@ -83,7 +111,6 @@ export interface Movie extends MovieSummary {
   original_language: string;
   overview: string;
   popularity: number;
-  title: string;
   video: boolean;
   vote_count: number;
 }
@@ -188,6 +215,76 @@ export interface MovieDetail {
       name: string;
     }>;
   };
+}
+
+export interface TvDetail {
+  adult: boolean;
+  backdrop_path: string | null;
+  credits?: {
+    cast: Array<{
+      id: number;
+      name: string;
+      character: string;
+      profile_path: string | null;
+    }>;
+    crew: Array<{
+      id: number;
+      name: string;
+      job: string;
+      profile_path: string | null;
+    }>;
+  };
+  genres: {
+    id: number;
+    name: string;
+  }[];
+  homepage: string | null;
+  id: number;
+  origin_country?: string[];
+  original_language: string;
+  original_name: string;
+  overview: string;
+  popularity: number;
+  poster_path: string | null;
+  production_companies: {
+    id: number;
+    logo_path: string | null;
+    name: string;
+    origin_country: string;
+  }[];
+  production_countries: {
+    iso_3166_1: string;
+    name: string;
+  }[];
+  first_air_date: string;
+  number_of_seasons: number;
+  number_of_episodes: number;
+  status: string;
+  tagline: string | null;
+  name: string;
+  video: boolean;
+  videos?: {
+    results: {
+      iso_639_1: string;
+      iso_3166_1: string;
+      name: string;
+      key: string;
+      site: string;
+      size: number;
+      type: string;
+      official: boolean;
+      published_at: string;
+      id: string;
+    }[];
+  };
+  similar?: {
+    results: Movie[];
+  };
+  recommendations?: {
+    results: Movie[];
+  };
+  vote_average: number;
+  vote_count: number;
 }
 
 export const GENRE_MAP: Record<string, number> = {
