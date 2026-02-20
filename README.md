@@ -50,6 +50,7 @@
 
 ### 🎨 Design & Experience
 
+- **Skeleton Loading**: Enhanced UX with cinematic loading states across the app.
 - **Fluid Responsiveness**: Optimized for Mobile, Tablet, and Desktop.
 - **Animated Sidebar**: Premium slide-in menu with smooth backdrop transitions.
 - **Micro-interactions**: Hover effects and icon animations using Tailwind and Swiper.js.
@@ -130,8 +131,10 @@ npm run dev
 - Search: `/search?q=Inception&page=1`
 - Category: `/category/top_rated?page=1`
 - Genre: `/category/28` (Action), `/category/12` (Adventure), etc.
-- Movie Details: `/movie/[id]`
-- Actor Details: `/actor/[id]`
+- Movie Details: `/movie/[slug]/[id]`
+- TV Details: `/tv/[slug]/[id]`
+- Actor Details: `/actor/[slug]/[id]`
+- Player: `/player/[id]`
 
 ---
 

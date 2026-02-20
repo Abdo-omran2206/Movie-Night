@@ -49,7 +49,7 @@ export default function Section({
           </h2>
         </div>
 
-        <Link
+        {/* <Link
           href={`/category/${category}`}
           className="flex items-center gap-1 md:gap-2 text-xs md:text-lg text-red-600 hover:text-red-700 hover:gap-2 md:hover:gap-3 transition-all duration-300 group"
         >
@@ -59,7 +59,7 @@ export default function Section({
             size={16}
             className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300"
           />
-        </Link>
+        </Link> */}
       </div>
 
       {/* Movies Container */}

@@ -73,7 +73,7 @@ export default function Banner() {
             <div className="relative w-full h-full">
               <Image
                 src={item.backdrop_path ? backdropUrl + item.backdrop_path : ""}
-                alt={item.title}
+                alt={item.title || item.name || "Movie Poster"}
                 fill
                 priority
                 className="object-cover"
@@ -84,7 +84,7 @@ export default function Banner() {
                 <div className="max-w-3xl space-y-3 md:space-y-5 flex flex-col items-center md:items-start gap-4 md:gap-10">
                   <div className="flex flex-col items-center md:items-start gap-2 md:gap-5">
                     <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white drop-shadow-lg leading-tight text-center">
-                      {item.title}
+                      {item.title || item.name}
                     </h1>
 
                     <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
@@ -112,7 +112,7 @@ export default function Banner() {
 
                     <div>
                       <Link
-                        href={`/movie/${slugify(item.title)}/${item.id}`}
+                        href={`/movie/${slugify(item.title || item.name)}/${item.id}`}
                         className="inline-block px-6 py-2 md:px-8 md:py-3 bg-neutral-100/10 ring ring-neutral-500 hover:bg-red-700 hover:ring-red-800 text-white text-sm md:text-base font-semibold rounded-lg transition-colors duration-300 shadow-lg hover:shadow-red-600/30"
                       >
                         View Movie
