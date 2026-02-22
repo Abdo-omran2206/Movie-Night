@@ -67,11 +67,12 @@
    - User can click any movie in filmography to open `/movie/[slug]/[id]`.
 
 7. **Watch content via external streams**
-   - User clicks “Watch Now” on `/movie/[slug]/[id]` or `/tv/[slug]/[id]` and is navigated to `/player/[id]`.
-   - App loads movie details and constructs an initial embed URL using `NEXT_PUBLIC_STREAM_API`.
-   - User sees video player iframe and a row of “Stream 1…5” buttons corresponding to different streaming domains.
-   - User may switch streams; iframe `src` updates to selected provider URL.
-   - User watches movie in fullscreen if supported by the provider.
+   - User clicks “Watch Now” on `/movie/[slug]/[id]` or `/tv/[slug]/[id]` and is navigated to `/movie/player/[id]` or `/tv/player/[slug]/[id]/1/1`.
+   - App loads details and constructs an initial embed URL using TV Season/Episode routing or pure Movie ID routing through integrated streaming API tables.
+   - User sees video player iframe and a row of stream source buttons.
+   - User may switch streams without reloading the page; iframe `src` updates dynamically to selected provider URL via client-state mapping.
+   - For TV Shows, users can pick different Seasons and Episodes via a custom scrolling selector, which dynamically updates the player URL and browser history via `replaceState` without a hard reload.
+   - User watches content in fullscreen if supported by the provider.
 
 ### 4. Functional Requirements
 
@@ -210,23 +211,19 @@
     - Heading “Filmography”.
     - `MovieMiniCard` grid from `movie_credits.cast`.
 
-#### 4.8 Player (`/player/[id]`)
+#### 4.8 Player (`/movie/player/[id]` and `/tv/player/[slug]/[id]/[season]/[episode]`)
 
 - **Data**
-  - Fetch movie details by ID for page title and context.
-  - Set browser document title to `Watch {title} - Movie Night`.
+  - Fetch movie or TV details by ID for page title and context.
+  - Set browser document title dynamically, e.g., `Watch {title} S{season} E{episode} - Movie Night`.
 - **Streaming sources**
-  - Support multiple streaming domains supplied via environment variables:
-    - `NEXT_PUBLIC_STREAM_API`
-    - `NEXT_PUBLIC_STREAM2_API`
-    - `NEXT_PUBLIC_STREAM3_API`
-    - `NEXT_PUBLIC_STREAM4_API`
-    - `NEXT_PUBLIC_STREAM5_API`
-  - Construct stream URLs using predefined path slugs (e.g. `?video_id={id}&tmdb=1`, `embed/movie/{id}`, etc.).
+  - Pull multiple streaming domains directly from the Supabase `stream_urls` table (e.g., vidsrc, multiembed).
+  - Construct stream URLs using predefined templates stored in the database, mapping `{id}`, `{s}`, and `{e}` slugs dynamically for TV shows.
   - UI:
     - Display helper text instructing users to switch sources if playback fails.
-    - Show button group “Stream 1…5”; highlight active stream.
-    - Update iframe `src` to selected stream URL.
+    - Show an array of stream buttons mapped to database entries; highlight active stream.
+    - Update iframe `src` via React State rather than page refresh.
+    - TV Shows display an 'Episodes' controller grid featuring horizontal season selection and a responsive episode grid. Clicking an episode uses `window.history.replaceState` to update the URL flawlessly without triggering a page reload.
   - Requirements:
     - Iframe must take full width of container and 16:9 aspect ratio.
     - `allowFullScreen` enabled.

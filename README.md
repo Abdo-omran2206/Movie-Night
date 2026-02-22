@@ -37,11 +37,12 @@
 - **Real-time Results**: Fast API integration with dedicated loading states.
 - **Pagination**: Seamlessly browse through thousands of search results.
 
-### 📱 Movie Details
+### 📱 Movie & TV Show Details
 
 - **Full Analytics**: Ratings, runtime, release dates, and localized genre tags.
-- **Interactive Trailers**: Integrated YouTube player for the latest movie clips.
-- **Similar Recommendations**: AI-driven suggestions based on the current film.
+- **Interactive Trailers**: Integrated YouTube player for the latest clips.
+- **TV Series Support**: Full support for TV Seasons and Episodes with an interactive, seamless episode controller that updates the stream instantly without page reloads.
+- **Similar Recommendations**: AI-driven suggestions based on the current film or show.
 
 ### 👥 Cast & Crew
 
@@ -134,7 +135,8 @@ npm run dev
 - Movie Details: `/movie/[slug]/[id]`
 - TV Details: `/tv/[slug]/[id]`
 - Actor Details: `/actor/[slug]/[id]`
-- Player: `/player/[id]`
+- Movie Player: `/movie/player/[id]`
+- TV Player: `/tv/player/[slug]/[id]/[season]/[episode]`
 
 ---
 

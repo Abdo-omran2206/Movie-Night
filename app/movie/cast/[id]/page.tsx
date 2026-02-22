@@ -62,7 +62,7 @@ export default function MovieCastPage() {
           </div>
 
           <div className="bg-neutral-900/20 p-8 rounded-3xl ring-1 ring-white/5">
-            <CastList cast={data.credits.cast} />
+            <CastList cast={data.credits.cast} navig="movie" />
           </div>
         </div>
       </main>

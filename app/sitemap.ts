@@ -115,6 +115,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  // Movie Player Pages
+  const moviePlayerPages: MetadataRoute.Sitemap = movieIds.map(({ id }: { id: number; slug: string }) => ({
+    url: `${BASE_URL}/movie/player/${id}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
+  // TV Player Pages (Defaulting to S1 E1)
+  const tvPlayerPages: MetadataRoute.Sitemap = tvIds.map(({ id, slug }: { id: number; slug: string }) => ({
+    url: `${BASE_URL}/tv/player/${slug}/${id}/1/1`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
   // Actor Details Pages
   const actorPages: MetadataRoute.Sitemap = actorIds.map(({ id, slug }: { id: number; slug: string }) => ({
     url: `${BASE_URL}/actor/${slug}/${id}`,
@@ -129,6 +145,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...tvGenrePages,
     ...moviePages,
     ...tvPages,
+    ...moviePlayerPages,
+    ...tvPlayerPages,
     ...actorPages,
   ];
 }
