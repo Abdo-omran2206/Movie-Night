@@ -244,7 +244,7 @@ export default function PlayerClient() {
               </div>
 
               {/* Horizontal Scroll Episodes */}
-              <div className="flex overflow-x-auto space-x-3 md:space-x-4 py-2 px-3.5 scrollbar-hide">
+              <div className="flex flex-wrap gap-y-3 space-x-3 md:space-x-4 py-2 px-3.5 scrollbar-hide">
                 {Array.from({
                   length:
                     movie.seasons.find(
