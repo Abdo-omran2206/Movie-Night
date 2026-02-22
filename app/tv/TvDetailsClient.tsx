@@ -2,18 +2,18 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
-import { fetchTvDetails, TvDetail } from "@/app/lib/tmdb";
+import { fetchTvDetails, TvDetail, Season } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaCirclePlay, FaPlay } from "react-icons/fa6";
+import { FaCirclePlay } from "react-icons/fa6";
 import CastList from "@/app/components/CastCard";
 import MovieMiniCard from "@/app/components/MovieMiniCard";
 import TrailerModal from "@/app/components/TrailerModel";
+import TvSeasonCard from "@/app/components/TvSeasonCard";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import LoadingModel from "@/app/components/LoadingModel";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
-import { slugify } from "@/app/lib/slugify";
 
 export default function TvDetailsClient() {
   const [data, setData] = useState<TvDetail | null>(null);
@@ -48,7 +48,6 @@ export default function TvDetailsClient() {
         ? generateMovieAvatar(data.name)
         : "";
 
-  const isAvailable = true; // Most TV shows are available or we can check status
 
   function formatDate(dateString: string) {
     if (!dateString) return "N/A";
@@ -145,19 +144,7 @@ export default function TvDetailsClient() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                  {/* <Link
-                    href={
-                      isAvailable
-                        ? `/player/${slugify(data?.name || "")}/${id}`
-                        : "#"
-                    }
-                    className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"
-                  >
-                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
-                    <FaPlay size={18} />
-                    {isAvailable ? "Watch Now" : "Coming Soon"}
-                  </Link> */}
-
+                  
                   {trailerKey && (
                     <button
                       onClick={() => setIsOpen(true)}
@@ -173,6 +160,23 @@ export default function TvDetailsClient() {
             </div>
           </div>
         </section>
+        {data.seasons && data.seasons.length > 0 && (
+          <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
+            <div className="container mx-auto px-0 md:px-4">
+              <div className="mb-6 md:mb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
+                  Seasons
+                </h2>
+                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
+              </div>
+              <div className="flex flex-wrap gap-6 justify-center">
+                {data.seasons.map((season: Season) => (
+                  <TvSeasonCard key={season.id} season={season} seriesId={data.id} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {data.credits && data.credits.cast.length > 0 && (
           <section className="py-10 md:py-16 px-4 md:px-10">
@@ -183,7 +187,7 @@ export default function TvDetailsClient() {
                 </h2>
                 <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
-              <CastList limit={11} cast={data.credits.cast} movieId={id} />
+              <CastList limit={11} cast={data.credits.cast} movieId={id} navig="tv"  />
             </div>
           </section>
         )}
@@ -225,7 +229,7 @@ export default function TvDetailsClient() {
   );
 }
 
-function Ships({ ship }: { ship: React.ReactNode }) {
+export function Ships({ ship }: { ship: React.ReactNode }) {
   return (
     <div className="px-3 py-2 bg-red-800/20 rounded-full ring-1 ring-red-700">
       <span className="text-sm flex items-center gap-1">{ship}</span>
@@ -245,7 +249,7 @@ interface RatingStarsProps {
   rating: number;
 }
 
-function RatingStars({ rating }: RatingStarsProps) {
+export function RatingStars({ rating }: RatingStarsProps) {
   const fullStars = Math.round(rating / 2);
   return (
     <span className="flex items-center gap-1 text-neutral-200">

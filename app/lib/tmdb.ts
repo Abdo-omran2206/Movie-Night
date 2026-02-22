@@ -67,6 +67,19 @@ export async function fetchTvDetails(tvID: string) {
   }
 }
 
+// Fetch tv season details
+export async function fetchTvSeasonDetails(tvID: string, seasonNumber: string | number) {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/tv/${tvID}/season/${seasonNumber}?api_key=${API_KEY}&language=en-US&append_to_response=credits,videos,images`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching tv season details:", error);
+    return null;
+  }
+}
+
 export async function fetchTvGenres() {
   try {
     const response = await axios.get(
@@ -83,7 +96,7 @@ export async function fetchTvGenres() {
 export async function getActorById(actorId: string) {
   try {
     const response = await axios.get(
-      `${BASE_URL}/person/${actorId}?api_key=${API_KEY}&language=en-US&append_to_response=movie_credits,images`,
+      `${BASE_URL}/person/${actorId}?api_key=${API_KEY}&language=en-US&append_to_response=movie_credits,tv_credits,images`,
     );
     return response.data;
   } catch (error) {
@@ -104,6 +117,7 @@ export interface MovieSummary {
 }
 
 export interface Movie extends MovieSummary {
+  profile_path: string;
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -217,7 +231,73 @@ export interface MovieDetail {
   };
 }
 
+export interface Season {
+  air_date: string;
+  episode_count: number;
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  vote_average: number;
+}
+
+export interface Episode {
+  air_date: string;
+  episode_number: number;
+  id: number;
+  name: string;
+  overview: string;
+  production_code: string;
+  runtime: number;
+  season_number: number;
+  show_id: number;
+  still_path: string | null;
+  vote_average: number;
+  vote_count: number;
+  crew: Array<{
+    id: number;
+    name: string;
+    job: string;
+    profile_path: string | null;
+  }>;
+  guest_stars: Array<{
+    id: number;
+    name: string;
+    character: string;
+    profile_path: string | null;
+  }>;
+}
+
+export interface SeasonDetail extends Season {
+  _id: string;
+  episodes: Episode[];
+  videos?: {
+    results: Array<{
+      key: string;
+      site: string;
+      type: string;
+      name: string;
+    }>;
+  };
+  credits?: {
+    cast: Array<{
+      id: number;
+      name: string;
+      character: string;
+      profile_path: string | null;
+    }>;
+    crew: Array<{
+      id: number;
+      name: string;
+      job: string;
+      profile_path: string | null;
+    }>;
+  };
+}
+
 export interface TvDetail {
+  seasons: Season[];
   adult: boolean;
   backdrop_path: string | null;
   credits?: {
@@ -317,7 +397,7 @@ export function getGenreSlug(id: number): string | undefined {
 export async function search(query: string, page: number): Promise<TMDBResponse<Movie>> {
   try {
     const response = await fetch(
-      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
+      `${BASE_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
         query
       )}&page=${page}&include_adult=false`
     );

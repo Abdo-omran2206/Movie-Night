@@ -57,7 +57,7 @@ export default function Banner() {
   if (!data.length) return null;
 
   return (
-    <div className="w-full max-h-[55vh] h-[55vh] md:max-h-[95vh] md:h-[95vh] max-sm:h-screen relative group">
+    <div className="w-full max-h-96 h-96 md:max-h-[95svh] md:h-[95svh] max-sm:h-screen relative group">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}

@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,6 +16,7 @@ type Props = {
   cast: Cast[];
   limit?: number;
   movieId?: string;
+  navig: string;
 };
 
 const posterUrl = "https://image.tmdb.org/t/p/w500";
@@ -44,7 +44,7 @@ function CastImage({ item }: { item: Cast }) {
   );
 }
 
-export default function CastList({ cast, limit, movieId }: Props) {
+export default function CastList({ cast, limit, movieId, navig }: Props) {
   if (!cast || cast.length === 0) return <p>No cast available</p>;
 
   const displayCast = limit ? cast.slice(0, limit) : cast;
@@ -65,19 +65,15 @@ export default function CastList({ cast, limit, movieId }: Props) {
 
           {/* Content */}
           <div className="p-3 text-center">
-            <h3 className="font-semibold text-sm truncate">
-              {item.name}
-            </h3>
-            <p className="text-xs text-gray-400 truncate">
-              {item.character}
-            </p>
+            <h3 className="font-semibold text-sm truncate">{item.name}</h3>
+            <p className="text-xs text-gray-400 truncate">{item.character}</p>
           </div>
         </Link>
       ))}
 
       {hasMore && movieId && (
         <Link
-          href={`/movie/cast/${movieId}`}
+          href={`/${navig}/cast/${movieId}`}
           className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group flex flex-col items-center justify-center gap-4 min-h-[250px]"
         >
           <div className="w-12 h-12 rounded-full bg-red-600/20 flex items-center justify-center group-hover:bg-red-600 transition-colors">

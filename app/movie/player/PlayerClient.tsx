@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { fetchMovieDetails, MovieDetail } from "@/app/lib/tmdb";
 import LoadingModel from "@/app/components/LoadingModel";
 import Link from "next/link";
-import { generateServerAvatar } from "../lib/generateMovieAvatar";
-import { supabaseClient } from "../lib/supabase";
+import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
+import { supabaseClient } from "@/app/lib/supabase";
 import { StreamButtonSkeleton } from "@/app/components/Skeleton";
 
 interface StreamSource {

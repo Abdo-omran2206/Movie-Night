@@ -150,7 +150,7 @@ export default function MovieDetailsClient() {
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                   <Link
-                    href={isAvailable ? `/player/${slugify(data?.title || "")}/${id}` : "#"}
+                    href={isAvailable ? `/movie/player/${slugify(data?.title || "")}/${id}` : "#"}
                     className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"
                   >
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
@@ -183,7 +183,7 @@ export default function MovieDetailsClient() {
                 </h2>
                 <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
-              <CastList limit={11} cast={data.credits.cast} movieId={id} />
+              <CastList limit={11} cast={data.credits.cast} movieId={id} navig="movie" />
             </div>
           </section>
         )}
