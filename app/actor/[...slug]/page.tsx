@@ -15,6 +15,9 @@ export interface ActorDetail {
   movie_credits?: {
     cast: MovieSummary[];
   };
+  tv_credits?: {
+    cast: MovieSummary[];
+  };
 }
 
 export async function generateMetadata({

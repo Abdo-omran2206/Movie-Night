@@ -120,17 +120,29 @@ export default function ActorDetailsClient() {
             </div>
           </div>
           <div className="mt-15">
-            {data.movie_credits?.cast && data.movie_credits.cast.length > 0 && (
-              <div>
-                <div className="mb-10 flex justify-center items-center flex-col">
-                  <h2 className="text-4xl font-bold mb-2 tracking-widest text-center">
-                    Filmography
-                  </h2>
-                  <div className="w-20 h-1.5 bg-red-600 rounded-full" />
+            {data.movie_credits?.cast &&
+              data.movie_credits.cast.length > 0 &&
+              data.tv_credits?.cast &&
+              data.tv_credits.cast.length > 0 && (
+                <div>
+                  <div className="mb-10 flex justify-center items-center flex-col">
+                    <h2 className="text-4xl font-bold mb-2 tracking-widest text-center">
+                      Filmography
+                    </h2>
+                    <div className="w-20 h-1.5 bg-red-600 rounded-full" />
+                  </div>
+                  <MovieMiniCard
+                    movies={[
+                      ...data.movie_credits.cast,
+                      ...data.tv_credits.cast,
+                    ].sort((a: any, b: any) =>
+                      (b.release_date || b.first_air_date || "").localeCompare(
+                        a.release_date || a.first_air_date || "",
+                      ),
+                    )}
+                  />
                 </div>
-                <MovieMiniCard movies={data.movie_credits.cast} />
-              </div>
-            )}
+              )}
           </div>
         </div>
       </main>
