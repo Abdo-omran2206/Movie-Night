@@ -9,7 +9,7 @@ import { search, Movie } from "@/app/lib/tmdb";
 import Image from "next/image";
 import { slugify } from "../lib/slugify";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
-
+import { encodeId } from "../lib/hash";
 export default function Navbar() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -105,8 +105,11 @@ function SearchItem({ item }: { item: Movie }) {
   const isTv = item.media_type === "tv";
   const title = isTv ? item.name : item.title;
   const date = isTv ? item.first_air_date : item.release_date;
+  
+  const year = date ? date.slice(0, 4) : "";
   const basePath = isTv ? "tv" : "movie";
-  const href = `/${basePath}/${slugify(title || "")}/${item.id}`;
+  const href = `/${basePath}/${encodeId(item.id)}/${slugify(`${title || ""} ${year}`.trim())}`;
+
 
   const posterUrl = "https://image.tmdb.org/t/p/w92";
   const imageSrc =
