@@ -10,6 +10,7 @@ import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
 import { supabaseClient } from "@/app/lib/supabase";
 import { StreamButtonSkeleton } from "@/app/components/Skeleton";
 import { slugify } from "@/app/lib/slugify";
+import { decodeId } from "@/app/lib/hash";
 
 interface StreamSource {
   id?: number;
@@ -44,16 +45,15 @@ export default function PlayerClient() {
   const params = useParams();
   const slugArray = (params?.slug as string[]) || [];
 
-  // For TV: slug should be [slug, id, season, episode] or [id, season, episode]
-  // Fallbacks just in case
-  const initialEpisode =
-    slugArray.length >= 3 ? slugArray[slugArray.length - 1] : "1";
-  const initialSeason =
-    slugArray.length >= 3 ? slugArray[slugArray.length - 2] : "1";
-  const id =
-    slugArray.length >= 3
-      ? slugArray[slugArray.length - 3]
-      : slugArray[slugArray.length - 1];
+  // For TV: slug should be [id, name, season, episode] (length 4) or [id, season, episode] (length 3)
+  const isNamed = slugArray.length === 4;
+  const rawId = slugArray[0]; // Always first
+  const initialSeason = isNamed ? slugArray[2] : slugArray[1] || "1";
+  const initialEpisode = isNamed ? slugArray[3] : slugArray[2] || "1";
+
+  const idDecoded = decodeId(rawId);
+  const id = idDecoded ? idDecoded : "";
+  const encodedId = rawId; // Explicitly name it for URL generation
 
   const [currentSeason, setCurrentSeason] = useState(initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(initialEpisode);
@@ -115,20 +115,23 @@ export default function PlayerClient() {
 
   const handleSeasonChange = (newSeason: string) => {
     setCurrentSeason(newSeason);
-    setCurrentEpisode("1");
+    const expectedSlug = slugify(title + "-s" + newSeason + "-e1");
     window.history.replaceState(
       null,
       "",
-      `/tv/player/${slugify(title)}/${id}/${newSeason}/1`,
+      `/tv/player/${encodedId}/${expectedSlug}/${newSeason}/1`,
     );
   };
 
   const handleEpisodeChange = (newEpisode: string) => {
     setCurrentEpisode(newEpisode);
+    const expectedSlug = slugify(
+      title + "-s" + currentSeason + "-e" + newEpisode,
+    );
     window.history.replaceState(
       null,
       "",
-      `/tv/player/${slugify(title)}/${id}/${currentSeason}/${newEpisode}`,
+      `/tv/player/${encodedId}/${expectedSlug}/${currentSeason}/${newEpisode}`,
     );
   };
 
@@ -258,7 +261,7 @@ export default function PlayerClient() {
                     <button
                       key={i}
                       onClick={() => handleEpisodeChange(epNum)}
-                      className={`flex-shrink-0 flex flex-col items-center justify-center w-16 md:w-20 p-3 rounded-lg text-sm md:text-base font-semibold transition-all duration-200 ease-in-out cursor-pointer ${
+                      className={`shrink-0 flex flex-col items-center justify-center w-16 md:w-20 p-3 rounded-lg text-sm md:text-base font-semibold transition-all duration-200 ease-in-out cursor-pointer ${
                         isCurrentEp
                           ? "bg-red-600 text-white shadow-lg ring-2 ring-red-400 scale-105"
                           : "bg-neutral-800 text-gray-400 hover:bg-neutral-700 hover:text-white ring-1 ring-white/10"

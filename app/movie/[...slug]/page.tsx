@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import MovieDetailsClient from "../MovieDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
+import { decodeId } from "@/app/lib/hash";
 
 export async function generateMetadata({
   params,
@@ -10,8 +11,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const id = slug[slug.length - 1];
-
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) return { title: "Movie Not Found" };
   try {
     const data = await fetchMovieDetails(id);
     if (!data) return { title: "Movie Not Found" };
@@ -39,27 +41,34 @@ export default async function MoviePage({
 }) {
   const { slug } = await params;
 
-  // Handle /movie/[id]
-  if (slug.length === 1) {
-    const id = slug[0];
-    const data = await fetchMovieDetails(id);
-    if (!data) notFound();
+  // Expect first segment to be the encoded movie ID
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) notFound();
+  const data = await fetchMovieDetails(id);
+  if (!data) notFound();
 
-    const expectedSlug = slugify(data.title);
-    permanentRedirect(`/movie/${expectedSlug}/${id}`);
+  // If only the encoded ID is present, redirect to full slug URL
+  if (slug.length === 1) {
+    const expectedSlug = slugify(
+      data.title +
+        "-" +
+        (data.release_date ? data.release_date.split("-")[0] : ""),
+    );
+    permanentRedirect(`/movie/${encodedId}/${expectedSlug}`);
   }
 
-  // Handle /movie/[name]/[id]
+  // If both encoded ID and slug are present, validate slug
   if (slug.length === 2) {
-    const [name, id] = slug;
-    const data = await fetchMovieDetails(id);
-    if (!data) notFound();
-
-    const expectedSlug = slugify(data.title);
+    const [, name] = slug;
+    const expectedSlug = slugify(
+      data.title +
+        "-" +
+        (data.release_date ? data.release_date.split("-")[0] : ""),
+    );
     if (name !== expectedSlug) {
-      permanentRedirect(`/movie/${expectedSlug}/${id}`);
+      permanentRedirect(`/movie/${encodedId}/${expectedSlug}`);
     }
-
     return <MovieDetailsClient />;
   }
 

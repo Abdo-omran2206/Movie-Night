@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
+import { encodeId } from "../lib/hash";
 
 interface Cast {
   id: number;
@@ -54,7 +55,7 @@ export default function CastList({ cast, limit, movieId, navig }: Props) {
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
       {displayCast.map((item) => (
         <Link
-          href={`/actor/${slugify(item.name)}/${item.id}`}
+          href={`/actor/${encodeId(item.id)}/${slugify(item.name)}`}
           key={item.id}
           className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group"
         >
@@ -73,7 +74,7 @@ export default function CastList({ cast, limit, movieId, navig }: Props) {
 
       {hasMore && movieId && (
         <Link
-          href={`/${navig}/cast/${movieId}`}
+          href={`/${navig}/cast/${encodeId(movieId)}`}
           className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group flex flex-col items-center justify-center gap-4 min-h-[250px]"
         >
           <div className="w-12 h-12 rounded-full bg-red-600/20 flex items-center justify-center group-hover:bg-red-600 transition-colors">

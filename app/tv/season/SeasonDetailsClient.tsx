@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,7 +13,7 @@ import { slugify } from "@/app/lib/slugify";
 import { Ships, RatingStars } from "@/app/tv/TvDetailsClient";
 import TrailerModal from "@/app/components/TrailerModel";
 import CastList from "@/app/components/CastCard";
-
+import { encodeId } from "@/app/lib/hash";
 interface SeasonDetailsClientProps {
   series: TvDetail;
   season: SeasonDetail;
@@ -28,7 +27,6 @@ export default function SeasonDetailsClient({
   const [isOpen, setIsOpen] = useState(false);
   const posterUrl = "https://image.tmdb.org/t/p/w500";
   const backdropUrl = "https://image.tmdb.org/t/p/w1280";
-  console.log(season);
 
   const imageSrc =
     !imgError && season.poster_path
@@ -72,7 +70,7 @@ export default function SeasonDetailsClient({
 
           <div className="container mx-auto px-4 lg:px-20 relative z-10">
             <Link
-              href={`/tv/${slugify(series.name)}/${series.id}`}
+              href={`/tv/${encodeId(series.id)}/${slugify(series.name + "-" + (series.first_air_date ? series.first_air_date.split("-")[0] : ""))}`}
               className="inline-flex items-center gap-2 text-gray-400 hover:text-red-500 transition-colors mb-8 group"
             >
               <IoArrowBack className="group-hover:-translate-x-1 transition-transform" />
@@ -153,7 +151,7 @@ export default function SeasonDetailsClient({
             <div className="grid grid-cols-1 gap-6">
               {season.episodes.map((episode: Episode) => (
                 <Link
-                  href={`/tv/player/${series.id}/${season.season_number}/${episode.episode_number}`}
+                  href={`/tv/player/${encodeId(series.id)}/${slugify(series.name  + "-s" + season.season_number + "-e" + episode.episode_number)}/${season.season_number}/${episode.episode_number}`}
                   key={episode.id}
                   className="group bg-neutral-900/40 border border-white/5 rounded-2xl overflow-hidden hover:bg-neutral-900/60 transition-all duration-300 flex flex-col md:flex-row cursor-pointer"
                 >

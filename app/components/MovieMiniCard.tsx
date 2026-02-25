@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import { MovieSummary } from "../lib/tmdb";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
+import { encodeId } from "../lib/hash";
 
 type Props = {
   movies: MovieSummary[];
@@ -19,7 +19,6 @@ function MovieImage({ item }: { item: MovieSummary }) {
   const [imgError, setImgError] = useState(false);
 
   const isTv = !item.title && !!item.name;
-  const title = isTv ? item.name : item.title;
   const originalTitle = isTv ? item.name : item.original_title;
 
   const fallbackAvatar = generateMovieAvatar(originalTitle || "Unknown");
@@ -55,9 +54,13 @@ export default function MovieMiniCard({ movies, limit }: Props) {
           const isTv = !item.title && !!item.name;
           const title = isTv ? item.name : item.title;
           const originalTitle = isTv ? item.name : item.original_title;
+          const year = item.release_date ? item.release_date.split("-")[0] : item.first_air_date ? item.first_air_date.split("-")[0] : "";
+          
+          const slug = slugify(`${title}-${year}`);
+
           const href = isTv
-            ? `/tv/${slugify(title)}/${item.id}`
-            : `/movie/${slugify(title)}/${item.id}`;
+            ? `/tv/${encodeId(item.id)}/${slug}`
+            : `/movie/${encodeId(item.id)}/${slug}`;
 
           return (
             <Link

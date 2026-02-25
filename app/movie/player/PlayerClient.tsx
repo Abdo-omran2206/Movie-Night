@@ -9,6 +9,7 @@ import Link from "next/link";
 import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
 import { supabaseClient } from "@/app/lib/supabase";
 import { StreamButtonSkeleton } from "@/app/components/Skeleton";
+import { decodeId } from "@/app/lib/hash";
 
 interface StreamSource {
   id?: number;
@@ -26,9 +27,10 @@ export default function PlayerClient() {
   const [streamApi, setStreamApi] = useState<StreamSource[]>([]);
   const params = useParams();
   const slugArray = params?.slug;
-  const id = Array.isArray(slugArray)
-    ? slugArray[slugArray.length - 1]
+  const encodedId = Array.isArray(slugArray)
+    ? slugArray[0]
     : (slugArray as string);
+  const id = decodeId(encodedId);
 
   useEffect(() => {
     async function fetchStreams() {

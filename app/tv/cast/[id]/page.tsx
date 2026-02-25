@@ -7,14 +7,20 @@ import { useEffect, useState } from "react";
 import CastList from "@/app/components/CastCard";
 import LoadingModel from "@/app/components/LoadingModel";
 import Link from "next/link";
+import { decodeId } from "@/app/lib/hash";
 
 export default function TvCastPage() {
   const [data, setData] = useState<any>(null);
-  const { id } = useParams<{ id: string }>();
+  const { id: encodedId } = useParams<{ id: string }>();
+  const id = decodeId(encodedId);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
         const res = await fetchTvDetails(id);
@@ -56,7 +62,13 @@ export default function TvCastPage() {
               <h2 className="text-2xl font-semibold text-red-600">
                 {data.name}
               </h2>
-              <span>({data.first_air_date ? data.first_air_date.split("-")[0] : "N/A"})</span>
+              <span>
+                (
+                {data.first_air_date
+                  ? data.first_air_date.split("-")[0]
+                  : "N/A"}
+                )
+              </span>
             </div>
             <div className="w-32 h-1.5 bg-red-600 rounded-full mt-6" />
           </div>

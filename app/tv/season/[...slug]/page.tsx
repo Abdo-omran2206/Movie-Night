@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import SeasonDetailsClient from "../SeasonDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
+import { decodeId } from "@/app/lib/hash";
 
 export async function generateMetadata({
   params,
@@ -10,10 +11,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-
-  // Expecting [series-id, season-number] or [series-name, series-id, season-number]
-  const seriesId = slug[slug.length - 2];
-  const seasonNumber = slug[slug.length - 1];
+  const encodedId = slug[0];
+  const seasonNumber = slug[1];
+  const seriesId = decodeId(encodedId);
+  if (!seriesId) return { title: "TV Show Not Found" };
 
   try {
     const series = await fetchTvDetails(seriesId);
@@ -44,29 +45,31 @@ export default async function SeasonPage({
   params: Promise<{ slug: string[] }>;
 }) {
   const { slug } = await params;
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) notFound();
 
-  // Handle /tv/season/[id]/[seasonNumber]
+  const seasonNum = slug[1];
+  if (!seasonNum) notFound();
+
+  const series = await fetchTvDetails(id);
+  if (!series) notFound();
+
+  const season = await fetchTvSeasonDetails(id, seasonNum);
+  if (!season) notFound();
+
+  const expectedSlug = slugify(series.name + "-season-" + seasonNum);
+
+  // Handle /tv/season/[id]/[seasonNum]
   if (slug.length === 2) {
-    const [id, seasonNum] = slug;
-    const series = await fetchTvDetails(id);
-    if (!series) notFound();
-
-    const expectedSlug = slugify(series.name);
-    permanentRedirect(`/tv/season/${expectedSlug}/${id}/${seasonNum}`);
+    permanentRedirect(`/tv/season/${encodedId}/${seasonNum}/${expectedSlug}`);
   }
 
-  // Handle /tv/season/[name]/[id]/[seasonNumber]
+  // Handle /tv/season/[id]/[seasonNum]/[name]
   if (slug.length === 3) {
-    const [name, id, seasonNum] = slug;
-    const series = await fetchTvDetails(id);
-    if (!series) notFound();
-
-    const season = await fetchTvSeasonDetails(id, seasonNum);
-    if (!season) notFound();
-
-    const expectedSlug = slugify(series.name);
+    const name = slug[2];
     if (name !== expectedSlug) {
-      permanentRedirect(`/tv/season/${expectedSlug}/${id}/${seasonNum}`);
+      permanentRedirect(`/tv/season/${encodedId}/${seasonNum}/${expectedSlug}`);
     }
 
     return <SeasonDetailsClient series={series} season={season} />;

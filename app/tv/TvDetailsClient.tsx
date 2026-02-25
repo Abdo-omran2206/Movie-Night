@@ -14,12 +14,16 @@ import TvSeasonCard from "@/app/components/TvSeasonCard";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import LoadingModel from "@/app/components/LoadingModel";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
+import { decodeId } from "@/app/lib/hash";
 
 export default function TvDetailsClient() {
   const [data, setData] = useState<TvDetail | null>(null);
   const params = useParams();
   const slug = params?.slug;
-  const id = Array.isArray(slug) ? slug[slug.length - 1] : (slug as string);
+  const slugArray = Array.isArray(slug) ? slug : [slug as string];
+  const encodedId = slugArray[0];
+  const idStr = decodeId(encodedId);
+  const id = idStr ? idStr : ""; // Use empty string if decoding fails
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
@@ -47,7 +51,6 @@ export default function TvDetailsClient() {
       : data
         ? generateMovieAvatar(data.name)
         : "";
-
 
   function formatDate(dateString: string) {
     if (!dateString) return "N/A";
@@ -144,7 +147,6 @@ export default function TvDetailsClient() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                  
                   {trailerKey && (
                     <button
                       onClick={() => setIsOpen(true)}
@@ -171,7 +173,12 @@ export default function TvDetailsClient() {
               </div>
               <div className="flex flex-wrap gap-6 justify-center">
                 {data.seasons.map((season: Season) => (
-                  <TvSeasonCard key={season.id} season={season} seriesId={data.id} />
+                  <TvSeasonCard
+                    key={season.id}
+                    season={season}
+                    seriesId={encodedId}
+                    seriesName={data.name}
+                  />
                 ))}
               </div>
             </div>
@@ -187,7 +194,12 @@ export default function TvDetailsClient() {
                 </h2>
                 <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
-              <CastList limit={11} cast={data.credits.cast} movieId={id} navig="tv"  />
+              <CastList
+                limit={11}
+                cast={data.credits.cast}
+                movieId={id}
+                navig="tv"
+              />
             </div>
           </section>
         )}

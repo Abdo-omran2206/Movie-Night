@@ -7,14 +7,20 @@ import { useEffect, useState } from "react";
 import CastList from "@/app/components/CastCard";
 import LoadingModel from "@/app/components/LoadingModel";
 import Link from "next/link";
+import { decodeId } from "@/app/lib/hash";
 
 export default function MovieCastPage() {
   const [data, setData] = useState<any>(null);
-  const { id } = useParams<{ id: string }>();
+  const { id: encodedId } = useParams<{ id: string }>();
+  const id = decodeId(encodedId);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
         const res = await fetchMovieDetails(id);

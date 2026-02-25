@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { fetchMovies, fetchGenres, fetchTvGenres } from "./lib/tmdb";
 import { slugify } from "./lib/slugify";
+import { encodeId } from "./lib/hash";
 
 const BASE_URL = "https://movie-night-self.vercel.app";
 
@@ -18,12 +19,14 @@ async function getAllMovieIds() {
   );
 
   const allMovies = results.flatMap((res) => res.results);
-  // Remove duplicates and return id and slug
   const uniqueMovies = Array.from(new Map(allMovies.map((m) => [m.id, m])).values());
-  return uniqueMovies.map(m => ({
-    id: m.id,
-    slug: slugify(m.title || m.original_title || "movie")
-  }));
+  return uniqueMovies.map(m => {
+    const year = m.release_date ? m.release_date.split("-")[0] : "";
+    return {
+      id: m.id,
+      slug: slugify(`${m.title || m.original_title || "movie"}-${year}`)
+    };
+  });
 }
 
 async function getAllTvIds() {
@@ -40,12 +43,15 @@ async function getAllTvIds() {
   );
 
   const allTv = results.flatMap((res) => res.results);
-  // Remove duplicates and return id and slug
   const uniqueTv = Array.from(new Map(allTv.map((t) => [t.id, t])).values());
-  return uniqueTv.map(t => ({
-    id: t.id,
-    slug: slugify(t.name || t.original_name || "tv")
-  }));
+  return uniqueTv.map(t => {
+    const year = t.first_air_date ? t.first_air_date.split("-")[0] : "";
+    return {
+      id: t.id,
+      name: t.name || t.original_name || "tv",
+      slug: slugify(`${t.name || t.original_name || "tv"}-${year}`)
+    };
+  });
 }
 
 async function getPopularActorIds() {
@@ -67,7 +73,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categories = ["trending", "popular", "top_rated", "upcoming", "now_playing"];
 
-  // Static and Category Pages
   const mainPages: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
@@ -83,7 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  // Movie Genre Pages
   const movieGenrePages: MetadataRoute.Sitemap = movieGenres.map((genre: { id: number }) => ({
     url: `${BASE_URL}/category/${genre.id}`,
     lastModified: new Date(),
@@ -91,7 +95,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // TV Genre Pages (Mapping might be different, but keeping consistent with category/[id])
   const tvGenrePages: MetadataRoute.Sitemap = tvGenres.map((genre: { id: number }) => ({
     url: `${BASE_URL}/category/${genre.id}`,
     lastModified: new Date(),
@@ -99,41 +102,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Movie Details Pages
   const moviePages: MetadataRoute.Sitemap = movieIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/movie/${slug}/${id}`,
+    url: `${BASE_URL}/movie/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
 
-  // TV Details Pages
   const tvPages: MetadataRoute.Sitemap = tvIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/tv/${slug}/${id}`,
+    url: `${BASE_URL}/tv/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
 
-  // Movie Player Pages
-  const moviePlayerPages: MetadataRoute.Sitemap = movieIds.map(({ id }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/movie/player/${id}`,
+  const moviePlayerPages: MetadataRoute.Sitemap = movieIds.map(({ id, slug }: { id: number; slug: string }) => ({
+    url: `${BASE_URL}/movie/player/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.5,
   }));
 
-  // TV Player Pages (Defaulting to S1 E1)
-  const tvPlayerPages: MetadataRoute.Sitemap = tvIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/tv/player/${slug}/${id}/1/1`,
+  const tvPlayerPages: MetadataRoute.Sitemap = tvIds.map(({ id, name }: { id: number; name: string }) => ({
+    url: `${BASE_URL}/tv/player/${encodeId(id)}/${slugify(name + "-s1-e1")}/1/1`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.5,
   }));
 
-  // Actor Details Pages
   const actorPages: MetadataRoute.Sitemap = actorIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/actor/${slug}/${id}`,
+    url: `${BASE_URL}/actor/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.5,

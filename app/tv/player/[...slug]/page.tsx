@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import PlayerClient from "../PlayerClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
+import { decodeId } from "@/app/lib/hash";
 
 export async function generateMetadata({
   params,
@@ -10,13 +11,15 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-
-  const id = slug.length >= 3 ? slug[slug.length - 3] : slug[slug.length - 1];
-  const season = slug.length >= 3 ? slug[slug.length - 2] : "1";
-  const episode = slug.length >= 3 ? slug[slug.length - 1] : "1";
+  const encodedId = slug[0];
+  const seriesId = decodeId(encodedId);
+  const isNamed = slug.length === 4;
+  const season = isNamed ? slug[2] : slug[1];
+  const episode = isNamed ? slug[3] : slug[2];
+  if (!seriesId) return { title: "TV Show Not Found" };
 
   try {
-    const data = await fetchTvDetails(id);
+    const data = await fetchTvDetails(seriesId);
     if (!data) return { title: "TV Show Not Found" };
 
     return {
@@ -42,38 +45,34 @@ export default async function PlayerPage({
 }) {
   const { slug } = await params;
 
-  // Expected format: /tv/player/[id]/[season]/[episode] (length = 3)
+  const isNamed = slug.length === 4;
+  const encodedId = slug[0];
+  const season = isNamed ? slug[2] : slug[1];
+  const episode = isNamed ? slug[3] : slug[2];
 
-  if (slug.length < 3) {
-    notFound();
-  }
+  const id = decodeId(encodedId);
+  if (!id || !season || !episode) notFound();
 
-  // Handle /tv/player/[id]/[season]/[episode]
+  const data = await fetchTvDetails(id);
+  if (!data) notFound();
+
+  const expectedSlug = slugify(data.name + "-s" + season + "-e" + episode);
+
+  // Handle /tv/player/[encodedId]/[season]/[episode]
   if (slug.length === 3) {
-    const [id, season, episode] = slug;
-
-    // Validate that it exists
-    const data = await fetchTvDetails(id);
-    if (!data) notFound();
-
-    const expectedSlug = slugify(data.name);
-    permanentRedirect(`/tv/player/${expectedSlug}/${id}/${season}/${episode}`);
+    permanentRedirect(
+      `/tv/player/${encodedId}/${expectedSlug}/${season}/${episode}`,
+    );
   }
 
-  // Handle /tv/player/[name]/[id]/[season]/[episode]
+  // Handle /tv/player/[encodedId]/[slug]/[season]/[episode]
   if (slug.length === 4) {
-    const [name, id, season, episode] = slug;
-    const data = await fetchTvDetails(id);
-    if (!data) notFound();
-
-    const expectedSlug = slugify(data.name);
-    // You can enforce redirect to without name or with name. Let's redirect to without name or keep it
+    const name = slug[1];
     if (name !== expectedSlug) {
       permanentRedirect(
-        `/tv/player/${expectedSlug}/${id}/${season}/${episode}`,
+        `/tv/player/${encodedId}/${expectedSlug}/${season}/${episode}`,
       );
     }
-
     return <PlayerClient />;
   }
 

@@ -132,11 +132,12 @@ npm run dev
 - Search: `/search?q=Inception&page=1`
 - Category: `/category/top_rated?page=1`
 - Genre: `/category/28` (Action), `/category/12` (Adventure), etc.
-- Movie Details: `/movie/[slug]/[id]`
-- TV Details: `/tv/[slug]/[id]`
-- Actor Details: `/actor/[slug]/[id]`
-- Movie Player: `/movie/player/[id]`
-- TV Player: `/tv/player/[slug]/[id]/[season]/[episode]`
+- Movie Details: `/movie/[id]/[slug]` (primary)
+- TV Details: `/tv/[id]/[slug]`
+- Actor Details: `/actor/[id]/[slug]`
+- Movie Player: `/movie/player/[id]/[slug]`
+- TV Player: `/tv/player/[id]/[slug]/[season]/[episode]`
+- TV Season: `/tv/season/[id]/[seasonNum]/[slug]`
 
 ---
 

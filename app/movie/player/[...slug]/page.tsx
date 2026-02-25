@@ -4,16 +4,20 @@ import PlayerClient from "../PlayerClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 
+import { decodeId } from "@/app/lib/hash";
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const id = slug[slug.length - 1];
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) return { title: "Movie Not Found" };
 
   try {
-    const data = await fetchMovieDetails(id);
+    const data = await fetchMovieDetails(id.toString());
     if (!data) return { title: "Movie Not Found" };
 
     return {
@@ -38,26 +42,25 @@ export default async function PlayerPage({
   params: Promise<{ slug: string[] }>;
 }) {
   const { slug } = await params;
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) notFound();
 
-  // Handle /player/[id]
+  const data = await fetchMovieDetails(id.toString());
+  if (!data) notFound();
+
+  const expectedSlug = slugify(data.title);
+
+  // Handle /movie/player/[id]
   if (slug.length === 1) {
-    const id = slug[0];
-    const data = await fetchMovieDetails(id);
-    if (!data) notFound();
-
-    const expectedSlug = slugify(data.title);
-    permanentRedirect(`/player/${expectedSlug}/${id}`);
+    permanentRedirect(`/movie/player/${encodedId}/${expectedSlug}`);
   }
 
-  // Handle /player/[name]/[id]
+  // Handle /movie/player/[id]/[name]
   if (slug.length === 2) {
-    const [name, id] = slug;
-    const data = await fetchMovieDetails(id);
-    if (!data) notFound();
-
-    const expectedSlug = slugify(data.title);
+    const [, name] = slug;
     if (name !== expectedSlug) {
-      permanentRedirect(`/player/${expectedSlug}/${id}`);
+      permanentRedirect(`/movie/player/${encodedId}/${expectedSlug}`);
     }
 
     return <PlayerClient />;

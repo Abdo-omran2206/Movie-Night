@@ -6,6 +6,7 @@ import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useState } from "react";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
+import { encodeId } from "../lib/hash";
 
 interface MovieCardProps {
   movie: Movie;
@@ -32,9 +33,16 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
     tv: "tv",
     person: "actor",
   };
-
   const basePath = routes[mediaType] || "movie";
-  const href = `/${basePath}/${slugify(title)}/${movie.id}`;
+  function getYear(item: Movie) {
+    const date = item.release_date || item.first_air_date;
+    return date ? date.split("-")[0] : "unknown";
+  }
+  const year = getYear(movie);
+
+  const slug = slugify(`${title}-${year}`);
+
+  const href = `/${basePath}/${encodeId(movie.id)}/${slug}`;
 
   const fallbackAvatar = generateMovieAvatar(title || "Unknown");
 

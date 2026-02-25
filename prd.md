@@ -20,7 +20,7 @@
 - **Success metrics**
   - Time to first meaningful interaction (home page fully interactive) ≤ 3s on modern devices.
   - Search to result display ≤ 2s p95 under normal network conditions.
-  - ≥ 60% of sessions include at least one detail page view (`/movie/[id]` or `/actor/[id]`).
+  - ≥ 60% of sessions include at least one detail page view (`/movie/[id]/[slug]` or `/actor/[id]/[slug]`).
   - Bounce rate on movie detail pages < 40%.
   - Uptime of external API calls (TMDB + streaming providers) ≥ 99% over a rolling 30 days.
 
@@ -29,45 +29,32 @@
 1. **Browse home & trending**
    - User lands on `/`.
    - Sees hero banner slider of trending movies (TMDB `/trending/movie/week`).
-   - Scrolls through horizontal carousels for Top Rated, Popular, Upcoming, and Now Playing.
-   - Can click a movie card to open its detail page.
-
-2. **Search for a movie**
-   - User types into the global search bar in the navbar and submits.
-   - App navigates to `/search?q={query}&page=1`.
-   - Results fetched from TMDB search endpoint; paginated navigation via query string `page`.
-   - User browses results and clicks a movie card to open `/movie/[id]`.
-
-3. **Browse by category or genre**
-   - User clicks “View all” on a section on the home page or selects from sidebar/menu.
-   - App navigates to `/category/[category]` where `[category]` is:
-     - Named category: `trending`, `top_rated`, `popular`, `upcoming`, `now_playing`.
      - Numeric genre ID: e.g. `/category/28` for Action via TMDB genres.
    - Movies are listed in a grid with pagination via `?page={n}`.
 
-4. **View movie details**
-   - User visits `/movie/[id]`.
+2. **View movie details**
+   - User visits `/movie/[id]/[slug]`.
    - App fetches movie details with appended `credits`, `similar`, `videos`, `recommendations`, `keywords`.
    - Page shows poster/backdrop, title, release date, runtime, rating (with stars), genres, overview.
    - User can:
      - See cast carousel and open full cast page.
      - See recommended and similar movies in mini-card carousels.
      - Open trailer modal (YouTube) if available.
-     - Click “Watch Now” to navigate to `/player/[id]` when `runtime > 0` (available).
+     - Click “Watch Now” to navigate to `/movie/player/[id]/[slug]` when `runtime > 0` (available).
 
-5. **View full cast**
+3. **View full cast**
    - User clicks into `/movie/cast/[id]` from movie detail.
    - Page shows full cast list with actor thumbnails and roles.
-   - User can click an actor to open `/actor/[id]`.
+   - User can click an actor to open `/actor/[id]/[slug]`.
 
-6. **View actor details & filmography**
-   - User visits `/actor/[slug]/[id]`.
+4. **View actor details & filmography**
+   - User visits `/actor/[id]/[slug]`.
    - App fetches actor details with `movie_credits` and `images`.
    - Page shows profile image, personal info (department, birthday, place of birth), biography, and filmography grid.
-   - User can click any movie in filmography to open `/movie/[slug]/[id]`.
+   - User can click any movie in filmography to open `/movie/[id]/[slug]`.
 
-7. **Watch content via external streams**
-   - User clicks “Watch Now” on `/movie/[slug]/[id]` or `/tv/[slug]/[id]` and is navigated to `/movie/player/[id]` or `/tv/player/[slug]/[id]/1/1`.
+5. **Watch content via external streams**
+   - User clicks “Watch Now” on `/movie/[id]/[slug]` or `/tv/[id]/[slug]` and is navigated to `/movie/player/[id]/[slug]` or `/tv/player/[id]/[slug]/1/1`.
    - App loads details and constructs an initial embed URL using TV Season/Episode routing or pure Movie ID routing through integrated streaming API tables.
    - User sees video player iframe and a row of stream source buttons.
    - User may switch streams without reloading the page; iframe `src` updates dynamically to selected provider URL via client-state mapping.
@@ -107,7 +94,7 @@
     - Movie title, release date, rating with star visualization, vote count.
     - Genre chips based on TMDB genre IDs.
     - Overview snippet with truncation.
-    - “View Movie” button linking to `/movie/[id]`.
+    - “View Movie” button linking to `/movie/[id]/[slug]`.
 - **Sections**
   - Configured endpoints:
     - `/movie/top_rated`
@@ -161,7 +148,7 @@
   - Movies displayed via `MovieCard` components (`size="small"`).
   - Loading skeleton grid while fetching.
 
-#### 4.5 Movie Details (`/movie/[id]`)
+#### 4.5 Movie Details (`/movie/[id]/[slug]`)
 
 - **Data**
   - Use single TMDB call with `append_to_response=credits,similar,videos,recommendations,keywords`.
@@ -178,7 +165,7 @@
 - **Supporting sections**
   - **Cast**:
     - Horizontal list of top N cast (e.g., up to 11).
-    - Each card links to `/actor/[id]`.
+    - Each card links to `/actor/[id]/[slug]`.
     - Provide prominent “Full Cast” entry point to `/movie/cast/[id]`.
   - **Recommendations & Similar Movies**:
     - Each section displayed only if results are present.
@@ -195,7 +182,7 @@
   - Accent divider for visual structure.
   - Cast list rendered in a scrollable container using `CastList`.
 
-#### 4.7 Actor Details (`/actor/[id]`)
+#### 4.7 Actor Details (`/actor/[id]/[slug]`)
 
 - **Data**
   - Use TMDB `/person/{id}` with appended `movie_credits,images`.
@@ -211,7 +198,7 @@
     - Heading “Filmography”.
     - `MovieMiniCard` grid from `movie_credits.cast`.
 
-#### 4.8 Player (`/movie/player/[id]` and `/tv/player/[slug]/[id]/[season]/[episode]`)
+#### 4.8 Player (`/movie/player/[id]/[slug]` and `/tv/player/[id]/[slug]/[season]/[episode]`)
 
 - **Data**
   - Fetch movie or TV details by ID for page title and context.
@@ -266,8 +253,8 @@
 - Provide structured data (JSON‑LD) for the website and site search action.
 - Ensure clean, keyword-rich URL patterns:
   - `/`, `/search`, `/category/[category]`
-  - `/movie/[slug]/[id]`, `/tv/[slug]/[id]`, `/actor/[slug]/[id]`
-  - `/movie/cast/[id]`, `/player/[id]`
+  - `/movie/[id]/[slug]`, `/tv/[id]/[slug]`, `/actor/[id]/[slug]`
+  - `/movie/cast/[id]`, `/movie/player/[id]/[slug]`, `/tv/player/[id]/[slug]/[season]/[episode]`
 
 #### 5.5 Accessibility & UX
 

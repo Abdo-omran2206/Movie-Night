@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import TvDetailsClient from "../TvDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
+import { decodeId } from "@/app/lib/hash";
 
 export async function generateMetadata({
   params,
@@ -10,8 +11,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const id = slug[slug.length - 1];
-
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) return { title: "TV Show Not Found" };
   try {
     const data = await fetchTvDetails(id);
     if (!data) return { title: "TV Show Not Found" };
@@ -39,25 +41,31 @@ export default async function TvPage({
 }) {
   const { slug } = await params;
 
-  // Handle /tv/[id]
-  if (slug.length === 1) {
-    const id = slug[0];
-    const data = await fetchTvDetails(id);
-    if (!data) notFound();
+  const encodedId = slug[0];
+  const id = decodeId(encodedId);
+  if (!id) notFound();
+  const data = await fetchTvDetails(id);
+  if (!data) notFound();
 
-    const expectedSlug = slugify(data.name);
-    permanentRedirect(`/tv/${expectedSlug}/${id}`);
+  if (slug.length === 1) {
+    const expectedSlug = slugify(
+      data.name +
+        "-" +
+        (data.first_air_date ? data.first_air_date.split("-")[0] : ""),
+    );
+
+    permanentRedirect(`/tv/${encodedId}/${expectedSlug}`);
   }
 
-  // Handle /tv/[name]/[id]
   if (slug.length === 2) {
-    const [name, id] = slug;
-    const data = await fetchTvDetails(id);
-    if (!data) notFound();
-
-    const expectedSlug = slugify(data.name);
+    const [, name] = slug;
+    const expectedSlug = slugify(
+      data.name +
+        "-" +
+        (data.first_air_date ? data.first_air_date.split("-")[0] : ""),
+    );
     if (name !== expectedSlug) {
-      permanentRedirect(`/tv/${expectedSlug}/${id}`);
+      permanentRedirect(`/tv/${encodedId}/${expectedSlug}`);
     }
 
     return <TvDetailsClient />;

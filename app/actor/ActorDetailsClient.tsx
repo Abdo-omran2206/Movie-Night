@@ -9,19 +9,23 @@ import MovieMiniCard from "@/app/components/MovieMiniCard";
 import LoadingModel from "@/app/components/LoadingModel";
 import { ActorDetail } from "./[...slug]/page";
 import Link from "next/link";
+import { decodeId } from "../lib/hash";
 
 export default function ActorDetailsClient() {
   const [data, setData] = useState<ActorDetail | null>(null);
   const params = useParams();
   const slug = params?.slug;
-  const id = Array.isArray(slug) ? slug[slug.length - 1] : (slug as string);
+  const slugArray = Array.isArray(slug) ? slug : [slug as string];
+  const encodedId = slugArray[0];
+  const idStr = decodeId(encodedId);
+  const id = idStr ? idStr : ""; // Use empty string if decoding fails
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       setLoading(true);
       try {
-        const res = await getActorById(id);
+        const res = await getActorById(id.toString());
         setData(res);
       } catch (error) {
         console.error("Failed to fetch actor details:", error);

@@ -4,13 +4,20 @@ import { Season } from "../lib/tmdb";
 import { useState } from "react";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import Link from "next/link";
+import { slugify } from "../lib/slugify";
+import { encodeId } from "../lib/hash";
 
 interface TvSeasonCardProps {
   season: Season;
   seriesId: number | string;
+  seriesName: string;
 }
 
-export default function TvSeasonCard({ season, seriesId }: TvSeasonCardProps) {
+export default function TvSeasonCard({
+  season,
+  seriesId,
+  seriesName,
+}: TvSeasonCardProps) {
   const [imgError, setImgError] = useState(false);
   const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
@@ -24,9 +31,14 @@ export default function TvSeasonCard({ season, seriesId }: TvSeasonCardProps) {
       ? posterUrl + season.poster_path
       : fallbackAvatar;
 
+  // Use encoded seriesId and generate expected slug
+  const encodedId =
+    typeof seriesId === "number" ? encodeId(seriesId) : seriesId;
+  const expectedSlug = slugify(seriesName + "-season-" + season.season_number);
+
   return (
     <Link
-      href={`/tv/season/${seriesId}/${season.season_number}`}
+      href={`/tv/season/${encodedId}/${season.season_number}/${expectedSlug}`}
       className="group flex flex-col mx-1 md:mx-0 w-[200px] md:min-w-[200px] transition-all duration-300 hover:scale-105 active:scale-95"
     >
       {/* Poster */}
