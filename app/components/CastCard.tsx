@@ -74,7 +74,7 @@ export default function CastList({ cast, limit, movieId, navig }: Props) {
 
       {hasMore && movieId && (
         <Link
-          href={`/${navig}/cast/${encodeId(movieId)}`}
+          href={`/${navig}/cast/${encodeId(Number(movieId))}`}
           className="bg-neutral-900/40 ring-1 ring-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group flex flex-col items-center justify-center gap-4 min-h-[250px]"
         >
           <div className="w-12 h-12 rounded-full bg-red-600/20 flex items-center justify-center group-hover:bg-red-600 transition-colors">
