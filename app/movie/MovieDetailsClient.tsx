@@ -28,6 +28,7 @@ export default function MovieDetailsClient() {
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
   const posterUrl = "https://image.tmdb.org/t/p/w500";
+  const backdropUrl = "https://image.tmdb.org/t/p/w1280";
   useEffect(() => {
     async function loadData() {
       setLoading(true);
@@ -86,7 +87,7 @@ export default function MovieDetailsClient() {
           <div className="absolute inset-0">
             {data.backdrop_path && (
               <Image
-                src={imageSrc}
+                src={backdropUrl + data.backdrop_path}
                 alt={data.title || "Movie backdrop"}
                 fill
                 className="object-cover"
