@@ -137,6 +137,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const movieCastPages: MetadataRoute.Sitemap = movieIds.map(({ id }: { id: number }) => ({
+    url: `${BASE_URL}/movie/cast/${encodeId(id)}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.4,
+  }));
+
+  const tvCastPages: MetadataRoute.Sitemap = tvIds.map(({ id }: { id: number }) => ({
+    url: `${BASE_URL}/tv/cast/${encodeId(id)}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.4,
+  }));
+
   return [
     ...mainPages,
     ...movieGenrePages,
@@ -146,5 +160,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...moviePlayerPages,
     ...tvPlayerPages,
     ...actorPages,
+    ...movieCastPages,
+    ...tvCastPages,
   ];
 }

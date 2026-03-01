@@ -96,15 +96,14 @@
     - Overview snippet with truncation.
     - “View Movie” button linking to `/movie/[id]/[slug]`.
 - **Sections**
-  - Configured endpoints:
-    - `/movie/top_rated`
-    - `/movie/popular`
-    - `/movie/upcoming`
-    - `/movie/now_playing`
+  - Configured from **Supabase** `sections_content` table based on the user's IP-detected region.
+  - Falls back to hardcoded default sections if no DB matching or failure:
+    - `/movie/top_rated`, `/movie/popular`, `/movie/upcoming`, `/movie/now_playing`, etc.
+  - Dynamically injects the current `{region}` and `{countryName}` (via `ipwho.is` Geolocation) into the "Trending in..." row (e.g., "Trending in Egypt").
   - Each section:
     - Title corresponding to category.
     - Horizontal scrollable list of `MovieCard`s (`size="large"`).
-    - “View all” link to `/category/[categorySlug]`, where slug maps to correct endpoint.
+    - “View all” link to `/category/[categorySlug]`.
   - While loading, show skeleton UI instead of empty state.
 
 #### 4.3 Search (`/search`)
@@ -155,13 +154,13 @@
   - Handle null/undefined responses gracefully and show “Movie not found” with navigation back home.
 - **Hero section**
   - Backdrop or poster as background with dark overlay.
-  - Foreground content:
+    - Foreground content:
     - Poster card (with fallback avatar if no poster or image error).
-    - Title, formatted release date, runtime (in hours/minutes), rating (stars and numeric).
-    - Genre chips.
-    - Overview text with length-limited truncation.
-    - Primary CTA: “Watch Now” (or “Coming Soon” if runtime is undefined/0).
-    - Secondary CTA: “Watch Trailer” that opens a YouTube modal when a video key is available.
+      - Title, formatted release date, runtime (in hours/minutes), rating (stars and numeric).
+      - Genre chips.
+      - Overview text with length-limited truncation.
+      - Primary CTA: “Watch Now” (or “Coming Soon” if runtime is undefined/0).
+      - Secondary CTA: “Watch Trailer” that opens a YouTube modal when a video key is available.
 - **Supporting sections**
   - **Cast**:
     - Horizontal list of top N cast (e.g., up to 11).
@@ -171,11 +170,11 @@
     - Each section displayed only if results are present.
     - Uses `MovieMiniCard` grid for compact cards.
 
-#### 4.6 Full Cast (`/movie/cast/[id]`)
+#### 4.6 Full Cast (`/movie/cast/[id]` and `/tv/cast/[id]`)
 
 - **Data**
-  - Reuse `fetchMovieDetails`, using `credits` from response.
-  - Fallback if no movie or credits.
+  - Reuse `fetchMovieDetails` or `fetchTvDetails`, using `credits` from response.
+  - Fallback if no media or credits are found.
 - **UI**
   - Title: “Full Cast”.
   - Subtitle: movie title and year.
@@ -267,7 +266,9 @@
 
 - **APIs**
   - TMDB REST API (`https://api.themoviedb.org/3`).
-  - Streaming providers via configurable environment variables.
+  - Streaming providers via configurable environment variables or Supabase URL DB.
+  - IP Geolocation API (`https://ipwho.is/`) for regional dynamic content.
+  - Supabase database (`sections_content`, `stream_urls`, etc.).
 - **Environment variables (public)**
   - `NEXT_PUBLIC_API_KEY` – TMDB API key.
   - `NEXT_PUBLIC_STREAM_API`, `NEXT_PUBLIC_STREAM2_API`, `NEXT_PUBLIC_STREAM3_API`, `NEXT_PUBLIC_STREAM4_API`, `NEXT_PUBLIC_STREAM5_API` – base URLs for streaming providers.

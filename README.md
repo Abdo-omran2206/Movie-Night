@@ -28,7 +28,8 @@
 ### 🏠 Home Page
 
 - **Cinematic Hero Slider**: Trending movies featured with high-quality backdrops.
-- **Dynamic Categories**: Instant access to Top Rated, Popular, Upcoming, and Now Playing sections.
+- **Dynamic Categories & Regional Content**: Instant access to Top Rated, Popular, Upcoming, and Now Playing sections. Uses IP Geolocation (`ipwho.is`) to show regional trending content natively.
+- **Remote Configuration**: Home page sections are dynamically driven by a **Supabase** backend, allowing updates without code redeployment.
 - **Glassmorphic UI**: Modern backdrop blur effects and premium typography.
 
 ### 🔍 Search & Discovery
@@ -41,6 +42,7 @@
 
 - **Full Analytics**: Ratings, runtime, release dates, and localized genre tags.
 - **Interactive Trailers**: Integrated YouTube player for the latest clips.
+- **Immersive Posters**: Full-screen Image Viewer modal for inspecting posters and high-res promotional backdrops.
 - **TV Series Support**: Full support for TV Seasons and Episodes with an interactive, seamless episode controller that updates the stream instantly without page reloads.
 - **Similar Recommendations**: AI-driven suggestions based on the current film or show.
 
@@ -63,6 +65,7 @@
 
 - **Core**: [Next.js 15](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Backend & Database**: [Supabase](https://supabase.com/) & [ipwho.is](https://ipwho.is/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Interactions**: [Swiper.js](https://swiperjs.com/) & [React Icons](https://react-icons.github.io/react-icons/)
 - **Data Architecture**: [The Movie Database (TMDB) API](https://www.themoviedb.org/)
@@ -134,6 +137,7 @@ npm run dev
 - Genre: `/category/28` (Action), `/category/12` (Adventure), etc.
 - Movie Details: `/movie/[id]/[slug]` (primary)
 - TV Details: `/tv/[id]/[slug]`
+- Cast Details: `/movie/cast/[id]` and `/tv/cast/[id]`
 - Actor Details: `/actor/[id]/[slug]`
 - Movie Player: `/movie/player/[id]/[slug]`
 - TV Player: `/tv/player/[id]/[slug]/[season]/[episode]`
