@@ -1,11 +1,35 @@
-import axios from 'axios';
-
 export async function getRegion() {
   try {
-    const response = await axios.get('https://ipwho.is/');
-    return response.data.country_code;
+    // Try ipwho.is first
+    const response = await fetch("https://ipwho.is/");
+    const data = await response.json();
+    if (data && data.country_code) {
+      return {
+        region: data.country_code,
+        language: "en",
+      };
+    }
   } catch (error) {
-    console.error('Error fetching country code:', error);
-    return null;
+    console.warn("ipwho.is failed, trying fallback...", error);
   }
+
+  try {
+    // Fallback to ip-api.com
+    const response = await fetch("http://ip-api.com/json/");
+    const data = await response.json();
+    if (data && data.countryCode) {
+      return {
+        region: data.countryCode,
+        language: "en",
+      };
+    }
+  } catch (error) {
+    console.error("All region fetchers failed:", error);
+  }
+
+  // Final fallback
+  return {
+    region: "US",
+    language: "en",
+  };
 }

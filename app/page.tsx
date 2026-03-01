@@ -29,7 +29,7 @@ export default async function Home() {
     ES: "Spain",
   };
   const region = await getRegion();
-  const countryName = (region && regions[region]) || "USA";
+  const countryName = (region && regions[region.region]) || "USA";
 
   const { data, error } = await supabaseClient
     .from("sections_content")
@@ -127,8 +127,8 @@ export default async function Home() {
       .replace("${countryName}", countryName || "USA")
       .replace("{countryName}", countryName || "USA"),
     endpoint: section.endpoint
-      .replace("${region}", region || "US")
-      .replace("{region}", region || "US"),
+      .replace("${region}", region.region || "US")
+      .replace("{region}", region.region || "US"),
   }));
 
   return (
