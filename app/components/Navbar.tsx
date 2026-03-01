@@ -15,6 +15,7 @@ export default function Navbar() {
   const [query, setQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [isSearchModelOpen, setIsSearchModelOpen] = useState(false);
 
   useEffect(() => {
     async function syncSearch() {
@@ -57,7 +58,7 @@ export default function Navbar() {
         </div>
 
         {/* Search */}
-        <div className="flex-1 max-w-[180px] md:max-w-md gap-2 md:gap-4 relative">
+        <div className="flex-1 hidden md:flex max-w-[180px] md:max-w-md gap-2 md:gap-4 md:relative lg:relative">
           <form
             onSubmit={handleSubmit}
             className="flex relative items-center gap-2 bg-neutral-900/80 border border-neutral-700 rounded-lg px-2 py-1.5 md:px-3 md:py-2 flex-1 max-w-[180px] md:max-w-md"
@@ -78,9 +79,120 @@ export default function Navbar() {
           </form>
           {query.trim() && <SearchMiniCards results={searchResults} />}
         </div>
+        <button
+          onClick={() => setIsSearchModelOpen(true)}
+          className="relative md:hidden rounded-full px-2 py-1.5 bg-neutral-900/80 border border-neutral-700"
+        >
+          <FaSearch className="text-red-600 text-lg " />
+        </button>
       </nav>
       {isMenuOpen && <SideBarMenu setIsMenuOpen={setIsMenuOpen} />}
+      {isSearchModelOpen && (
+        <SearchModal setIsSearchModelOpen={setIsSearchModelOpen} />
+      )}
     </header>
+  );
+}
+
+function SearchModal({
+  setIsSearchModelOpen,
+}: {
+  setIsSearchModelOpen: (open: boolean) => void;
+}) {
+  const router = useRouter();
+  const [localQuery, setLocalQuery] = useState("");
+  const [localResults, setLocalResults] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    async function syncSearch() {
+      const results = await search(localQuery, 1);
+      setLocalResults(results.results);
+    }
+    const timer = setTimeout(() => {
+      if (localQuery.trim()) {
+        syncSearch();
+      } else {
+        setLocalResults([]);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [localQuery]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!localQuery.trim()) return;
+    router.push(`/search?q=${encodeURIComponent(localQuery.trim())}`);
+    setIsSearchModelOpen(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-start justify-center z-[100] pt-[15vh] px-4">
+      <div className="bg-neutral-950 border border-neutral-800 rounded-2xl p-6 w-full max-w-xl shadow-[0_0_50px_-12px_rgba(220,38,38,0.3)] relative animate-in fade-in zoom-in duration-300">
+        <button
+          onClick={() => setIsSearchModelOpen(false)}
+          className="absolute right-6 top-6 text-neutral-400 hover:text-white transition-colors"
+        >
+          <span className="text-2xl">✕</span>
+        </button>
+
+        <h2 className="text-white text-2xl font-bold mb-6 pr-10 tracking-tight">
+          Search Movies & TV
+        </h2>
+
+        <form onSubmit={handleSubmit} className="flex items-center gap-3 mb-6">
+          <div className="relative flex-1">
+            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" />
+            <input
+              type="search"
+              placeholder="Search for movies, actors, tv shows..."
+              autoFocus
+              value={localQuery}
+              onChange={(e) => setLocalQuery(e.target.value)}
+              className="w-full bg-neutral-900 rounded-xl pl-12 pr-4 py-4 outline-none text-white placeholder-neutral-500 text-lg border border-neutral-800 focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all shadow-inner"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-red-600 hover:bg-red-700 h-14 px-6 rounded-xl text-white font-semibold transition-all shadow-lg shadow-red-600/20 active:scale-95"
+          >
+            Search
+          </button>
+        </form>
+
+        <div className="max-h-[50vh] overflow-y-auto custom-scrollbar rounded-xl bg-neutral-900/50 border border-neutral-800/50">
+          {localResults.length > 0 ? (
+            <div className="divide-y divide-neutral-800/50">
+              {localResults
+                .filter(
+                  (item) =>
+                    item.media_type === "movie" || item.media_type === "tv",
+                )
+                .slice(0, 8)
+                .map((item) => (
+                  <div
+                    key={`${item.media_type}-${item.id}`}
+                    onClick={() => setIsSearchModelOpen(false)}
+                  >
+                    <SearchItem item={item} />
+                  </div>
+                ))}
+            </div>
+          ) : localQuery.trim() ? (
+            <div className="flex flex-col items-center justify-center py-12 text-neutral-500">
+              <FaSearch size={40} className="mb-4 opacity-20" />
+              <p className="text-lg">
+                No matches found for &quot;{localQuery}&quot;
+              </p>
+            </div>
+          ) : (
+            <div className="py-12 text-center text-neutral-500 italic">
+              Try searching for &quot;Inception&quot; or &quot;Breaking
+              Bad&quot;
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -105,11 +217,10 @@ function SearchItem({ item }: { item: Movie }) {
   const isTv = item.media_type === "tv";
   const title = isTv ? item.name : item.title;
   const date = isTv ? item.first_air_date : item.release_date;
-  
+
   const year = date ? date.slice(0, 4) : "";
   const basePath = isTv ? "tv" : "movie";
   const href = `/${basePath}/${encodeId(item.id)}/${slugify(`${title || ""} ${year}`.trim())}`;
-
 
   const posterUrl = "https://image.tmdb.org/t/p/w92";
   const imageSrc =
