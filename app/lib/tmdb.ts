@@ -133,7 +133,7 @@ export interface MovieSummary {
 }
 
 export interface Movie extends MovieSummary {
-  known_for_department: unknown;
+  known_for_department?: string;
   profile_path: string;
   adult: boolean;
   backdrop_path: string | null;
