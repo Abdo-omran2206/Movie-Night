@@ -6,12 +6,12 @@ import { supabaseClient } from "./lib/supabase";
 import { getRegion } from "./lib/getRegion";
 
 interface SectionData {
-  id: number;
+  id?: number;
   endpoint: string;
   title: string;
   slug?: string;
-  type: string;
-  created_at: string;
+  type?: string;
+  created_at?: string;
 }
 
 export default async function Home() {
@@ -29,7 +29,9 @@ export default async function Home() {
     ES: "Spain",
   };
   const region = await getRegion();
-  const countryName = (region && regions[region.region]) || "USA";
+  // Ensure we use a region code that we have a name for, or fallback to US
+  const regionCode = (region && regions[region.region]) ? region.region : "US";
+  const countryName = regions[regionCode];
 
   const { data, error } = await supabaseClient
     .from("sections_content")
@@ -41,10 +43,8 @@ export default async function Home() {
     console.error("Error fetching sections:", error);
   }
 
-  // Determine which sections to use: from DB for specific country, or hardcoded fallback
-  const dbSectionsRaw = data
-
-  const sectionsList: SectionData[] = (dbSectionsRaw as SectionData[]) || [
+  // Determine which sections to use: from DB if available, or hardcoded fallback
+  const sectionsList: SectionData[] = (data && data.length > 0) ? (data as SectionData[]) : [
     // Trending / Popular
     {
       endpoint: "/movie/popular",
@@ -57,7 +57,7 @@ export default async function Home() {
       slug: "popular",
     },
     {
-      endpoint: `/discover/movie?with_origin_country=${region || "US"}&sort_by=popularity.desc`,
+      endpoint: `/discover/movie?with_origin_country=${regionCode}&sort_by=popularity.desc`,
       title: `Trending in ${countryName}`,
       slug: "trending",
     },
@@ -72,8 +72,6 @@ export default async function Home() {
       title: "Top Rated TV Shows",
       slug: "top_rated",
     },
-
-    // Recently Released / Now Playing
     {
       endpoint: "/movie/now_playing",
       title: "Now Playing Movies",
@@ -127,8 +125,8 @@ export default async function Home() {
       .replace("${countryName}", countryName || "USA")
       .replace("{countryName}", countryName || "USA"),
     endpoint: section.endpoint
-      .replace("${region}", region.region || "US")
-      .replace("{region}", region.region || "US"),
+      .replace("${region}", regionCode)
+      .replace("{region}", regionCode),
   }));
 
   return (

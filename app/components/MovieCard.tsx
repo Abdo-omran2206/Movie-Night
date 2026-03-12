@@ -17,15 +17,13 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
   const [imgError, setImgError] = useState(false);
   const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
-  const mediaType = movie.media_type || (movie.first_air_date ? "tv" : "movie");
-
-  const title = movie.title || movie.name || movie.original_title || "Unknown";
+  const mediaType = movie.media_type || (movie.first_air_date ? "tv" : movie.known_for_department ? "person" : "movie");
 
   // Detect Types
-  const isTv = movie.media_type === "tv" || (!movie.title && !!movie.name);
-  const isPers = movie.media_type === "person";
+  const isTv = mediaType === "tv";
+  const isPers = mediaType === "person";
 
-  // FIX: persons use name not title
+  const title = isPers ? movie.name : (movie.title || movie.name || movie.original_title || "Unknown");
 
   const date = isTv ? movie.first_air_date : movie.release_date;
   const routes: Record<string, string> = {
@@ -34,26 +32,26 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
     person: "actor",
   };
   const basePath = routes[mediaType] || "movie";
-  function getYear(item: Movie) {
-    const date = item.release_date || item.first_air_date;
-    return date ? date.split("-")[0] : "unknown";
-  }
-  const year = getYear(movie);
 
-  const slug = slugify(`${title}-${year}`);
+  function getYear(item: Movie) {
+    const dateStr = item.release_date || item.first_air_date;
+    return dateStr ? dateStr.split("-")[0] : "";
+  }
+  const year = isPers ? "" : getYear(movie);
+
+  const slug = slugify(`${title}${year ? `-${year}` : ""}`);
 
   const href = `/${basePath}/${encodeId(movie.id)}/${slug}`;
 
   const fallbackAvatar = generateMovieAvatar(title || "Unknown");
 
-  // FIX: prevent building invalid URLs after error
-  let imageSrc = fallbackAvatar;
+  let imageSrc: string = fallbackAvatar;
 
   if (!imgError) {
-    if (movie.poster_path) {
-      imageSrc = posterUrl + movie.poster_path;
-    } else if (isPers && movie.profile_path) {
+    if (isPers && movie.profile_path) {
       imageSrc = posterUrl + movie.profile_path;
+    } else if (movie.poster_path) {
+      imageSrc = posterUrl + movie.poster_path;
     }
   }
 
@@ -77,22 +75,26 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
       </div>
 
       {/* Details */}
-
-      <div className="flex flex-col gap-2 px-1">
-        <h3 className="text-white font-semibold text-sm md:text-lg line-clamp-2 leading-tight">
+      <div className="flex flex-col gap-2 px-1 text-center md:text-left">
+        <h3 className="text-white font-semibold text-sm md:text-lg line-clamp-2 leading-tight group-hover:text-red-500 transition-colors">
           {title}
         </h3>
-        {!isPers && (
-          <div className="flex flex-col gap-1">
-            <span className="text-gray-300 text-xs md:text-sm">
-              {isTv ? "First Air Date" : "Release Date"}: {date || "N/A"}
+        <div className="flex flex-col gap-1">
+          {isPers ? (
+            <span className="text-gray-400 text-xs md:text-sm italic">
+              {movie.known_for_department || "Person"}
             </span>
-
-            <div className="scale-75 md:scale-90 origin-left text-xs md:text-sm">
-              <StarRating rating={movie.vote_average} />
-            </div>
-          </div>
-        )}
+          ) : (
+            <>
+              <span className="text-gray-400 text-xs md:text-sm">
+                {isTv ? "First Air Date" : "Release Date"}: {date || "N/A"}
+              </span>
+              <div className="scale-75 md:scale-90 origin-left text-xs md:text-sm">
+                <StarRating rating={movie.vote_average} />
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </Link>
   );

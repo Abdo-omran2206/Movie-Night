@@ -105,6 +105,22 @@ export async function getActorById(actorId: string) {
   }
 }
 
+export async function getCollectionDetails(collectionId: string) {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/collection/${collectionId}?api_key=${API_KEY}&language=en-US`
+    );
+
+    if (!response) {
+      throw new Error(`Failed to fetch collection for ID: ${collectionId}`);
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching collection details:", error);
+    return null;
+  }
+}
+
 export interface MovieSummary {
   id: number;
   original_title?: string;
@@ -117,6 +133,7 @@ export interface MovieSummary {
 }
 
 export interface Movie extends MovieSummary {
+  known_for_department: unknown;
   profile_path: string;
   adult: boolean;
   backdrop_path: string | null;
@@ -127,6 +144,15 @@ export interface Movie extends MovieSummary {
   popularity: number;
   video: boolean;
   vote_count: number;
+}
+
+export interface Collection {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  parts: MovieSummary[];
 }
 
 export interface TMDBResponse<T> {

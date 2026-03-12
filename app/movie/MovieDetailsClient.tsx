@@ -2,7 +2,13 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
-import { fetchMovieDetails, MovieDetail } from "@/app/lib/tmdb";
+import {
+  Collection,
+  fetchMovieDetails,
+  getCollectionDetails,
+  MovieDetail,
+  MovieSummary,
+} from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -27,14 +33,22 @@ export default function MovieDetailsClient() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
+  const [collection, setCollection] = useState<Collection | null>(null);
   const posterUrl = "https://image.tmdb.org/t/p/w500";
   const backdropUrl = "https://image.tmdb.org/t/p/w1280";
   useEffect(() => {
     async function loadData() {
+      if (!id) return;
       setLoading(true);
       try {
         const res = await fetchMovieDetails(id.toString());
         setData(res);
+        if (res?.belongs_to_collection) {
+          const coll = await getCollectionDetails(
+            res.belongs_to_collection.id.toString(),
+          );
+          setCollection(coll);
+        }
       } catch (error) {
         console.error("Failed to fetch movie details:", error);
       } finally {
@@ -48,7 +62,7 @@ export default function MovieDetailsClient() {
     !imgError && data?.poster_path
       ? posterUrl + data?.poster_path
       : data
-        ? generateMovieAvatar(data.original_title)
+        ? generateMovieAvatar(data.title || data.original_title || "Unknown")
         : "";
   const isAvailable = data?.runtime && data.runtime > 0;
   function formatDate(dateString: string) {
@@ -202,12 +216,33 @@ export default function MovieDetailsClient() {
           </section>
         )}
 
+        {collection && collection.parts.length > 0 && (
+          <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
+            <div className="container mx-auto px-0 md:px-4">
+              <div className="mb-6 md:mb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
+                  {collection.name}
+                </h2>
+                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
+              </div>
+              <MovieMiniCard
+                limit={30}
+                movies={[...(collection.parts || [])].sort(
+                  (a: MovieSummary, b: MovieSummary) =>
+                    new Date(a.release_date || 0).getTime() -
+                    new Date(b.release_date || 0).getTime(),
+                )}
+              />
+            </div>
+          </section>
+        )}
+
         {data.recommendations && data.recommendations.results.length > 0 && (
           <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
             <div className="container mx-auto px-0 md:px-4">
               <div className="mb-6 md:mb-10">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
-                  recommendations Movies
+                  Recommended Movies
                 </h2>
                 <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
               </div>
