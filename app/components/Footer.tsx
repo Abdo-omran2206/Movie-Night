@@ -98,26 +98,21 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social Media */}
+          {/* Install App */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Follow Us</h3>
-            <div className="flex gap-4">
-              {socialMedia.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 bg-neutral-800 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors duration-300"
-                    aria-label={social.label}
-                  >
-                    <Icon className="text-white text-lg" />
-                  </a>
-                );
-              })}
-            </div>
+            <h3 className="text-white font-semibold text-lg mb-4">
+              Get the App
+            </h3>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              Install Movie Night as an app for a faster, more immersive
+              experience.
+            </p>
+            <Link
+              href="/install"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors duration-200"
+            >
+              Install App
+            </Link>
           </div>
         </div>
 

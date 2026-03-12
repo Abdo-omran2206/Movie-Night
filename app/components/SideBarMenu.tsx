@@ -26,6 +26,7 @@ import {
   FaFlag,
   FaHatCowboy,
   FaSearch,
+  FaDownload,
 } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import Link from "next/link";
@@ -108,11 +109,20 @@ export default function SideBarMenu({
         <div className="px-6 sm:px-8 py-6 text-xl text-neutral-400 overflow-y-auto flex-1 custom-scrollbar">
           <Link
             href="/"
-            className="flex items-center gap-3 mb-8 hover:text-red-500 transition-colors group"
+            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
             onClick={handleClose}
           >
             <IoHome className="group-hover:scale-110 transition-transform" />
             <span>Home</span>
+          </Link>
+
+          <Link
+            href="/install"
+            className="flex items-center gap-3 mb-8 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <FaDownload className="group-hover:scale-110 transition-transform text-red-600" />
+            <span>Install App</span>
           </Link>
 
           <p className="text-gray-500 text-[10px] sm:text-xs font-bold tracking-widest mb-3 uppercase">
