@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Movie Night",
   },
   description:
-    "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies. Watch trailers, check ratings, and explore cast details.",
+    "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies. Watch trailers, check ratings, explore cast details, and install Movie Night as a web app for a fast, cinematic experience.",
   keywords: [
     "movies",
     "movie streaming",
@@ -39,6 +39,9 @@ export const metadata: Metadata = {
     "watch movies online",
     "movie trailers",
     "film recommendations",
+    "movie night app",
+    "install movie app",
+    "pwa movie app",
   ],
   authors: [{ name: "Akira Omran" }, { name: "Movie Night Team" }],
   creator: "Movie Night",
@@ -67,7 +70,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Movie Night - Discover Your Next Favorite Film",
     description:
-      "Explore the world of cinema with Movie Night. Find your next favorite movie, watch trailers, and get detailed info on cast and crew.",
+      "Explore the world of cinema with Movie Night. Find your next favorite movie, watch trailers, get detailed info on cast and crew, and install the app-like experience on your device.",
     url: siteUrl,
     siteName: "Movie Night",
     images: [
@@ -93,7 +96,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Movie Night - Discover Your Next Favorite Film",
     description:
-      "Your ultimate destination for movie enthusiasts. Discover, watch, and enjoy cinema like never before.",
+      "Your ultimate destination for movie enthusiasts. Discover, watch, and enjoy cinema like never before — now installable as a fast, app-like web experience.",
     images: ["/favicon.png"],
     creator: "@MovieNight",
     site: "@MovieNight",
@@ -127,7 +130,7 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "Movie Night",
     description:
-      "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies.",
+      "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies, with an installable web app experience.",
     url: siteUrl,
     image: "/favicon.png",
     logo: {

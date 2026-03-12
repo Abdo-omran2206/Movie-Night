@@ -4,7 +4,7 @@
 
 # 🎬 Movie Night
 
-**Movie Night** is a premium, high-performance web application designed for cinema lovers. Discover trending films, explore detailed movie analytics, and watch the latest trailers through a stunning, cinematic interface built with **Next.js 15**, **Tailwind CSS**, and the **TMDB API**.
+**Movie Night** is a premium, high-performance web application designed for cinema lovers. Discover trending films, explore detailed movie analytics, and watch the latest trailers through a stunning, cinematic interface built with **Next.js 15**, **Tailwind CSS**, and the **TMDB API**. You can also install Movie Night as a web app for a faster, app-like experience from the dedicated install page.
 
 **Live Demo:** [https://movie-night-self.vercel.app](https://movie-night-self.vercel.app)
 
@@ -103,6 +103,12 @@ NEXT_PUBLIC_STREAM_API=your_streaming_api_url
 npm run dev
 ```
 
+### 5. Install the Mobile App
+
+- Visit `/install` on the deployed site (`https://movie-night-self.vercel.app/install`).
+- Click the **Install App** button to be redirected to the latest download/store URL configured in Supabase.
+- On supported browsers/devices, you can also use the native "Add to Home Screen" / install prompts for an app-like experience.
+
 ---
 
 ## 🎨 Design System
@@ -142,6 +148,7 @@ npm run dev
 - Movie Player: `/movie/player/[id]/[slug]`
 - TV Player: `/tv/player/[id]/[slug]/[season]/[episode]`
 - TV Season: `/tv/season/[id]/[seasonNum]/[slug]`
+- Install Page: `/install`
 
 ---
 

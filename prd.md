@@ -27,39 +27,39 @@
 ### 3. Core User Flows
 
 1. **Browse home & trending**
-   - User lands on `/`.
-   - Sees hero banner slider of trending movies (TMDB `/trending/movie/week`).
-     - Numeric genre ID: e.g. `/category/28` for Action via TMDB genres.
-   - Movies are listed in a grid with pagination via `?page={n}`.
-
+  - User lands on `/`.
+  - Sees hero banner slider of trending movies (TMDB `/trending/movie/week`).
+    - Numeric genre ID: e.g. `/category/28` for Action via TMDB genres.
+  - Movies are listed in a grid with pagination via `?page={n}`.
 2. **View movie details**
-   - User visits `/movie/[id]/[slug]`.
-   - App fetches movie details with appended `credits`, `similar`, `videos`, `recommendations`, `keywords`.
-   - Page shows poster/backdrop, title, release date, runtime, rating (with stars), genres, overview.
-   - User can:
-     - See cast carousel and open full cast page.
-     - See recommended and similar movies in mini-card carousels.
-     - Open trailer modal (YouTube) if available.
-     - Click “Watch Now” to navigate to `/movie/player/[id]/[slug]` when `runtime > 0` (available).
-
+  - User visits `/movie/[id]/[slug]`.
+  - App fetches movie details with appended `credits`, `similar`, `videos`, `recommendations`, `keywords`.
+  - Page shows poster/backdrop, title, release date, runtime, rating (with stars), genres, overview.
+  - User can:
+    - See cast carousel and open full cast page.
+    - See recommended and similar movies in mini-card carousels.
+    - Open trailer modal (YouTube) if available.
+    - Click “Watch Now” to navigate to `/movie/player/[id]/[slug]` when `runtime > 0` (available).
 3. **View full cast**
-   - User clicks into `/movie/cast/[id]` from movie detail.
-   - Page shows full cast list with actor thumbnails and roles.
-   - User can click an actor to open `/actor/[id]/[slug]`.
-
+  - User clicks into `/movie/cast/[id]` from movie detail.
+  - Page shows full cast list with actor thumbnails and roles.
+  - User can click an actor to open `/actor/[id]/[slug]`.
 4. **View actor details & filmography**
-   - User visits `/actor/[id]/[slug]`.
-   - App fetches actor details with `movie_credits` and `images`.
-   - Page shows profile image, personal info (department, birthday, place of birth), biography, and filmography grid.
-   - User can click any movie in filmography to open `/movie/[id]/[slug]`.
-
+  - User visits `/actor/[id]/[slug]`.
+  - App fetches actor details with `movie_credits` and `images`.
+  - Page shows profile image, personal info (department, birthday, place of birth), biography, and filmography grid.
+  - User can click any movie in filmography to open `/movie/[id]/[slug]`.
 5. **Watch content via external streams**
-   - User clicks “Watch Now” on `/movie/[id]/[slug]` or `/tv/[id]/[slug]` and is navigated to `/movie/player/[id]/[slug]` or `/tv/player/[id]/[slug]/1/1`.
-   - App loads details and constructs an initial embed URL using TV Season/Episode routing or pure Movie ID routing through integrated streaming API tables.
-   - User sees video player iframe and a row of stream source buttons.
-   - User may switch streams without reloading the page; iframe `src` updates dynamically to selected provider URL via client-state mapping.
-   - For TV Shows, users can pick different Seasons and Episodes via a custom scrolling selector, which dynamically updates the player URL and browser history via `replaceState` without a hard reload.
-   - User watches content in fullscreen if supported by the provider.
+  - User clicks “Watch Now” on `/movie/[id]/[slug]` or `/tv/[id]/[slug]` and is navigated to `/movie/player/[id]/[slug]` or `/tv/player/[id]/[slug]/1/1`.
+  - App loads details and constructs an initial embed URL using TV Season/Episode routing or pure Movie ID routing through integrated streaming API tables.
+  - User sees video player iframe and a row of stream source buttons.
+  - User may switch streams without reloading the page; iframe `src` updates dynamically to selected provider URL via client-state mapping.
+  - For TV Shows, users can pick different Seasons and Episodes via a custom scrolling selector, which dynamically updates the player URL and browser history via `replaceState` without a hard reload.
+  - User watches content in fullscreen if supported by the provider.
+6. **Install the web app**
+  - User visits `/install` from the footer or a shared link.
+  - Page highlights the Movie Night experience and shows an install call-to-action.
+  - On click, user is directed to the latest app download/store URL configured via Supabase `app_config`.
 
 ### 4. Functional Requirements
 
@@ -79,7 +79,7 @@
     - Selected genre shortcuts (via TMDB genre IDs).
 - **Footer**
   - Present on main content pages (home, search, details, category, actor, cast).
-  - Contains branding and basic links (e.g., attribution to TMDB).
+  - Contains branding and basic links (e.g., attribution to TMDB) plus a prominent link to the install page (`/install`).
 
 #### 4.2 Home Page (`/`)
 
@@ -254,6 +254,7 @@
   - `/`, `/search`, `/category/[category]`
   - `/movie/[id]/[slug]`, `/tv/[id]/[slug]`, `/actor/[id]/[slug]`
   - `/movie/cast/[id]`, `/movie/player/[id]/[slug]`, `/tv/player/[id]/[slug]/[season]/[episode]`
+  - `/install` (web app install and download page)
 
 #### 5.5 Accessibility & UX
 
@@ -292,3 +293,4 @@
 - Integrate multi-language support and region-based content.
 - Offline caching for common lists and recently visited details.
 - Enhanced analytics (top searches, most-watched categories, engagement funnels).
+
