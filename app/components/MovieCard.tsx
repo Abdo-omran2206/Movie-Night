@@ -75,7 +75,7 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
       </div>
 
       {/* Details */}
-      <div className="flex flex-col gap-2 px-1 text-center md:text-left">
+      <div className="flex flex-col gap-2 px-1 text-left">
         <h3 className="text-white font-semibold text-sm md:text-lg line-clamp-2 leading-tight group-hover:text-red-500 transition-colors">
           {title}
         </h3>
