@@ -42,16 +42,16 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 w-full z-50">
       <nav className="flex items-center justify-between px-2 py-3 md:px-6 md:py-4 bg-neutral-950/80 backdrop-blur-lg border-b border-neutral-800/50 gap-2 md:gap-4">
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center justify-center gap-2 md:gap-4">
           <MdMenu
-            className="text-red-600 text-xl cursor-pointer"
+            className="text-red-600 text-md md:text-xl cursor-pointer"
             size={30}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           />
           {/* Logo */}
           <Link
             href="/"
-            className="text-red-600 text-lg md:text-3xl tracking-widest font-bold select-none shrink-0"
+            className="text-red-600 text-2xl md:text-3xl tracking-widest font-bold select-none shrink-0"
           >
             <h1>MOVIE NIGHT</h1>
           </Link>
@@ -81,7 +81,7 @@ export default function Navbar() {
         </div>
         <button
           onClick={() => setIsSearchModelOpen(true)}
-          className="relative md:hidden rounded-full px-2 py-1.5 bg-neutral-900/80 border border-neutral-700"
+          className="relative md:hidden rounded-full px-2 py-1.5 bg-neutral-900/80 border border-neutral-700 mr-2"
         >
           <FaSearch className="text-red-600 text-lg " />
         </button>
@@ -139,23 +139,23 @@ function SearchModal({
           Search Movies & TV
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex items-center gap-3 mb-6">
+        <form onSubmit={handleSubmit} className="flex relative items-center gap-3 mb-6">
           <div className="relative flex-1">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" />
+            {/* <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" /> */}
             <input
               type="search"
               placeholder="Search for movies, actors, tv shows..."
               autoFocus
               value={localQuery}
               onChange={(e) => setLocalQuery(e.target.value)}
-              className="w-full bg-neutral-900 rounded-xl pl-12 pr-4 py-4 outline-none text-white placeholder-neutral-500 text-lg border border-neutral-800 focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all shadow-inner"
+              className="w-full bg-neutral-900 rounded-xl pr-16 pl-3 py-2 outline-none text-white placeholder-neutral-500 text-md border border-neutral-800 focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all shadow-inner"
             />
           </div>
           <button
             type="submit"
-            className="bg-red-600 hover:bg-red-700 h-14 px-6 rounded-xl text-white font-semibold transition-all shadow-lg shadow-red-600/20 active:scale-95"
+            className="absolute right-0 bg-red-600 hover:bg-red-700 p-3 px-5 rounded-xl text-white font-semibold transition-all shadow-lg shadow-red-600/20 active:scale-95"
           >
-            Search
+            <FaSearch className="text-white text-lg " />
           </button>
         </form>
 
