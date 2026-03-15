@@ -81,8 +81,8 @@ export default function Banner() {
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent" />
 
-              <div className="absolute inset-0 flex flex-col justify-center items-start md:items-start px-4 sm:px-8 md:px-16 lg:px-24">
-                <div className="max-w-3xl space-y-3 md:space-y-5 flex flex-col items-start md:items-start gap-4 md:gap-10">
+              <div className="absolute inset-0 flex flex-col justify-end pb-12 items-start md:items-start px-4 sm:px-8 md:pb-0 md:px-16 lg:px-24">
+                <div className="max-w-3xl space-y-0 md:space-y-5 flex flex-col items-start md:items-start gap-4 md:gap-10">
                   <div className="flex flex-col items-start md:items-start gap-2 md:gap-5">
                     <h1 className="text-3xl md:text-6xl font-bold text-white drop-shadow-lg leading-tight text-center">
                       {item.title || item.name}
@@ -102,7 +102,7 @@ export default function Banner() {
                   </div>
 
                   <div className="flex flex-col items-start md:items-start gap-4 md:gap-8">
-                    <div className="space-y-1 text-left md:text-left">
+                    <div className="space-y-1 hidden md:flex flex-col text-left md:text-left">
                       <h2 className="text-xl md:text-3xl font-semibold text-red-700">
                         OVERVIEW
                       </h2>
