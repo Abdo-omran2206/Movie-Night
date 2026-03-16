@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/_next/', '/static/'],
+      disallow: ['/api/'],
     },
     sitemap: 'https://movie-night-self.vercel.app/sitemap.xml',
     host: 'https://movie-night-self.vercel.app',
