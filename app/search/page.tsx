@@ -69,8 +69,27 @@ function SearchContent() {
     updateUrl(query, newPage);
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SearchResultsPage",
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": `Search results for "${query}"`,
+      "itemListElement": movies.map((movie, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `https://movie-night-self.vercel.app/${movie.media_type === "tv" ? "tv" : "movie"}/${movie.id}`,
+        "name": movie.title || movie.name
+      }))
+    }
+  };
+
   return (
     <main className="min-h-screen bg-black text-white pt-32 pb-20 px-4 md:px-10 lg:px-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="container mx-auto">
         <div className="mb-6 md:mb-12">
           <h1 className="text-2xl md:text-5xl font-bold mb-4">

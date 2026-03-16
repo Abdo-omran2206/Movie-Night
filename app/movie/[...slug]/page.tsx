@@ -58,7 +58,6 @@ export default async function MoviePage({
     permanentRedirect(`/movie/${encodedId}/${expectedSlug}`);
   }
 
-  // If both encoded ID and slug are present, validate slug
   if (slug.length === 2) {
     const [, name] = slug;
     const expectedSlug = slugify(
@@ -69,7 +68,31 @@ export default async function MoviePage({
     if (name !== expectedSlug) {
       permanentRedirect(`/movie/${encodedId}/${expectedSlug}`);
     }
-    return <MovieDetailsClient />;
+
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Movie",
+      name: data.title,
+      description: data.overview,
+      image: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : undefined,
+      datePublished: data.release_date,
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: data.vote_average,
+        bestRating: 10,
+        ratingCount: data.vote_count,
+      },
+    };
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <MovieDetailsClient />
+      </>
+    );
   }
 
   notFound();

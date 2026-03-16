@@ -94,8 +94,29 @@ function CategoryContent() {
     }
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": displayTitle,
+    "description": `Browse ${displayTitle} on Movie Night.`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": displayTitle,
+      "itemListElement": movies.map((movie, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `https://movie-night-self.vercel.app/movie/${movie.id}`,
+        "name": movie.title || movie.original_title || "Movie"
+      }))
+    }
+  };
+
   return (
     <div className="overflow-x-hidden bg-black min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       <main className="grow pt-[10vh] px-4 md:px-8 lg:px-16">

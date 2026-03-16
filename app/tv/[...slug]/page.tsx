@@ -68,7 +68,30 @@ export default async function TvPage({
       permanentRedirect(`/tv/${encodedId}/${expectedSlug}`);
     }
 
-    return <TvDetailsClient />;
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "TVSeries",
+      name: data.name,
+      description: data.overview,
+      image: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : undefined,
+      datePublished: data.first_air_date,
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: data.vote_average,
+        bestRating: 10,
+        ratingCount: data.vote_count,
+      },
+    };
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <TvDetailsClient />
+      </>
+    );
   }
 
   notFound();

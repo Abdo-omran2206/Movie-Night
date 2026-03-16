@@ -23,26 +23,29 @@ export const metadata: Metadata = {
     template: "%s | Movie Night",
   },
   description:
-    "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies. Watch trailers, check ratings, explore cast details, and install Movie Night as a web app for a fast, cinematic experience.",
+    "Your ultimate destination for movie enthusiasts. Stream and watch movies and TV shows online. Discover top-rated, popular, and upcoming content, explore cast details, and enjoy a fast, cinematic experience with our installable web app.",
   keywords: [
     "movies",
-    "movie streaming",
-    "cinema",
-    "film",
-    "movie reviews",
+    "TV shows",
+    "streaming",
+    "film reviews",
     "top rated movies",
-    "upcoming movies",
-    "actors",
-    "cast",
-    "film database",
-    "movie database",
-    "watch movies online",
+    "upcoming releases",
+    "actor database",
+    "filmography",
     "movie trailers",
-    "film recommendations",
-    "movie night app",
-    "install movie app",
-    "pwa movie app",
+    "watch highlights",
+    "movie night",
+    "trending content",
+    "popular movies",
+    "افلام",
+    "مسلسلات",
+    "سينما",
+    "مشاهدة افلام",
+    "نقد سينمائي",
   ],
+  category: "entertainment",
+  classification: "Entertainment/Movies",
   authors: [{ name: "Akira Omran" }, { name: "Movie Night Team" }],
   creator: "Movie Night",
   publisher: "Movie Night",
@@ -64,8 +67,30 @@ export const metadata: Metadata = {
   applicationName: "Movie Night",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Movie Night",
+    startupImage: [
+      {
+        url: "/favicon.png",
+        media:
+          "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)",
+      },
+      {
+        url: "/favicon.png",
+        media:
+          "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)",
+      },
+      {
+        url: "/favicon.png",
+        media:
+          "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)",
+      },
+      {
+        url: "/favicon.png",
+        media:
+          "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)",
+      },
+    ],
   },
   openGraph: {
     title: "Movie Night - Discover Your Next Favorite Film",
@@ -130,7 +155,7 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "Movie Night",
     description:
-      "Your ultimate destination for movie enthusiasts. Discover top-rated, popular, and upcoming movies, with an installable web app experience.",
+      "Your ultimate destination for movie enthusiasts. Stream and watch movies and TV shows online, with an installable web app experience.",
     url: siteUrl,
     image: "/favicon.png",
     logo: {

@@ -89,7 +89,26 @@ export default async function ActorPage({
       permanentRedirect(`/actor/${encodedId}/${expectedSlug}`);
     }
 
-    return <ActorDetailsClient />;
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: data.name,
+      description: data.biography,
+      image: data.profile_path ? `https://image.tmdb.org/t/p/h632${data.profile_path}` : undefined,
+      jobTitle: data.known_for_department,
+      birthDate: data.birthday,
+      birthPlace: data.place_of_birth,
+    };
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <ActorDetailsClient />
+      </>
+    );
   }
 
   notFound();

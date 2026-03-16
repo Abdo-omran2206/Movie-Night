@@ -124,6 +124,7 @@ export async function getCollectionDetails(collectionId: string) {
 export interface MovieSummary {
   id: number;
   original_title?: string;
+  original_name?: string;
   title?: string;
   name?: string;
   poster_path: string | null;
