@@ -6,14 +6,14 @@
 
 **Movie Night** is a premium, high-performance web application designed for cinema lovers. Discover trending films, explore detailed movie analytics, and watch the latest trailers through a stunning, cinematic interface built with **Next.js 15**, **Tailwind CSS**, and the **TMDB API**. You can also install Movie Night as a web app for a faster, app-like experience from the dedicated install page.
 
-**Live Demo:** [https://movie-night-self.vercel.app](https://movie-night-self.vercel.app)
+**Live Demo:** [https://mymovienight.vercel.app](https://mymovienight.vercel.app)
 
 **📱 Mobile App:** Check out the React Native version of this project here: [Movie Night App](https://github.com/Abdo-omran2206/Movie-Night-App)
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://movie-night-self.vercel.app)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://mymovienight.vercel.app)
 
 ---
 
@@ -105,7 +105,7 @@ npm run dev
 
 ### 5. Install the Mobile App
 
-- Visit `/install` on the deployed site (`https://movie-night-self.vercel.app/install`).
+- Visit `/install` on the deployed site (`https://mymovienight.vercel.app/install`).
 - Click the **Install App** button to be redirected to the latest download/store URL configured in Supabase.
 - On supported browsers/devices, you can also use the native "Add to Home Screen" / install prompts for an app-like experience.
 

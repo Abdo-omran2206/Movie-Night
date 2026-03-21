@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
-    sitemap: 'https://movie-night-self.vercel.app/sitemap.xml',
-    host: 'https://movie-night-self.vercel.app',
+    sitemap: 'https://mymovienight.vercel.app/sitemap.xml',
+    host: 'https://mymovienight.vercel.app',
   };
 }

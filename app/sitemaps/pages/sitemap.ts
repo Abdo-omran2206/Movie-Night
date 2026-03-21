@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const BASE_URL = "https://movie-night-self.vercel.app";
+const BASE_URL = "https://mymovienight.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categories = ["trending", "popular", "top_rated", "upcoming", "now_playing"];

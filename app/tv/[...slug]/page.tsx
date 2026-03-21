@@ -5,6 +5,7 @@ import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 import { decodeId } from "@/app/lib/hash";
 
+const siteUrl = "https://mymovienight.vercel.app";
 export async function generateMetadata({
   params,
 }: {
@@ -21,12 +22,38 @@ export async function generateMetadata({
     return {
       title: `${data.name} (${data.first_air_date?.split("-")[0] || ""}) - Movie Night`,
       description: data.overview || "No description available.",
+
+      alternates: {
+        canonical: `${siteUrl}/tv/${data.id}/${slugify(
+          data.name + "-" + (data.first_air_date?.split("-")[0] || ""),
+        )}`,
+      },
+
       openGraph: {
         title: data.name,
         description: data.overview,
+        url: `${siteUrl}/tv/${data.id}/${slugify(
+          data.name + "-" + (data.first_air_date?.split("-")[0] || ""),
+        )}`,
         images: data.poster_path
-          ? [{ url: `https://image.tmdb.org/t/p/w500${data.poster_path}` }]
+          ? [
+              {
+                url: `https://image.tmdb.org/t/p/w780${data.poster_path}`,
+                width: 780,
+                height: 1170,
+                alt: data.name,
+              },
+            ]
           : undefined,
+      },
+
+      twitter: {
+        card: "summary_large_image",
+        title: data.name,
+        description: data.overview,
+        images: data.poster_path
+          ? [`https://image.tmdb.org/t/p/w780${data.poster_path}`]
+          : [],
       },
     };
   } catch {
@@ -73,7 +100,9 @@ export default async function TvPage({
       "@type": "TVSeries",
       name: data.name,
       description: data.overview,
-      image: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : undefined,
+      image: data.poster_path
+        ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+        : undefined,
       datePublished: data.first_air_date,
       aggregateRating: {
         "@type": "AggregateRating",

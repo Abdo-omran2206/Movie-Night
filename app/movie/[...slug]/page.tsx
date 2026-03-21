@@ -5,6 +5,7 @@ import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 import { decodeId } from "@/app/lib/hash";
 
+const siteUrl = "https://mymovienight.vercel.app";
 export async function generateMetadata({
   params,
 }: {
@@ -21,6 +22,13 @@ export async function generateMetadata({
     return {
       title: `${data.title} (${data.release_date?.split("-")[0] || ""}) - Movie Night`,
       description: data.overview || "No description available.",
+
+      alternates: {
+        canonical: `${siteUrl}/movie/${encodedId}/${slugify(
+          data.title + "-" + (data.release_date?.split("-")[0] || ""),
+        )}`,
+      },
+
       openGraph: {
         title: data.title,
         description: data.overview,
@@ -74,7 +82,9 @@ export default async function MoviePage({
       "@type": "Movie",
       name: data.title,
       description: data.overview,
-      image: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : undefined,
+      image: data.poster_path
+        ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+        : undefined,
       datePublished: data.release_date,
       aggregateRating: {
         "@type": "AggregateRating",

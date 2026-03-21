@@ -10,7 +10,7 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 // /movie/upcoming
 // /movie/now_playing
 
-export async function fetchMovies(endpoint: string , page = 1 , language = "en-US") {
+export async function fetchMovies(endpoint: string , page = 1 , language = "en-US"): Promise<{ results: Movie[]; total_pages: number }> {
 
   try {
     const separator = endpoint.includes("?") ? "&" : "?";
@@ -435,3 +435,46 @@ export async function search(query: string, page: number): Promise<TMDBResponse<
     return { results: [], total_pages: 0, total_results: 0, page: 1 };
   }
 }
+
+export const getCategoryInfo = (cat: string) => {
+  const slug = (cat || "").toLowerCase().replace(/-/g, "_");
+
+  switch (cat) {
+    case "trending":
+      return { endpoint: "/trending/movie/week", title: "Trending Movies" };
+    case "top_rated":
+      return { endpoint: "/movie/top_rated", title: "Top Rated Movies" };
+    case "popular":
+    case "populer":
+      return { endpoint: "/movie/popular", title: "Popular Movies" };
+    case "upcoming":
+      return { endpoint: "/movie/upcoming", title: "Upcoming Movies" };
+    case "now_playing":
+      return { endpoint: "/movie/now_playing", title: "Now Playing" };
+    default: {
+      const genreId = GENRE_MAP[slug] || GENRE_MAP[cat];
+      if (genreId) {
+        return {
+          endpoint: `/discover/movie?with_genres=${genreId}`,
+          title: cat
+            .replace(/_/g, " ")
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase()),
+        };
+      }
+
+      if (/^\d+$/.test(cat)) {
+        return {
+          endpoint: `/discover/movie?with_genres=${cat}`,
+          title: "Movies",
+        };
+      }
+      return {
+        endpoint: `/movie/${cat}`,
+        title: cat
+          ? cat.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+          : "Movies",
+      };
+    }
+  }
+};

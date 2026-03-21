@@ -3,7 +3,7 @@ import { fetchMovies, fetchTvGenres, MovieSummary } from "../../lib/tmdb";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
 
-const BASE_URL = "https://movie-night-self.vercel.app";
+const BASE_URL = "https://mymovienight.vercel.app";
 
 async function getAllTvIds() {
   const pages = [1, 2, 3, 4, 5];

@@ -14,16 +14,16 @@ const robotoSlab = Roboto_Slab({
   variable: "--font-roboto",
 });
 
-const siteUrl = "https://movie-night-self.vercel.app";
+const siteUrl = "https://mymovienight.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Movie Night - Discover Your Next Favorite Film",
+    default: "Movie Night - Watch Movies & TV Shows Online",
     template: "%s | Movie Night",
   },
   description:
-    "Your ultimate destination for movie enthusiasts. Stream and watch movies and TV shows online. Discover top-rated, popular, and upcoming content, explore cast details, and enjoy a fast, cinematic experience with our installable web app.",
+    "Watch movies and TV shows online on Movie Night. Discover trending, top-rated, and upcoming titles, explore cast details, and enjoy a fast, cinematic experience.",
   keywords: [
     "movies",
     "TV shows",

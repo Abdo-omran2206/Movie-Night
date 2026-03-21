@@ -20,7 +20,7 @@ export interface ActorDetail {
     cast: MovieSummary[];
   };
 }
-
+const siteUrl = "https://mymovienight.vercel.app";
 export async function generateMetadata({
   params,
 }: {
@@ -35,12 +35,19 @@ export async function generateMetadata({
     return {
       title: `${data.name} - Movie Night`,
       description: data.biography
-        ? data.biography.slice(0, 160)
+        ? data.biography.length > 160
+          ? data.biography.slice(0, 157) + "..."
+          : data.biography
         : `Learn more about ${data.name} on Movie Night.`,
+      alternates: {
+        canonical: `${siteUrl}/person/${data.id}`,
+      },
       openGraph: {
         title: `${data.name} - Movie Night`,
         description: data.biography
-          ? data.biography.slice(0, 160)
+          ? data.biography.length > 160
+            ? data.biography.slice(0, 157) + "..."
+            : data.biography
           : `Learn more about ${data.name} on Movie Night.`,
         images: data.profile_path
           ? [
@@ -94,7 +101,9 @@ export default async function ActorPage({
       "@type": "Person",
       name: data.name,
       description: data.biography,
-      image: data.profile_path ? `https://image.tmdb.org/t/p/h632${data.profile_path}` : undefined,
+      image: data.profile_path
+        ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
+        : undefined,
       jobTitle: data.known_for_department,
       birthDate: data.birthday,
       birthPlace: data.place_of_birth,

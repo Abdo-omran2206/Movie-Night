@@ -78,7 +78,7 @@ function SearchContent() {
       "itemListElement": movies.map((movie, index) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://movie-night-self.vercel.app/${movie.media_type === "tv" ? "tv" : "movie"}/${movie.id}`,
+        "url": `https://mymovienight.vercel.app/${movie.media_type === "tv" ? "tv" : "movie"}/${movie.id}`,
         "name": movie.title || movie.name
       }))
     }
