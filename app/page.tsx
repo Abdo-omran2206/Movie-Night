@@ -4,6 +4,7 @@ import Section from "./components/sections";
 import Footer from "./components/Footer";
 import { supabaseClient } from "./lib/supabase";
 import { getRegion } from "./lib/getRegion";
+import NightGuide from "./components/NightGuide";
 
 interface SectionData {
   id?: number;
@@ -143,6 +144,7 @@ export default async function Home() {
           />
         ))}
       </main>
+      <NightGuide/>
       <Footer />
     </div>
   );

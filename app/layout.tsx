@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Roboto_Slab } from "next/font/google";
 import { SkeletonTheme } from "react-loading-skeleton";
+import NightGuide from "./components/NightGuide";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -188,6 +189,7 @@ export default function RootLayout({
       >
         <SkeletonTheme baseColor="#1a1a1a" highlightColor="#333">
           {children}
+          <NightGuide />
         </SkeletonTheme>
       </body>
     </html>
