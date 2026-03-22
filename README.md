@@ -46,6 +46,13 @@
 - **TV Series Support**: Full support for TV Seasons and Episodes with an interactive, seamless episode controller that updates the stream instantly without page reloads.
 - **Similar Recommendations**: AI-driven suggestions based on the current film or show.
 
+### 🤖 NightGuide AI Assistant
+
+- **Conversational Recommendations**: Ask for movie or TV show suggestions naturally via a floating widget on any page or through a dedicated fullscreen chat interface (`/nightguide`).
+- **Smart Local Search**: The AI securely generates precise titles and release years, which are seamlessly matched with real TMDB data on the client‑side to guarantee valid links and posters, eliminating AI hallucinations.
+- **Built-in Resilience**: Implements an advanced model fallback chain (automatically switching between `gemini-2.5-flash`, `gemini-2.5-flash-lite`, and `gemini-1.5-flash`) ensuring 100% uptime even during rate limits.
+- **Premium Chat UI**: Glassmorphic, tailored chat bubbles with embedded movie mini-cards and interactive suggestions.
+
 ### 👥 Cast & Crew
 
 - **Actor Profiles**: Explore full biographies and personal facts.
@@ -66,6 +73,7 @@
 - **Core**: [Next.js 15](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Backend & Database**: [Supabase](https://supabase.com/) & [ipwho.is](https://ipwho.is/)
+- **AI Integration**: [Google Generative AI (Gemini)](https://ai.google.dev/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Interactions**: [Swiper.js](https://swiperjs.com/) & [React Icons](https://react-icons.github.io/react-icons/)
 - **Data Architecture**: [The Movie Database (TMDB) API](https://www.themoviedb.org/)
@@ -95,6 +103,7 @@ Create a `.env.local` file in the root:
 ```env
 NEXT_PUBLIC_API_KEY=your_tmdb_api_key
 NEXT_PUBLIC_STREAM_API=your_streaming_api_url
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### 4. Launch

@@ -2,10 +2,17 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { askAI, clearConversation, getQuickSuggestions } from "../lib/NightGuide";
+import {
+  askAI,
+  clearConversation,
+  getQuickSuggestions,
+} from "../lib/NightGuide";
 import { MessageParser } from "../components/MessageParser";
 import { FaPaperPlane, FaTrash } from "react-icons/fa";
 import Navbar from "../components/Navbar";
+import { MdArrowBackIos } from "react-icons/md";
+
+import Link from "next/link";
 
 interface Message {
   role: "user" | "assistant";
@@ -18,7 +25,8 @@ export default function NightGuidePage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "👋 Hello! I'm **NightGuide**. What kind of movies or shows are you looking for?",
+      content:
+        "👋 Hello! I'm **NightGuide**. What kind of movies or shows are you looking for?",
       timestamp: new Date(),
     },
   ]);
@@ -53,13 +61,13 @@ export default function NightGuidePage() {
     setMessages((prev) => [...prev, userMessage]);
     setMessage("");
     if (inputRef.current) {
-        inputRef.current.style.height = "auto";
+      inputRef.current.style.height = "auto";
     }
     setLoading(true);
 
     try {
       const response = await askAI(textToSend);
-      
+
       const assistantMessage: Message = {
         role: "assistant",
         content: response,
@@ -69,7 +77,7 @@ export default function NightGuidePage() {
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("Night Guide error:", error);
-      
+
       const errorMessage: Message = {
         role: "assistant",
         content: "Sorry, I encountered an error. Please try again.",
@@ -94,7 +102,8 @@ export default function NightGuidePage() {
     setMessages([
       {
         role: "assistant",
-        content: "👋 Hello! I'm **NightGuide**. What kind of movies or shows are you looking for?",
+        content:
+          "👋 Hello! I'm **NightGuide**. What kind of movies or shows are you looking for?",
         timestamp: new Date(),
       },
     ]);
@@ -108,19 +117,29 @@ export default function NightGuidePage() {
     <div className="flex flex-col h-screen bg-[#050505] text-white overflow-hidden selection:bg-red-500/30">
       {/* Header - Minimal and Flat */}
       <div className="flex justify-between items-center px-4 md:px-8 py-4 shrink-0 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md z-10 w-full relative">
-        <div className="flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-80">
-          <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-red-500/30 relative shadow-[0_0_15px_rgba(220,38,38,0.2)] bg-black">
-            <Image
-              src="/NightGuide.png"
-              alt="NightGuide Logo"
-              fill
-              className="object-cover"
-              sizes="36px"
-            />
+        <div className="flex items-center gap-4">
+          <Link 
+            href="/" 
+            className="flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 w-10 h-10 rounded-full transition-all active:scale-95 group"
+            title="Back to Home"
+          >
+            <MdArrowBackIos className="text-lg translate-x-[2px] group-hover:-translate-x-0.5 transition-transform" />
+          </Link>
+          
+          <div className="flex items-center gap-3 cursor-default">
+            <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-red-500/30 relative shadow-[0_0_15px_rgba(220,38,38,0.2)] bg-black">
+              <Image
+                src="/NightGuide.png"
+                alt="NightGuide Logo"
+                fill
+                className="object-cover"
+                sizes="36px"
+              />
+            </div>
+            <h1 className="text-sm md:text-lg font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400">
+              NightGuide AI
+            </h1>
           </div>
-          <h1 className="text-sm md:text-lg font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400">
-            NightGuide AI
-          </h1>
         </div>
         <button
           onClick={handleClearChat}
@@ -135,10 +154,14 @@ export default function NightGuidePage() {
       </div>
 
       {/* Chat Area */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}} />
+      `,
+        }}
+      />
       <div className="flex-1 overflow-y-auto pb-48 px-4 md:px-6 scroll-smooth no-scrollbar relative">
         <div className="absolute inset-0 bg-gradient-to-b from-red-900/5 to-transparent pointer-events-none" />
         <div className="max-w-3xl mx-auto flex flex-col gap-8 pt-8 relative z-0">
@@ -160,10 +183,12 @@ export default function NightGuidePage() {
                   />
                 </div>
               )}
-              
+
               <div
                 className={`flex flex-col ${
-                  msg.role === "user" ? "items-end" : "items-start max-w-full min-w-0 flex-1"
+                  msg.role === "user"
+                    ? "items-end"
+                    : "items-start max-w-full min-w-0 flex-1"
                 }`}
               >
                 {msg.role === "assistant" && (
@@ -215,16 +240,27 @@ export default function NightGuidePage() {
                 />
               </div>
               <div className="flex flex-col items-start pt-1">
-                <span className="text-[11px] font-medium text-gray-500 mb-2 ml-1">NightGuide thinking...</span>
+                <span className="text-[11px] font-medium text-gray-500 mb-2 ml-1">
+                  NightGuide thinking...
+                </span>
                 <div className="flex gap-1.5 items-center h-6 px-1">
-                  <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  <div
+                    className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <div
+                    className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <div
+                    className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
                 </div>
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} className="h-4" />
         </div>
       </div>

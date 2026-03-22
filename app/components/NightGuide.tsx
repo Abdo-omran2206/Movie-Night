@@ -114,7 +114,7 @@ export default function NightGuide() {
   return (
     <>
       {/* Floating Button */}
-      <div className="fixed bottom-10 right-10 z-50">
+      <div className="fixed bottom-3 right-5 md:bottom-10 md:right-10 z-50">
         <button
           onClick={handleClick}
           aria-label="Open Night Guide Chatbot"
@@ -127,6 +127,9 @@ export default function NightGuide() {
             width={70}
             priority
             className="
+              w-13
+              md:w-20
+              md:h-20
               rounded-full 
               ring-2 
               ring-red-700 
@@ -148,7 +151,7 @@ export default function NightGuide() {
 
       {/* Chat Modal */}
       {open && (
-        <div className="fixed bottom-28 right-6 md:right-10 z-[60] w-[380px] max-w-[calc(100vw-2rem)] bg-[#050505] text-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col max-h-[600px] animate-in slide-in-from-bottom-5 fade-in duration-300">
+        <div className="fixed bottom-16 right-2.5 md:bottom-28 md:right-6 z-[60] w-[380px] max-w-[calc(100vw-2rem)] bg-[#050505] text-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col max-h-[600px] animate-in slide-in-from-bottom-5 fade-in duration-300">
           {/* Header */}
           <div className="flex justify-between items-center px-5 py-4 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md">
             <div className="flex items-center gap-2">
