@@ -6,12 +6,7 @@ import { askAI, clearConversation, getQuickSuggestions } from "../lib/NightGuide
 import { MessageParser } from "./MessageParser";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
+import { Message } from "@/app/constant/types";
 
 export default function NightGuide() {
   const [open, setOpen] = useState(false);
@@ -114,7 +109,7 @@ export default function NightGuide() {
   return (
     <>
       {/* Floating Button */}
-      <div className="fixed bottom-3 right-5 md:bottom-10 md:right-10 z-50">
+      <div className="fixed bottom-6 right-6 z-60 animate-in fade-in slide-in-from-bottom-10 duration-500">
         <button
           onClick={handleClick}
           aria-label="Open Night Guide Chatbot"
@@ -151,7 +146,7 @@ export default function NightGuide() {
 
       {/* Chat Modal */}
       {open && (
-        <div className="fixed bottom-16 right-2.5 md:bottom-28 md:right-6 z-[60] w-[380px] max-w-[calc(100vw-2rem)] bg-[#050505] text-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col max-h-[600px] animate-in slide-in-from-bottom-5 fade-in duration-300">
+        <div className="fixed bottom-16 right-2.5 md:bottom-28 md:right-6 z-60 w-[380px] max-w-[calc(100vw-2rem)] bg-[#050505] text-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col max-h-[600px] animate-in slide-in-from-bottom-5 fade-in duration-300">
           {/* Header */}
           <div className="flex justify-between items-center px-5 py-4 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md">
             <div className="flex items-center gap-2">
@@ -179,7 +174,7 @@ export default function NightGuide() {
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-[300px] max-h-[400px] bg-gradient-to-b from-[#050505] to-[#0a0a0a]">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth bg-linear-to-b from-white/5 to-transparent">
             {messages.map((msg, index) => (
               <div
                 key={index}

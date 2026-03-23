@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-import { Movie } from "../lib/tmdb";
+import { Movie, MovieCardProps } from "@/app/constant/types";
+import { posterUrl } from "@/app/constant/main";
 import Link from "next/link";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useState } from "react";
@@ -8,14 +9,8 @@ import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
 import { encodeId } from "../lib/hash";
 
-interface MovieCardProps {
-  movie: Movie;
-  size?: "small" | "medium" | "large";
-}
-
 export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
   const [imgError, setImgError] = useState(false);
-  const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
   const mediaType = movie.media_type || (movie.first_air_date ? "tv" : movie.known_for_department ? "person" : "movie");
 

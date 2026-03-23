@@ -1,6 +1,7 @@
 "use client";
 
 import { GrClose } from "react-icons/gr";
+import { youtubeEmbedUrl } from "@/app/constant/main";
 
 type Props = {
   url: string;
@@ -8,7 +9,6 @@ type Props = {
 };
 
 export default function TrailerModal({ url, onClose }: Props) {
-  const baceUrl = "https://www.youtube.com/embed/"
   return (
     <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50">
       {/* Container */}
@@ -24,7 +24,7 @@ export default function TrailerModal({ url, onClose }: Props) {
         {/* Video */}
         <div className="aspect-video w-full">
           <iframe
-            src={`${baceUrl}${url}`}
+            src={`${youtubeEmbedUrl}${url}`}
             title="Trailer"
             allowFullScreen
             className="w-full h-full"

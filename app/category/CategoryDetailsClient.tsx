@@ -1,8 +1,8 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { fetchMovies, Movie, getCategoryInfo } from "@/app/lib/tmdb";
+import { fetchMovies, getCategoryInfo } from "@/app/lib/tmdb";
+import { Movie, CategoryDetailsClientProps } from "@/app/constant/types";
 import MovieCard from "@/app/components/MovieCard";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -10,11 +10,6 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Link from "next/link";
 import LoadingModel from "@/app/components/LoadingModel";
 import NightGuide from "../components/NightGuide";
-
-interface CategoryDetailsClientProps {
-  initialMovies?: Movie[];
-  initialTotalPages?: number;
-}
 
 export default function CategoryDetailsClient({ 
   initialMovies = [], 

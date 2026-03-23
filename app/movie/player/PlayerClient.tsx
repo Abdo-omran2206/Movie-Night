@@ -3,21 +3,14 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import { useEffect, useState } from "react";
-import { fetchMovieDetails, MovieDetail } from "@/app/lib/tmdb";
+import { fetchMovieDetails } from "@/app/lib/tmdb";
+import { MovieDetail, StreamSource } from "@/app/constant/types";
 import LoadingModel from "@/app/components/LoadingModel";
 import Link from "next/link";
 import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
 import { supabaseClient } from "@/app/lib/supabase";
 import { StreamButtonSkeleton } from "@/app/components/Skeleton";
 import { decodeId } from "@/app/lib/hash";
-
-interface StreamSource {
-  id?: number;
-  name: string;
-  full_url: string;
-  is_active?: boolean;
-  added_at?: string;
-}
 
 export default function PlayerClient() {
   const [movie, setMovie] = useState<MovieDetail | null>(null);
@@ -51,7 +44,10 @@ export default function PlayerClient() {
 
       if (data && data.length > 0) {
         setStreamApi(data as StreamSource[]);
-        setEmbedUrl(data[0].full_url + id);
+        const firstUrl = data[0].full_url;
+        if (firstUrl && id) {
+          setEmbedUrl(firstUrl + id);
+        }
       }
       setStreamsLoading(false);
     }
@@ -127,9 +123,13 @@ export default function PlayerClient() {
                 streamApi.map((source, index) => (
                   <button
                     key={source.id || index}
-                    onClick={() => setEmbedUrl(source.full_url + id)}
+                    onClick={() => {
+                      if (source.full_url && id) {
+                        setEmbedUrl(source.full_url + id);
+                      }
+                    }}
                     className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg font-medium transition-all hover:cursor-pointer text-sm md:text-base ${
-                      embedUrl === source.full_url + id
+                      id && embedUrl === source.full_url + id
                         ? "bg-red-600 text-white shadow-lg"
                         : "bg-neutral-800 text-gray-300 hover:bg-neutral-700"
                     }`}

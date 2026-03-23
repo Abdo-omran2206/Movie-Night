@@ -1,18 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchMovies, Movie } from "../lib/tmdb";
+import { fetchMovies } from "../lib/tmdb";
 import MovieCard from "./MovieCard";
 import { SectionSkeleton } from "./Skeleton";
-interface SectionProps {
-  endpoint: string;
-  title: string;
-  categorySlug?: string;
-}
+import { Movie, SectionProps } from "../constant/types";
+
 
 export default function Section({
   endpoint,
   title,
-  categorySlug,
 }: SectionProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +28,6 @@ export default function Section({
   if (loading) return <SectionSkeleton />;
   if (!movies.length) return null;
 
-  // Final category for the URL
-  const category = categorySlug || endpoint.split("/").pop() || "";
-
   return (
     <section className="py-4 md:py-8 px-2 sm:px-4 relative" id={title}>
       <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
@@ -45,18 +38,6 @@ export default function Section({
             {title}
           </h2>
         </div>
-
-        {/* <Link
-          href={`/category/${category}`}
-          className="flex items-center gap-1 md:gap-2 text-xs md:text-lg text-red-600 hover:text-red-700 hover:gap-2 md:hover:gap-3 transition-all duration-300 group"
-        >
-          <span className="inline sm:hidden text-xs">More</span>
-          <span className="hidden sm:inline">View all</span>
-          <FaArrowRight
-            size={16}
-            className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300"
-          />
-        </Link> */}
       </div>
 
       {/* Movies Container */}

@@ -1,13 +1,5 @@
-interface IPResponse {
-  country_code?: string;
-  countryCode?: string;
-}
-
-interface Provider {
-  url: string;
-  parse: (d: string | IPResponse) => string | null | undefined;
-  isText?: boolean;
-}
+import { IPResponse, Provider } from "@/app/constant/types";
+import { ipProviders } from "@/app/constant/main";
 
 export async function getRegion() {
   // 1️⃣ Check if region is already set in store (persisted in AsyncStorage or Cookies)
@@ -38,19 +30,19 @@ export async function getRegion() {
 
   const providers: Provider[] = [
     {
-      url: "https://ipwho.is/",
+      url: ipProviders.ipwho,
       parse: (d) => (d as IPResponse).country_code,
     },
     {
-      url: "https://ipapi.co/json/",
+      url: ipProviders.ipapi,
       parse: (d) => (d as IPResponse).country_code,
     },
     {
-      url: "https://extreme-ip-lookup.com/json/",
+      url: ipProviders.extremeIp,
       parse: (d) => (d as IPResponse).countryCode,
     },
     {
-      url: "https://cloudflare.com/cdn-cgi/trace",
+      url: ipProviders.cloudflare,
       parse: (d) => {
         const lines = (d as string).split("\n");
         const loc = lines.find((line) => line.startsWith("loc="));

@@ -5,22 +5,8 @@ import { useState } from "react";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
 import { encodeId } from "../lib/hash";
-
-interface Cast {
-  id: number;
-  name: string;
-  character: string;
-  profile_path: string | null;
-}
-
-type Props = {
-  cast: Cast[];
-  limit?: number;
-  movieId?: string;
-  navig: string;
-};
-
-const posterUrl = "https://image.tmdb.org/t/p/w500";
+import { posterUrl } from "../constant/main";
+import { Cast, CastSectionProps } from "../constant/types";
 
 // 👇 كل ممثل ليه حالته الخاصة
 function CastImage({ item }: { item: Cast }) {
@@ -45,7 +31,7 @@ function CastImage({ item }: { item: Cast }) {
   );
 }
 
-export default function CastList({ cast, limit, movieId, navig }: Props) {
+export default function CastList({ cast, limit, movieId, navig }: CastSectionProps) {
   if (!cast || cast.length === 0) return <p>No cast available</p>;
 
   const displayCast = limit ? cast.slice(0, limit) : cast;
@@ -53,7 +39,7 @@ export default function CastList({ cast, limit, movieId, navig }: Props) {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
-      {displayCast.map((item) => (
+      {displayCast.map((item: Cast) => (
         <Link
           href={`/actor/${encodeId(item.id)}/${slugify(item.name)}`}
           key={item.id}

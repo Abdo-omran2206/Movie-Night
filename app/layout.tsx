@@ -3,6 +3,7 @@ import { Bebas_Neue, Roboto_Slab } from "next/font/google";
 import { SkeletonTheme } from "react-loading-skeleton";
 import NightGuide from "./components/NightGuide";
 import "./globals.css";
+import { siteUrl } from "./constant/main";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -14,8 +15,6 @@ const robotoSlab = Roboto_Slab({
   subsets: ["latin"],
   variable: "--font-roboto",
 });
-
-const siteUrl = "https://mymovienight.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

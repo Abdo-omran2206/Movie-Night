@@ -2,7 +2,7 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
-import { fetchTvDetails, TvDetail, Season } from "@/app/lib/tmdb";
+import { fetchTvDetails} from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,6 +15,8 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import LoadingModel from "@/app/components/LoadingModel";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { decodeId } from "@/app/lib/hash";
+import { posterUrl, backdropUrl } from "@/app/constant/main";
+import { Season, TvDetail } from "../constant/types";
 
 export default function TvDetailsClient() {
   const [data, setData] = useState<TvDetail | null>(null);
@@ -27,7 +29,7 @@ export default function TvDetailsClient() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
-  const posterUrl = "https://image.tmdb.org/t/p/w500";
+
 
   useEffect(() => {
     async function loadData() {
@@ -89,7 +91,7 @@ export default function TvDetailsClient() {
           <div className="absolute inset-0">
             {data.backdrop_path && (
               <Image
-                src={`https://image.tmdb.org/t/p/w1280${data.backdrop_path}`}
+                src={`${backdropUrl}${data.backdrop_path}`}
                 alt={data.name || "TV Show backdrop"}
                 fill
                 className="object-cover opacity-60"

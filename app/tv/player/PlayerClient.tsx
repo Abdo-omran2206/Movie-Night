@@ -3,7 +3,8 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import { useEffect, useState } from "react";
-import { fetchTvDetails, TvDetail } from "@/app/lib/tmdb";
+import { fetchTvDetails } from "@/app/lib/tmdb";
+import { StreamSource, TvDetail } from "@/app/constant/types";
 import LoadingModel from "@/app/components/LoadingModel";
 import Link from "next/link";
 import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
@@ -11,14 +12,6 @@ import { supabaseClient } from "@/app/lib/supabase";
 import { StreamButtonSkeleton } from "@/app/components/Skeleton";
 import { slugify } from "@/app/lib/slugify";
 import { decodeId } from "@/app/lib/hash";
-
-interface StreamSource {
-  id?: number;
-  name: string;
-  full_url_tv: string;
-  is_active?: boolean;
-  added_at?: string;
-}
 
 const getStreamUrl = (
   templateUrl: string,
@@ -81,7 +74,7 @@ export default function PlayerClient() {
 
       if (data && data.length > 0) {
         setStreamApi(data as StreamSource[]);
-        setActiveSource(data[0].full_url_tv);
+        setActiveSource(data[0].full_url_tv || null);
       }
       setStreamsLoading(false);
     }
@@ -182,7 +175,7 @@ export default function PlayerClient() {
                 streamApi.map((source, index) => (
                   <button
                     key={source.id || index}
-                    onClick={() => setActiveSource(source.full_url_tv)}
+                    onClick={() => setActiveSource(source.full_url_tv || null)}
                     className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg font-medium transition-all hover:cursor-pointer text-sm md:text-base ${
                       activeSource === source.full_url_tv
                         ? "bg-red-600 text-white shadow-lg"

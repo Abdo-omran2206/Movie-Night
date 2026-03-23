@@ -1,26 +1,11 @@
-import { getActorById, MovieSummary } from "@/app/lib/tmdb";
+import { getActorById } from "@/app/lib/tmdb";
+import { ActorDetail } from "@/app/constant/types";
 import { Metadata } from "next";
 import ActorDetailsClient from "../ActorDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 import { decodeId } from "@/app/lib/hash";
-
-export interface ActorDetail {
-  id: number;
-  name: string;
-  biography: string;
-  birthday: string | null;
-  place_of_birth: string | null;
-  profile_path: string | null;
-  known_for_department: string;
-  movie_credits?: {
-    cast: MovieSummary[];
-  };
-  tv_credits?: {
-    cast: MovieSummary[];
-  };
-}
-const siteUrl = "https://mymovienight.vercel.app";
+import { siteUrl, profileUrl } from "@/app/constant/main";
 export async function generateMetadata({
   params,
 }: {
@@ -52,7 +37,7 @@ export async function generateMetadata({
         images: data.profile_path
           ? [
               {
-                url: `https://image.tmdb.org/t/p/h632${data.profile_path}`,
+                url: `${profileUrl}${data.profile_path}`,
                 width: 632,
                 height: 948,
                 alt: data.name,
@@ -102,7 +87,7 @@ export default async function ActorPage({
       name: data.name,
       description: data.biography,
       image: data.profile_path
-        ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
+        ? `${profileUrl}${data.profile_path}`
         : undefined,
       jobTitle: data.known_for_department,
       birthDate: data.birthday,

@@ -6,21 +6,20 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { fetchGenres, fetchMovies, Movie } from "../lib/tmdb";
+import { fetchGenres, fetchMovies} from "../lib/tmdb";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import Link from "next/link";
 import { slugify } from "../lib/slugify";
 import { encodeId } from "../lib/hash";
+import { Genre, Movie } from "../constant/types";
+import { backdropUrl } from "../constant/main";
 
-interface Genre {
-  id: number;
-  name: string;
-}
+
 export default function Banner() {
   const [data, setData] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(true);
-  const backdropUrl = `https://image.tmdb.org/t/p/w1280`;
+  
 
   useEffect(() => {
     async function fetchBanner() {

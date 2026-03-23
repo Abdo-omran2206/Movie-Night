@@ -5,11 +5,13 @@ import Link from "next/link";
 import { MdMenu } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 import SideBarMenu from "./SideBarMenu";
-import { search, Movie } from "@/app/lib/tmdb";
+import { search } from "@/app/lib/tmdb";
 import Image from "next/image";
 import { slugify } from "../lib/slugify";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { encodeId } from "../lib/hash";
+import { thumbnailUrl } from "@/app/constant/main";
+import { Movie } from "../constant/types";
 export default function Navbar() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -222,10 +224,9 @@ function SearchItem({ item }: { item: Movie }) {
   const basePath = isTv ? "tv" : "movie";
   const href = `/${basePath}/${encodeId(item.id)}/${slugify(`${title || ""} ${year}`.trim())}`;
 
-  const posterUrl = "https://image.tmdb.org/t/p/w92";
   const imageSrc =
     !imgError && item.poster_path
-      ? `${posterUrl}${item.poster_path}`
+      ? `${thumbnailUrl}${item.poster_path}`
       : generateMovieAvatar(title || "Unknown");
 
   return (

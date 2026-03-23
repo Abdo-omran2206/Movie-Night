@@ -1,49 +1,8 @@
 import Link from "next/link";
-import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import { genres, navigationLinks, socialMedia } from "../constant/main";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-
-  const genres = [
-    { href: "/category/action", label: "Action" },
-    { href: "/category/comedy", label: "Comedy" },
-    { href: "/category/drama", label: "Drama" },
-    { href: "/category/sci-fi", label: "Sci-Fi" },
-    { href: "/category/horror", label: "Horror" },
-    { href: "/category/romance", label: "Romance" },
-  ];
-
-  const navigationLinks = [
-    { href: "/", label: "Home" },
-    { href: "/category/trending", label: "Trending" },
-    { href: "/category/top_rated", label: "Top Rated" },
-    { href: "/category/popular", label: "Popular" },
-    { href: "/category/upcoming", label: "Upcoming" },
-    { href: "/category/now_playing", label: "Now Playing" },
-  ];
-
-  const socialMedia = [
-    {
-      href: "/",
-      icon: FaFacebookF,
-      label: "Facebook",
-    },
-    {
-      href: "/",
-      icon: FaTwitter,
-      label: "Twitter",
-    },
-    {
-      href: "/",
-      icon: FaInstagram,
-      label: "Instagram",
-    },
-    {
-      href: "/",
-      icon: FaYoutube,
-      label: "YouTube",
-    },
-  ];
 
   return (
     <footer className="bg-neutral-950 border-t border-neutral-800 mt-16">
@@ -58,6 +17,21 @@ export default function Footer() {
               Your ultimate destination for movie enthusiasts. Discover, watch,
               and enjoy cinema like never before.
             </p>
+            <div className="flex gap-4">
+              {socialMedia.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <Link
+                    key={social.label}
+                    href={social.href}
+                    className="w-10 h-10 rounded-full bg-neutral-900 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all"
+                    aria-label={social.label}
+                  >
+                    <Icon size={18} />
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           {/* Navigation Links */}
@@ -85,13 +59,13 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-2">
-              {genres.map((link) => (
-                <li key={link.href + link.label}>
+              {genres.slice(0, 6).map((link) => (
+                <li key={link.href + link.name}>
                   <Link
                     href={link.href}
                     className="text-gray-400 hover:text-red-600 transition-colors duration-200 text-sm"
                   >
-                    {link.label}
+                    {link.name}
                   </Link>
                 </li>
               ))}
@@ -123,14 +97,14 @@ export default function Footer() {
           </p>
           <p className="text-gray-500 text-sm">
             Powered by{" "}
-            <a
+            <Link
               href="https://www.themoviedb.org/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-red-600 hover:text-red-500 font-semibold transition-colors"
             >
               TMDB API
-            </a>
+            </Link>
           </p>
         </div>
       </div>
