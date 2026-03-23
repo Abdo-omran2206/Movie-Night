@@ -24,6 +24,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: `${siteUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${siteUrl}/nightguide`,
+      lastModified: new Date(),
+      changeFrequency: "always",
+      priority: 0.9,
+    },
     ...categories.flatMap((cat) =>
       pages.map((page) => ({
         url: `${siteUrl}/category/${cat}${page > 1 ? `?page=${page}` : ""}`,

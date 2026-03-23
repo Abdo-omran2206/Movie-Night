@@ -18,6 +18,15 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isSearchModelOpen, setIsSearchModelOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     async function syncSearch() {
@@ -42,51 +51,74 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50">
-      <nav className="flex items-center justify-between px-2 py-3 md:px-6 md:py-4 bg-neutral-950/80 backdrop-blur-lg border-b border-neutral-800/50 gap-2 md:gap-4">
-        <div className="flex items-center justify-center gap-2 md:gap-4">
-          <MdMenu
-            className="text-red-600 text-md md:text-xl cursor-pointer"
-            size={30}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          />
-          {/* Logo */}
-          <Link
-            href="/"
-            className="text-red-600 text-2xl md:text-3xl tracking-widest font-bold select-none shrink-0"
-          >
-            <h1>MOVIE NIGHT</h1>
-          </Link>
-        </div>
-
-        {/* Search */}
-        <div className="flex-1 hidden md:flex max-w-[180px] md:max-w-md gap-2 md:gap-4 md:relative lg:relative">
-          <form
-            onSubmit={handleSubmit}
-            className="flex relative items-center gap-2 bg-neutral-900/80 border border-neutral-700 rounded-lg px-2 py-1.5 md:px-3 md:py-2 flex-1 max-w-[180px] md:max-w-md"
-          >
-            <input
-              type="search"
-              placeholder="Search movies..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-white placeholder-neutral-500 text-sm md:text-base min-w-0"
-            />
+    <header className="fixed top-0 left-0 w-full z-50 group">
+      <nav
+        className={`transition-all duration-500 ${
+          isScrolled
+            ? "bg-neutral-950/60 backdrop-blur-xl py-3 shadow-2xl"
+            : "bg-gradient-to-b from-black/80 to-transparent py-5"
+        }`}
+      >
+        <div className="container mx-auto px-4 lg:px-20 flex items-center justify-between gap-4">
+          {/* Logo & Menu Group */}
+          <div className="flex items-center gap-4 md:gap-8 shrink-0">
             <button
-              type="submit"
-              className="text-red-600 hover:text-red-500 transition"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-white hover:text-red-600 transition-colors p-1"
+              aria-label="Toggle menu"
             >
-              <FaSearch className="text-sm md:text-base" />
+              <MdMenu size={28} />
             </button>
-          </form>
-          {query.trim() && <SearchMiniCards results={searchResults} />}
+
+            <Link
+              href="/"
+              className="group/logo flex items-center gap-2 select-none"
+            >
+              <h1 className="text-red-600 text-shadow-black text-shadow-sm text-2xl md:text-3xl tracking-widest font-black transition-transform group-hover/logo:scale-105">
+                MOVIE NIGHT
+              </h1>
+            </Link>
+          </div>
+
+          {/* Desktop Search */}
+          <div className="hidden md:flex flex-1 max-w-md relative group/search">
+            <form
+              onSubmit={handleSubmit}
+              className="flex items-center w-full bg-neutral-900/60 hover:bg-neutral-900/90 border border-neutral-800 focus-within:border-red-600/50 focus-within:ring-2 focus-within:ring-red-600/20 rounded-xl px-4 py-2 transition-all duration-300"
+            >
+              <input
+                type="search"
+                placeholder="Search movies, tv shows..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="flex-1 bg-transparent outline-none text-white placeholder-neutral-500 text-sm lg:text-base min-w-0"
+              />
+              <button
+                type="submit"
+                className="text-neutral-400 hover:text-red-600 transition-colors px-1"
+                aria-label="Submit search"
+              >
+                <FaSearch size={18} />
+              </button>
+            </form>
+            {query.trim() && (
+              <div className="absolute top-full left-0 right-0 mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                <SearchMiniCards results={searchResults} />
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Search Trigger */}
+          <div className="flex md:hidden items-center">
+            <button
+              onClick={() => setIsSearchModelOpen(true)}
+              className="p-2 text-white hover:text-red-600 transition-colors"
+              aria-label="Open mobile search"
+            >
+              <FaSearch size={22} />
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => setIsSearchModelOpen(true)}
-          className="relative md:hidden rounded-full px-2 py-1.5 bg-neutral-900/80 border border-neutral-700 mr-2"
-        >
-          <FaSearch className="text-red-600 text-lg " />
-        </button>
       </nav>
       {isMenuOpen && <SideBarMenu setIsMenuOpen={setIsMenuOpen} />}
       {isSearchModelOpen && (
@@ -133,6 +165,7 @@ function SearchModal({
         <button
           onClick={() => setIsSearchModelOpen(false)}
           className="absolute right-6 top-6 text-neutral-400 hover:text-white transition-colors"
+          aria-label="Close search modal"
         >
           <span className="text-2xl">✕</span>
         </button>
@@ -141,7 +174,10 @@ function SearchModal({
           Search Movies & TV
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex relative items-center gap-3 mb-6">
+        <form
+          onSubmit={handleSubmit}
+          className="flex relative items-center gap-3 mb-6"
+        >
           <div className="relative flex-1">
             {/* <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" /> */}
             <input
@@ -156,6 +192,7 @@ function SearchModal({
           <button
             type="submit"
             className="absolute right-0 bg-red-600 hover:bg-red-700 p-3 px-5 rounded-xl text-white font-semibold transition-all shadow-lg shadow-red-600/20 active:scale-95"
+            aria-label="Submit search"
           >
             <FaSearch className="text-white text-lg " />
           </button>
@@ -206,7 +243,7 @@ function SearchMiniCards({ results }: { results: Movie[] }) {
   if (filteredResults.length === 0) return null;
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 bg-neutral-900/95 backdrop-blur-md rounded-lg shadow-2xl w-full border border-neutral-800 overflow-hidden z-50">
+    <div className="absolute top-full left-0 right-0 bg-neutral-900/95 backdrop-blur-md rounded-lg shadow-2xl w-full border border-neutral-800 overflow-hidden z-50">
       {filteredResults.map((item) => (
         <SearchItem key={`${item.media_type}-${item.id}`} item={item} />
       ))}

@@ -113,14 +113,13 @@ export default async function Home() {
   return (
     <div className="overflow-x-hidden bg-black">
       <Navbar />
-      <main className="min-h-screen pt-[5vh]">
+      <main className="min-h-screen">
         <Banner />
         {sections.map((section: SectionData) => (
           <Section
             key={section.endpoint}
             endpoint={section.endpoint}
             title={section.title}
-            categorySlug={section.slug}
           />
         ))}
       </main>

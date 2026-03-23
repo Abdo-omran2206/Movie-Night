@@ -17,10 +17,12 @@ import {
   FaFlag, 
   FaHatCowboy, 
   FaSearch,
-  FaFacebookF,
-  FaTwitter,
   FaInstagram,
-  FaYoutube
+  FaYoutube,
+  FaRedditAlien,
+  FaGithub,
+  FaDiscord,
+  FaLinkedin
 } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoFlame, IoStar, IoCalendar, IoPlay } from "react-icons/io5";
@@ -94,13 +96,14 @@ export const navigationLinks = [
   { href: "/category/popular", label: "Popular" },
   { href: "/category/upcoming", label: "Upcoming" },
   { href: "/category/now_playing", label: "Now Playing" },
+  { href: "/about", label: "About" },
 ];
 
 export const socialMedia = [
-  { href: "/", icon: FaFacebookF, label: "Facebook" },
-  { href: "/", icon: FaTwitter, label: "Twitter" },
-  { href: "/", icon: FaInstagram, label: "Instagram" },
-  { href: "/", icon: FaYoutube, label: "YouTube" },
+  { href: "https://www.linkedin.com/in/abdalla-omran-388572361/", icon: FaLinkedin, label: "Linkedin" },
+  { href: "https://github.com/Abdo-omran2206", icon: FaGithub , label: "Github " },
+  { href: "https://www.reddit.com/r/myMovieNight/", icon: FaRedditAlien  , label: "Reddit" },
+  { href: "https://discord.gg/yep7xvZj", icon: FaDiscord, label: "Discord" },
 ];
 
 export const categories = [

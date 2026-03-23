@@ -57,7 +57,7 @@ export default function Banner() {
   if (!data.length) return null;
 
   return (
-    <div className="w-full max-h-96 h-96 md:max-h-[95svh] md:h-[95svh] max-sm:h-screen relative group">
+    <div className="w-full max-h-96 h-96 md:max-h-[100svh] md:h-[100svh] max-sm:h-screen relative group">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -76,7 +76,9 @@ export default function Banner() {
                 alt={item.title || item.name || "Movie Poster"}
                 fill
                 priority
+                fetchPriority="high"
                 className="object-cover"
+                sizes="100vw"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent" />
 

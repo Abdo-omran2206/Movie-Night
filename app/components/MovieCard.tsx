@@ -66,6 +66,7 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
           fill
           className="object-cover brightness-85 group-hover:brightness-105 transition-all duration-300"
           onError={() => setImgError(true)}
+          sizes="(max-width: 768px) 250px, 250px"
         />
       </div>
 

@@ -3,8 +3,15 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["image.tmdb.org"], // هنا ضيف أي دومين خارجي هتستخدمه
-    unoptimized: true, 
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
+      },
+    ],
+  },
+  experimental: {
+    optimizePackageImports: ["react-icons/fa", "react-icons/fa6", "react-icons/md", "react-icons/io5"],
   },
 };
 

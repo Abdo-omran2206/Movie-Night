@@ -118,9 +118,11 @@ export default function NightGuide() {
           <Image
             src="/NightGuide.png"
             alt="Night Guide Chatbot"
-            height={70}
-            width={70}
+            height={80}
+            width={80}
+            quality={75}
             priority
+            sizes="(max-width: 768px) 52px, 80px"
             className="
               w-13
               md:w-20

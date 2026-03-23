@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Roboto_Slab } from "next/font/google";
 import { SkeletonTheme } from "react-loading-skeleton";
-import NightGuide from "./components/NightGuide";
-import "./globals.css";
 import { siteUrl } from "./constant/main";
+import "./globals.css";
+import DynamicNightGuide from "./components/DynamicNightGuide";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -177,6 +177,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://api.themoviedb.org" />
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://api.themoviedb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -188,7 +192,7 @@ export default function RootLayout({
       >
         <SkeletonTheme baseColor="#1a1a1a" highlightColor="#333">
           {children}
-          <NightGuide />
+          <DynamicNightGuide />
         </SkeletonTheme>
       </body>
     </html>

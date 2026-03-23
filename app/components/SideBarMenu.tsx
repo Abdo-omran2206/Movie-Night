@@ -1,11 +1,5 @@
-import { 
-  IoClose, 
-  IoHome 
-} from "react-icons/io5";
-import { 
-  FaDownload, 
-  FaRobot 
-} from "react-icons/fa";
+import { IoClose, IoHome } from "react-icons/io5";
+import { FaDownload, FaRobot, FaInfoCircle } from "react-icons/fa";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { categories, genres } from "@/app/constant/main";
@@ -60,7 +54,14 @@ export default function SideBarMenu({
             <IoHome className="group-hover:scale-110 transition-transform" />
             <span>Home</span>
           </Link>
-
+          <Link
+            href="/about"
+            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <FaInfoCircle className="group-hover:scale-110 transition-transform" />
+            <span>About</span>
+          </Link>
           <Link
             href="/nightguide"
             className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"

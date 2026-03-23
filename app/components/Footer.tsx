@@ -13,7 +13,7 @@ export default function Footer() {
             <h2 className="text-red-600 text-3xl font-bold tracking-widest">
               MOVIE NIGHT
             </h2>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-gray-300 text-sm leading-relaxed">
               Your ultimate destination for movie enthusiasts. Discover, watch,
               and enjoy cinema like never before.
             </p>
@@ -24,7 +24,7 @@ export default function Footer() {
                   <Link
                     key={social.label}
                     href={social.href}
-                    className="w-10 h-10 rounded-full bg-neutral-900 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all"
+                    className="w-10 h-10 rounded-full bg-neutral-900 flex items-center justify-center text-gray-300 hover:bg-red-500 hover:text-white transition-all"
                     aria-label={social.label}
                   >
                     <Icon size={18} />
@@ -44,7 +44,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-red-600 transition-colors duration-200 text-sm"
+                    className="text-gray-300 hover:text-red-500 transition-colors duration-200 text-sm"
                   >
                     {link.label}
                   </Link>
@@ -63,7 +63,7 @@ export default function Footer() {
                 <li key={link.href + link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-red-600 transition-colors duration-200 text-sm"
+                    className="text-gray-300 hover:text-red-500 transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -77,7 +77,7 @@ export default function Footer() {
             <h3 className="text-white font-semibold text-lg mb-4">
               Get the App
             </h3>
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+            <p className="text-gray-300 text-sm leading-relaxed mb-4">
               Install Movie Night as an app for a faster, more immersive
               experience.
             </p>
@@ -92,16 +92,16 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-neutral-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-400 text-sm">
             © {currentYear} Movie Night. All rights reserved.
           </p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-400 text-sm">
             Powered by{" "}
             <Link
               href="https://www.themoviedb.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-red-600 hover:text-red-500 font-semibold transition-colors"
+              className="text-red-500 underline underline-offset-4 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               TMDB API
             </Link>

@@ -30,7 +30,7 @@ export default function ChatMovieCard({ movie }: { movie: Movie }) {
       href={href}
       className="group relative flex flex-col w-[140px] md:w-[160px] shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#0a0a0a] transition-all duration-300 hover:-translate-y-1.5 hover:border-red-600/50 hover:shadow-[0_8px_20px_rgba(220,38,38,0.2)]"
     >
-      <div className="relative aspect-[2/3] w-full overflow-hidden bg-neutral-900">
+      <div className="relative aspect-2/3 group-hover:scale-105 transition-transform duration-500">
         <Image
           src={imageSrc}
           alt={originalTitle}
@@ -40,7 +40,7 @@ export default function ChatMovieCard({ movie }: { movie: Movie }) {
           sizes="(max-width: 768px) 140px, 160px"
         />
         {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/40 to-transparent transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent opacity-80" />
         
         {/* Rating Badge */}
         {movie.vote_average > 0 && (
