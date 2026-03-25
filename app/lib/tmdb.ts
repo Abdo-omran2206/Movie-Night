@@ -123,41 +123,59 @@ export function getGenreSlug(id: number): string | undefined {
   return Object.keys(GENRE_MAP).find((key) => GENRE_MAP[key] === id);
 }
 
-export async function search(query: string, page: number): Promise<TMDBResponse<Movie>> {
+export async function search(query: string, page: number, type: string = "multi"): Promise<TMDBResponse<Movie>> {
+  const endpoint = type === "all" || !type ? "multi" : type;
   try {
     const response = await fetch(
-      `${BASE_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
+      `${BASE_URL}/search/${endpoint}?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
         query
       )}&page=${page}&include_adult=false`
     );
     const data = await response.json();
     return data || { results: [], total_pages: 0, total_results: 0, page: 1 };
   } catch (error) {
-    console.error(`Error searching movies:`, error);
+    console.error(`Error searching media:`, error);
     return { results: [], total_pages: 0, total_results: 0, page: 1 };
   }
 }
 
-export const getCategoryInfo = (cat: string) => {
+export const getCategoryInfo = (cat: string, type: string = "movie") => {
   const slug = (cat || "").toLowerCase().replace(/-/g, "_");
+  const isTv = type === "tv";
+  const mediaType = isTv ? "tv" : "movie";
 
   switch (cat) {
     case "trending":
-      return { endpoint: "/trending/movie/week", title: "Trending Movies" };
+      return { 
+        endpoint: `/trending/${mediaType}/week`, 
+        title: isTv ? "Trending TV Shows" : "Trending Movies" 
+      };
     case "top_rated":
-      return { endpoint: "/movie/top_rated", title: "Top Rated Movies" };
+      return { 
+        endpoint: `/${mediaType}/top_rated`, 
+        title: isTv ? "Top Rated TV Shows" : "Top Rated Movies" 
+      };
     case "popular":
     case "populer":
-      return { endpoint: "/movie/popular", title: "Popular Movies" };
+      return { 
+        endpoint: `/${mediaType}/popular`, 
+        title: isTv ? "Popular TV Shows" : "Popular Movies" 
+      };
     case "upcoming":
-      return { endpoint: "/movie/upcoming", title: "Upcoming Movies" };
+      return { 
+        endpoint: isTv ? "/tv/on_the_air" : "/movie/upcoming", 
+        title: isTv ? "TV Shows On The Air" : "Upcoming Movies" 
+      };
     case "now_playing":
-      return { endpoint: "/movie/now_playing", title: "Now Playing" };
+      return { 
+        endpoint: isTv ? "/tv/airing_today" : "/movie/now_playing", 
+        title: isTv ? "TV Shows Airing Today" : "Now Playing" 
+      };
     default: {
       const genreId = GENRE_MAP[slug] || GENRE_MAP[cat];
       if (genreId) {
         return {
-          endpoint: `/discover/movie?with_genres=${genreId}`,
+          endpoint: `/discover/${mediaType}?with_genres=${genreId}`,
           title: cat
             .replace(/_/g, " ")
             .replace(/-/g, " ")
@@ -167,12 +185,12 @@ export const getCategoryInfo = (cat: string) => {
 
       if (/^\d+$/.test(cat)) {
         return {
-          endpoint: `/discover/movie?with_genres=${cat}`,
+          endpoint: `/discover/${mediaType}?with_genres=${cat}`,
           title: "Movies",
         };
       }
       return {
-        endpoint: `/movie/${cat}`,
+        endpoint: `/${mediaType}/${cat}`,
         title: cat
           ? cat.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
           : "Movies",

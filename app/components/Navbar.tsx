@@ -51,7 +51,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 group">
+    <header className="fixed top-0 left-0 w-full z-50">
       <nav
         className={`transition-all duration-500 ${
           isScrolled
@@ -91,7 +91,7 @@ export default function Navbar() {
 
             {/* Explore Dropdown */}
             <div className="relative group/nav">
-              <button className="text-neutral-400 hover:text-white transition-colors flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
+              <button className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
                 Explore
                 <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">▼</span>
               </button>
@@ -113,7 +113,7 @@ export default function Navbar() {
 
             {/* Genres Dropdown */}
             <div className="relative group/nav">
-              <button className="text-neutral-400 hover:text-white transition-colors flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
+              <button className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
                 Genres
                 <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">▼</span>
               </button>
@@ -153,7 +153,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Search */}
-          <div className="hidden md:flex flex-1 max-w-md relative group/search">
+          <div className="hidden md:flex flex-1 max-w-sm relative group/search">
             <form
               onSubmit={handleSubmit}
               className="flex items-center w-full bg-neutral-900/60 hover:bg-neutral-900/90 border border-neutral-800 focus-within:border-red-600/50 focus-within:ring-2 focus-within:ring-red-600/20 rounded-xl px-4 py-2 transition-all duration-300"
