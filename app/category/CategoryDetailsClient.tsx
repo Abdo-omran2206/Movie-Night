@@ -116,7 +116,7 @@ export default function CategoryDetailsClient({
               <select
                 value={mediaType}
                 onChange={(e) => handleTypeChange(e.target.value)}
-                className="appearance-none bg-neutral-900 border border-neutral-800 rounded-xl px-6 py-3.5 pr-14 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:border-red-600 hover:bg-neutral-800 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-600/50 w-full sm:w-48 shadow-xl"
+                className="appearance-none bg-neutral-900 border border-neutral-800 rounded-xl px-6 py-3.5 pr-14 text-[11px] font-black uppercase tracking-widest text-white hover:border-red-600 hover:bg-neutral-800 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-600/50 w-full sm:w-48 shadow-xl"
               >
                 <option value="movie">Movies</option>
                 <option value="tv">TV Shows</option>
@@ -163,7 +163,7 @@ export default function CategoryDetailsClient({
               </button>
 
               <div className="flex items-center gap-4 px-6 py-3.5 bg-neutral-900/30 rounded-2xl border border-white/5">
-                <span className="text-red-600 font-black text-lg min-w-[1.5rem] text-center">
+                <span className="text-red-600 font-black text-lg min-w-6 text-center">
                   {currentPage}
                 </span>
                 <span className="text-neutral-700 font-black">/</span>
