@@ -60,11 +60,16 @@ export default function SeasonDetailsClient({
                 src={backdropUrl + series.backdrop_path}
                 alt={series.name}
                 fill
-                className="object-cover opacity-60 blur-sm"
+                className="object-cover opacity-80"
                 priority
               />
             )}
-            <div className="absolute inset-0 bg-linear-to-t from-black/65  to-transparent" />
+            {/* Main bottom-up gradient for blending */}
+            <div className="absolute inset-0 bg-linear-to-b from-transparent via-black/40 to-black" />
+            {/* Top-down gradient for better navbar contrast */}
+            <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-transparent h-1/3" />
+            {/* Subtle solid-ish bottom layer to hide image edges */}
+            <div className="absolute inset-0 bottom-0 left-0 right-0 backdrop-blur-xs" />
           </div>
 
           <div className="container mx-auto px-4 lg:px-20 relative z-10">

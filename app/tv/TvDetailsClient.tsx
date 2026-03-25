@@ -98,7 +98,13 @@ export default function TvDetailsClient() {
                 priority
               />
             )}
-            <div className="absolute inset-0 bg-black/65" />
+            {/* Main bottom-up gradient for blending */}
+            <div className="absolute inset-0 bg-linear-to-b from-transparent via-black/40 to-black" />
+            {/* Top-down gradient for better navbar contrast */}
+            <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-transparent h-1/3" />
+            {/* Subtle solid-ish bottom layer to hide image edges */}
+            <div className="absolute inset-0 bottom-0 left-0 right-0 backdrop-blur-xs" />
+
           </div>
 
           <div className="relative z-10 flex flex-col lg:flex-row container mx-auto px-4 lg:px-20 gap-6 lg:gap-10 min-h-[60vh] lg:min-h-screen items-center py-20 lg:py-0">
