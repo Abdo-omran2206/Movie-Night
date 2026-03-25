@@ -2,10 +2,7 @@
 import { useEffect, useState } from "react";
 import { fetchMovies, Movie } from "../lib/tmdb";
 import MovieCard from "./MovieCard";
-import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
 import { SectionSkeleton } from "./Skeleton";
-
 interface SectionProps {
   endpoint: string;
   title: string;

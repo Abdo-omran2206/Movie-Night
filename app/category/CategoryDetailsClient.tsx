@@ -9,6 +9,7 @@ import Footer from "@/app/components/Footer";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Link from "next/link";
 import LoadingModel from "@/app/components/LoadingModel";
+import NightGuide from "../components/NightGuide";
 
 interface CategoryDetailsClientProps {
   initialMovies?: Movie[];
@@ -153,6 +154,8 @@ export default function CategoryDetailsClient({
           </div>
         )}
       </main>
+            <NightGuide/>
+      
       <Footer />
     </>
   );

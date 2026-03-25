@@ -60,6 +60,12 @@
   - User visits `/install` from the footer or a shared link.
   - Page highlights the Movie Night experience and shows an install call-to-action.
   - On click, user is directed to the latest app download/store URL configured via Supabase `app_config`.
+7. **Ask NightGuide for Recommendations (AI Chat)**
+  - User clicks the floating "NightGuide" widget or navigates to `/nightguide`.
+  - User types a prompt (e.g., "Recommend a sci-fi movie from 2014").
+  - The Gemini AI processes the request using a custom prompt, formatted as text with `🎬 **Title** (Year)`.
+  - The client parses the AI response and invisibly invokes a local TMDB search.
+  - The interface seamlessly displays the text response alongside accurate `ChatMovieCard` visual components without AI ID hallucination.
 
 ### 4. Functional Requirements
 
@@ -215,6 +221,16 @@
     - `allowFullScreen` enabled.
     - Failures from a given domain should not break the page; users can try other sources.
 
+#### 4.9 NightGuide AI Assistant
+
+- **UI & Integration**
+  - **Floating Widget**: A globally available floating chat button (hidden on the dedicated `/nightguide` page) providing quick recommendations.
+  - **Dedicated Page (`/nightguide`)**: A distraction-free, full-screen chat experience featuring premium aesthetics (e.g., glassmorphic inputs, slide-in animations).
+  - **Movie Cards via MessageParser**: AI output matching the pattern `(🎬|📺) **Title** (Year)` is parsed by the client. The client performs a local search against the TMDB API, rendering a compact `ChatMovieCard` in the chat to prevent broken links from AI hallucinated IDs.
+- **AI Logic & Fallbacks**
+  - Prompted strictly to return recommendations avoiding internal IDs, only referencing Titles and Years.
+  - Implements an automated capability fallback hierarchy: if `gemini-2.5-flash` is rate-limited or errors, it falls back to `gemini-2.5-flash-lite`, and then to `gemini-1.5-flash` to ensure uninterrupted service.
+
 ### 5. Non‑Functional Requirements
 
 #### 5.1 Performance
@@ -254,6 +270,7 @@
   - `/`, `/search`, `/category/[category]`
   - `/movie/[id]/[slug]`, `/tv/[id]/[slug]`, `/actor/[id]/[slug]`
   - `/movie/cast/[id]`, `/movie/player/[id]/[slug]`, `/tv/player/[id]/[slug]/[season]/[episode]`
+  - `/nightguide` (AI assistant full screen)
   - `/install` (web app install and download page)
 
 #### 5.5 Accessibility & UX
@@ -273,6 +290,7 @@
 - **Environment variables (public)**
   - `NEXT_PUBLIC_API_KEY` – TMDB API key.
   - `NEXT_PUBLIC_STREAM_API`, `NEXT_PUBLIC_STREAM2_API`, `NEXT_PUBLIC_STREAM3_API`, `NEXT_PUBLIC_STREAM4_API`, `NEXT_PUBLIC_STREAM5_API` – base URLs for streaming providers.
+  - `NEXT_PUBLIC_GEMINI_API_KEY` – Google Generative AI API key for the NightGuide assistant.
 - **Libraries**
   - Next.js, React, TypeScript.
   - Axios / fetch for networking.

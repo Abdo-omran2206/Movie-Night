@@ -27,6 +27,7 @@ import {
   FaHatCowboy,
   FaSearch,
   FaDownload,
+  FaRobot 
 } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import Link from "next/link";
@@ -114,6 +115,15 @@ export default function SideBarMenu({
           >
             <IoHome className="group-hover:scale-110 transition-transform" />
             <span>Home</span>
+          </Link>
+
+          <Link
+            href="/nightguide"
+            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <FaRobot className="group-hover:scale-110 transition-transform" />
+            <span>Night Guide</span>
           </Link>
 
           <Link
