@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetchMovies, MovieSummary } from "../../lib/tmdb";
+import { fetchMovies } from "../../lib/tmdb";
+import { MovieSummary } from "../../constant/types";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
-
-const BASE_URL = "https://mymovienight.vercel.app";
+import { siteUrl } from "../../constant/main";
 
 async function getPopularActorIds() {
   const pages = [1, 2, 3, 4, 5];
@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const actorIds = await getPopularActorIds();
 
   const actorPages: MetadataRoute.Sitemap = actorIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/actor/${encodeId(id)}/${slug}`,
+    url: `${siteUrl}/actor/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.5,

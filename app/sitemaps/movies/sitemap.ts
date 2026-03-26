@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetchMovies, fetchGenres, MovieSummary } from "../../lib/tmdb";
+import { fetchMovies, fetchGenres } from "../../lib/tmdb";
+import { MovieSummary } from "../../constant/types";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
-
-const BASE_URL = "https://mymovienight.vercel.app";
+import { siteUrl } from "../../constant/main";
 
 async function getAllMovieIds() {
   const pages = [1, 2, 3, 4, 5];
@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const movieGenrePages: MetadataRoute.Sitemap = movieGenres.flatMap((genre: { id: number; name: string }) => 
     [1, 2, 3, 4, 5].map(page => ({
-      url: `${BASE_URL}/category/${slugify(genre.name)}${page > 1 ? `?page=${page}` : ""}`,
+      url: `${siteUrl}/category/${slugify(genre.name)}${page > 1 ? `?page=${page}` : ""}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: page === 1 ? 0.7 : 0.5,
@@ -48,21 +48,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const moviePages: MetadataRoute.Sitemap = movieIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/movie/${encodeId(id)}/${slug}`,
+    url: `${siteUrl}/movie/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
 
   const moviePlayerPages: MetadataRoute.Sitemap = movieIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/movie/player/${encodeId(id)}/${slug}`,
+    url: `${siteUrl}/movie/player/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.5,
   }));
 
   const movieCastPages: MetadataRoute.Sitemap = movieIds.map(({ id }: { id: number }) => ({
-    url: `${BASE_URL}/movie/cast/${encodeId(id)}`,
+    url: `${siteUrl}/movie/cast/${encodeId(id)}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.4,

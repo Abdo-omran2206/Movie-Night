@@ -3,17 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 import { useState } from "react";
-import { MovieSummary } from "../lib/tmdb";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
 import { encodeId } from "../lib/hash";
+import { posterUrl } from "@/app/constant/main";
+import { MovieSummary } from "../constant/types";
 
 type Props = {
   movies: MovieSummary[];
   limit?: number;
 };
-
-const posterUrl = "https://image.tmdb.org/t/p/w500";
 
 function MovieImage({ item }: { item: MovieSummary }) {
   const [imgError, setImgError] = useState(false);

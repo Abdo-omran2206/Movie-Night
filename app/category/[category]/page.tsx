@@ -1,10 +1,10 @@
-import { fetchMovies, getCategoryInfo, Movie } from "@/app/lib/tmdb";
+import { fetchMovies, getCategoryInfo } from "@/app/lib/tmdb";
+import { Movie } from "@/app/constant/types";
 import { Metadata } from "next";
 import { encodeId } from "@/app/lib/hash";
 import { slugify } from "@/app/lib/slugify";
 import CategoryDetailsClient from "../CategoryDetailsClient";
-
-const siteUrl = "https://mymovienight.vercel.app";
+import { siteUrl, posterUrl } from "@/app/constant/main";
 
 export async function generateMetadata({
   params,
@@ -89,7 +89,7 @@ export default async function CategoryPage({
           url: `${siteUrl}/movie/${encodeId(movie.id)}/${slug}`,
           name: title,
           image: movie.poster_path
-            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+            ? `${posterUrl}${movie.poster_path}`
             : undefined,
         };
       }),

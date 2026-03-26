@@ -1,37 +1,14 @@
-import { MdAnimation } from "react-icons/md";
-import {
-  IoClose,
-  IoHome,
-  IoFlame,
-  IoStar,
-  IoCalendar,
-  IoPlay,
+import { 
+  IoClose, 
+  IoHome 
 } from "react-icons/io5";
-import {
-  FaFistRaised,
-  FaTheaterMasks,
-  FaUserFriends,
-  FaGhost,
-  FaMountain,
-  FaLaughSquint,
-  FaMask,
-  FaFileAlt,
-  FaMagic,
-  FaHistory,
-  FaMusic,
-  FaHeart,
-  FaRocket,
-  FaTv,
-  FaSkull,
-  FaFlag,
-  FaHatCowboy,
-  FaSearch,
-  FaDownload,
+import { 
+  FaDownload, 
   FaRobot 
 } from "react-icons/fa";
-import { FaArrowTrendUp } from "react-icons/fa6";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { categories, genres } from "@/app/constant/main";
 
 export default function SideBarMenu({
   setIsMenuOpen,
@@ -50,39 +27,6 @@ export default function SideBarMenu({
     setMounted(false);
     setTimeout(() => setIsMenuOpen(false), 300); // Wait for animation to finish
   };
-
-  const categories = [
-    { name: "Trending", icon: <FaArrowTrendUp />, href: "/category/trending" },
-    { name: "Popular", icon: <IoFlame />, href: "/category/popular" },
-    { name: "Top Rated", icon: <IoStar />, href: "/category/top_rated" },
-    { name: "Upcoming", icon: <IoCalendar />, href: "/category/upcoming" },
-    { name: "Now Playing", icon: <IoPlay />, href: "/category/now_playing" },
-  ];
-  const genres = [
-    { name: "Action", icon: <FaFistRaised />, href: "/category/action" },
-    { name: "Adventure", icon: <FaMountain />, href: "/category/adventure" },
-    { name: "Animation", icon: <MdAnimation />, href: "/category/animation" },
-    { name: "Comedy", icon: <FaLaughSquint />, href: "/category/comedy" },
-    { name: "Crime", icon: <FaMask />, href: "/category/crime" },
-    { name: "Documentary", icon: <FaFileAlt />, href: "/category/documentary" },
-    { name: "Drama", icon: <FaTheaterMasks />, href: "/category/drama" },
-    { name: "Family", icon: <FaUserFriends />, href: "/category/family" },
-    { name: "Fantasy", icon: <FaMagic />, href: "/category/fantasy" },
-    { name: "History", icon: <FaHistory />, href: "/category/history" },
-    { name: "Horror", icon: <FaGhost />, href: "/category/horror" },
-    { name: "Music", icon: <FaMusic />, href: "/category/music" },
-    { name: "Mystery", icon: <FaSearch />, href: "/category/mystery" },
-    { name: "Romance", icon: <FaHeart />, href: "/category/romance" },
-    {
-      name: "Science Fiction",
-      icon: <FaRocket />,
-      href: "/category/science-fiction",
-    },
-    { name: "TV Movie", icon: <FaTv />, href: "/category/tv-movie" },
-    { name: "Thriller", icon: <FaSkull />, href: "/category/thriller" },
-    { name: "War", icon: <FaFlag />, href: "/category/war" },
-    { name: "Western", icon: <FaHatCowboy />, href: "/category/western" },
-  ];
 
   return (
     <div
@@ -148,7 +92,7 @@ export default function SideBarMenu({
                 onClick={handleClose}
               >
                 <span className="group-hover:scale-110 transition-transform">
-                  {cat.icon}
+                  <cat.icon />
                 </span>
                 <span className="text-base sm:text-lg">{cat.name}</span>
               </Link>
@@ -168,7 +112,7 @@ export default function SideBarMenu({
                 onClick={handleClose}
               >
                 <span className="shrink-0 group-hover:scale-110 transition-transform">
-                  {g.icon}
+                  <g.icon />
                 </span>
                 <span className="truncate text-base sm:text-lg">{g.name}</span>
               </Link>

@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetchMovies, fetchTvGenres, MovieSummary } from "../../lib/tmdb";
+import { fetchMovies, fetchTvGenres } from "../../lib/tmdb";
+import { MovieSummary } from "../../constant/types";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
-
-const BASE_URL = "https://mymovienight.vercel.app";
+import { siteUrl } from "../../constant/main";
 
 async function getAllTvIds() {
   const pages = [1, 2, 3, 4, 5];
@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const tvGenrePages: MetadataRoute.Sitemap = tvGenres.flatMap((genre: { id: number; name: string }) => 
     [1, 2, 3, 4, 5].map(page => ({
-      url: `${BASE_URL}/category/${slugify(genre.name)}${page > 1 ? `?page=${page}` : ""}`,
+      url: `${siteUrl}/category/${slugify(genre.name)}${page > 1 ? `?page=${page}` : ""}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: page === 1 ? 0.7 : 0.5,
@@ -49,21 +49,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const tvPages: MetadataRoute.Sitemap = tvIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${BASE_URL}/tv/${encodeId(id)}/${slug}`,
+    url: `${siteUrl}/tv/${encodeId(id)}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
 
   const tvPlayerPages: MetadataRoute.Sitemap = tvIds.map(({ id, name }: { id: number; name: string }) => ({
-    url: `${BASE_URL}/tv/player/${encodeId(id)}/${slugify(name + "-s1-e1")}/1/1`,
+    url: `${siteUrl}/tv/player/${encodeId(id)}/${slugify(name + "-s1-e1")}/1/1`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.5,
   }));
 
   const tvCastPages: MetadataRoute.Sitemap = tvIds.map(({ id }: { id: number }) => ({
-    url: `${BASE_URL}/tv/cast/${encodeId(id)}`,
+    url: `${siteUrl}/tv/cast/${encodeId(id)}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.4,

@@ -1,17 +1,12 @@
 "use client";
 import Image from "next/image";
-import { Season } from "../lib/tmdb";
 import { useState } from "react";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import Link from "next/link";
 import { slugify } from "../lib/slugify";
 import { encodeId } from "../lib/hash";
-
-interface TvSeasonCardProps {
-  season: Season;
-  seriesId: number | string;
-  seriesName: string;
-}
+import { posterUrl } from "@/app/constant/main";
+import { TvSeasonCardProps } from "../constant/types";
 
 export default function TvSeasonCard({
   season,
@@ -19,7 +14,6 @@ export default function TvSeasonCard({
   seriesName,
 }: TvSeasonCardProps) {
   const [imgError, setImgError] = useState(false);
-  const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
   const title = season.name;
   const date = season.air_date;

@@ -4,8 +4,7 @@ import TvDetailsClient from "../TvDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 import { decodeId } from "@/app/lib/hash";
-
-const siteUrl = "https://mymovienight.vercel.app";
+import { siteUrl, posterUrl, posterUrl780 } from "@/app/constant/main";
 export async function generateMetadata({
   params,
 }: {
@@ -38,7 +37,7 @@ export async function generateMetadata({
         images: data.poster_path
           ? [
               {
-                url: `https://image.tmdb.org/t/p/w780${data.poster_path}`,
+                url: `${posterUrl780}${data.poster_path}`,
                 width: 780,
                 height: 1170,
                 alt: data.name,
@@ -52,7 +51,7 @@ export async function generateMetadata({
         title: data.name,
         description: data.overview,
         images: data.poster_path
-          ? [`https://image.tmdb.org/t/p/w780${data.poster_path}`]
+          ? [`${posterUrl780}${data.poster_path}`]
           : [],
       },
     };
@@ -101,7 +100,7 @@ export default async function TvPage({
       name: data.name,
       description: data.overview,
       image: data.poster_path
-        ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+        ? `${posterUrl}${data.poster_path}`
         : undefined,
       datePublished: data.first_air_date,
       aggregateRating: {

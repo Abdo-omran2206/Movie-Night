@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { siteUrl } from './constant/main';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
-    sitemap: 'https://mymovienight.vercel.app/sitemap.xml',
-    host: 'https://mymovienight.vercel.app',
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: siteUrl,
   };
 }

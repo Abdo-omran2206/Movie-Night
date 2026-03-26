@@ -7,11 +7,11 @@ import { FaStar } from "react-icons/fa";
 import generateMovieAvatar from "../lib/generateMovieAvatar";
 import { slugify } from "../lib/slugify";
 import { encodeId } from "../lib/hash";
-import { Movie } from "../lib/tmdb";
+import { posterUrl } from "@/app/constant/main";
+import { Movie } from "../constant/types";
 
 export default function ChatMovieCard({ movie }: { movie: Movie }) {
   const [imgError, setImgError] = useState(false);
-  const posterUrl = `https://image.tmdb.org/t/p/w500`;
 
   const isTv = movie.media_type === "tv" || movie.first_air_date;
   const originalTitle = movie.title || movie.name || movie.original_title || "Unknown";

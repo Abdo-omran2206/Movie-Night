@@ -1,12 +1,13 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { search, Movie } from "@/app/lib/tmdb";
+import { search } from "@/app/lib/tmdb";
+import { Movie } from "@/app/constant/types";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import MovieCard from "../components/MovieCard";
 import LoadingModel from "@/app/components/LoadingModel";
-
+import { siteUrl } from "@/app/constant/main";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 function SearchContent() {
@@ -78,7 +79,7 @@ function SearchContent() {
       "itemListElement": movies.map((movie, index) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://mymovienight.vercel.app/${movie.media_type === "tv" ? "tv" : "movie"}/${movie.id}`,
+        "url": `${siteUrl}/${movie.media_type === "tv" ? "tv" : "movie"}/${movie.id}`,
         "name": movie.title || movie.name
       }))
     }

@@ -4,8 +4,7 @@ import MovieDetailsClient from "../MovieDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 import { decodeId } from "@/app/lib/hash";
-
-const siteUrl = "https://mymovienight.vercel.app";
+import { siteUrl, posterUrl } from "@/app/constant/main";
 export async function generateMetadata({
   params,
 }: {
@@ -33,7 +32,7 @@ export async function generateMetadata({
         title: data.title,
         description: data.overview,
         images: data.poster_path
-          ? [{ url: `https://image.tmdb.org/t/p/w500${data.poster_path}` }]
+          ? [{ url: `${posterUrl}${data.poster_path}` }]
           : undefined,
       },
     };
@@ -83,7 +82,7 @@ export default async function MoviePage({
       name: data.title,
       description: data.overview,
       image: data.poster_path
-        ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+        ? `${posterUrl}${data.poster_path}`
         : undefined,
       datePublished: data.release_date,
       aggregateRating: {

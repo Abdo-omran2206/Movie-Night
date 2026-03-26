@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import PlayerClient from "../PlayerClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
-
 import { decodeId } from "@/app/lib/hash";
+import { backdropUrl } from "@/app/constant/main";
 
 export async function generateMetadata({
   params,
@@ -27,7 +27,7 @@ export async function generateMetadata({
         title: `Watch ${data.title}`,
         description: data.overview,
         images: data.backdrop_path
-          ? [{ url: `https://image.tmdb.org/t/p/w1280${data.backdrop_path}` }]
+          ? [{ url: `${backdropUrl}${data.backdrop_path}` }]
           : undefined,
       },
     };

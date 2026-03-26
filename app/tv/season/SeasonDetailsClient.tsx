@@ -7,13 +7,14 @@ import { FaCirclePlay } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
-import { TvDetail, SeasonDetail, Episode } from "@/app/lib/tmdb";
+import { TvDetail, SeasonDetail, Episode } from "../../constant/types";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { slugify } from "@/app/lib/slugify";
 import { Ships, RatingStars } from "@/app/tv/TvDetailsClient";
 import TrailerModal from "@/app/components/TrailerModel";
 import CastList from "@/app/components/CastCard";
 import { encodeId } from "@/app/lib/hash";
+import { posterUrl, backdropUrl } from "@/app/constant/main";
 interface SeasonDetailsClientProps {
   series: TvDetail;
   season: SeasonDetail;
@@ -25,8 +26,6 @@ export default function SeasonDetailsClient({
 }: SeasonDetailsClientProps) {
   const [imgError, setImgError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const posterUrl = "https://image.tmdb.org/t/p/w500";
-  const backdropUrl = "https://image.tmdb.org/t/p/w1280";
 
   const imageSrc =
     !imgError && season.poster_path
@@ -159,7 +158,7 @@ export default function SeasonDetailsClient({
                   <div className="relative w-full md:w-64 lg:w-80 aspect-video shrink-0 bg-neutral-800">
                     {episode.still_path ? (
                       <Image
-                        src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
+                        src={`${posterUrl}${episode.still_path}`}
                         alt={episode.name}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"

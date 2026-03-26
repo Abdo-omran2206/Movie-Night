@@ -3,11 +3,8 @@ import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Image from "next/image";
 import {
-  Collection,
   fetchMovieDetails,
   getCollectionDetails,
-  MovieDetail,
-  MovieSummary,
 } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -21,6 +18,8 @@ import LoadingModel from "@/app/components/LoadingModel";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { slugify } from "@/app/lib/slugify";
 import { decodeId } from "@/app/lib/hash";
+import { posterUrl, backdropUrl } from "@/app/constant/main";
+import { Collection, MovieDetail, MovieSummary } from "../constant/types";
 
 export default function MovieDetailsClient() {
   const [data, setData] = useState<MovieDetail | null>(null);
@@ -34,8 +33,7 @@ export default function MovieDetailsClient() {
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
   const [collection, setCollection] = useState<Collection | null>(null);
-  const posterUrl = "https://image.tmdb.org/t/p/w500";
-  const backdropUrl = "https://image.tmdb.org/t/p/w1280";
+
   useEffect(() => {
     async function loadData() {
       if (!id) return;

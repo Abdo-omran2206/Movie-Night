@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next";
-
-const BASE_URL = "https://mymovienight.vercel.app";
+import { siteUrl } from "../../constant/main";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categories = ["trending", "popular", "top_rated", "upcoming", "now_playing"];
@@ -8,26 +7,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const mainPages: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
+      url: siteUrl,
       lastModified: new Date(),
       changeFrequency: "always",
       priority: 1,
     },
     {
-      url: `${BASE_URL}/search`,
+      url: `${siteUrl}/search`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/install`,
+      url: `${siteUrl}/install`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     ...categories.flatMap((cat) =>
       pages.map((page) => ({
-        url: `${BASE_URL}/category/${cat}${page > 1 ? `?page=${page}` : ""}`,
+        url: `${siteUrl}/category/${cat}${page > 1 ? `?page=${page}` : ""}`,
         lastModified: new Date(),
         changeFrequency: "daily" as const,
         priority: page === 1 ? 0.8 : 0.6,

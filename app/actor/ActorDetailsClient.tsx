@@ -7,9 +7,10 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MovieMiniCard from "@/app/components/MovieMiniCard";
 import LoadingModel from "@/app/components/LoadingModel";
-import { ActorDetail } from "./[...slug]/page";
 import Link from "next/link";
 import { decodeId } from "../lib/hash";
+import { profileUrl } from "@/app/constant/main";
+import { ActorDetail } from "../constant/types";
 
 export default function ActorDetailsClient() {
   const [data, setData] = useState<ActorDetail | null>(null);
@@ -63,7 +64,7 @@ export default function ActorDetailsClient() {
                 <Image
                   src={
                     data.profile_path
-                      ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
+                      ? `${profileUrl}${data.profile_path}`
                       : "/no-avatar.png"
                   }
                   alt={data.name}

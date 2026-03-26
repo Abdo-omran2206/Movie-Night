@@ -5,30 +5,10 @@ import Footer from "./components/Footer";
 import { supabaseClient } from "./lib/supabase";
 import { getRegion } from "./lib/getRegion";
 import NightGuide from "./components/NightGuide";
-
-interface SectionData {
-  id?: number;
-  endpoint: string;
-  title: string;
-  slug?: string;
-  type?: string;
-  created_at?: string;
-}
+import { SectionData } from "./constant/types";
+import { regions } from "./constant/main";
 
 export default async function Home() {
-  const regions: Record<string, string> = {
-    EG: "Egypt",
-    US: "USA",
-    GB: "UK",
-    SA: "Saudi Arabia",
-    AE: "UAE",
-    FR: "France",
-    DE: "Germany",
-    CA: "Canada",
-    AU: "Australia",
-    IT: "Italy",
-    ES: "Spain",
-  };
   const region = await getRegion();
   // Ensure we use a region code that we have a name for, or fallback to US
   const regionCode = (region && regions[region.region]) ? region.region : "US";
@@ -140,7 +120,6 @@ export default async function Home() {
             key={section.endpoint}
             endpoint={section.endpoint}
             title={section.title}
-            categorySlug={section.slug}
           />
         ))}
       </main>

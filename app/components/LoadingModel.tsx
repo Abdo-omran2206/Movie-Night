@@ -1,10 +1,7 @@
 "use client";
-import React from "react";
-
 interface LoadingModelProps {
   message?: string;
 }
-
 export default function LoadingModel({
   message = "MOVIE NIGHT",
 }: LoadingModelProps) {
