@@ -120,7 +120,6 @@ export default async function Home() {
             key={section.endpoint}
             endpoint={section.endpoint}
             title={section.title}
-            categorySlug={section.slug}
           />
         ))}
       </main>
