@@ -60,7 +60,14 @@
   - User visits `/install` from the footer or a shared link.
   - Page highlights the Movie Night experience and shows an install call-to-action.
   - On click, user is directed to the latest app download/store URL configured via Supabase `app_config`.
-7. **Ask NightGuide for Recommendations (AI Chat)**
+7. **Discover content via Explore Hub**
+  - User visits `/explore`.
+  - Sees a premium dual-pane layout with a sticky filter sidebar (or mobile drawer).
+  - User adjusts range sliders (Year, Rating), selects genres, or picks a region/language.
+  - Results update in real-time in a responsive grid.
+  - User can toggle between Media Types (Movies/TV) without losing filter context.
+  - User uses pagination to browse large filtered lists.
+8. **Ask NightGuide for Recommendations (AI Chat)**
   - User clicks the floating "NightGuide" widget or navigates to `/nightguide`.
   - User types a prompt (e.g., "Recommend a sci-fi movie from 2014").
   - The Gemini AI processes the request using a custom prompt, formatted as text with `🎬 **Title** (Year)`.
@@ -232,6 +239,25 @@
 - **AI Logic & Fallbacks**
   - Prompted strictly to return recommendations avoiding internal IDs, only referencing Titles and Years.
   - Implements an automated capability fallback hierarchy: if `gemini-2.5-flash` is rate-limited or errors, it falls back to `gemini-2.5-flash-lite`, and then to `gemini-1.5-flash` to ensure uninterrupted service.
+
+#### 4.10 Explore Hub (`/explore`)
+
+- **Discovery Flow**
+  - Fetches results from TMDB via the advanced `/discover` endpoints.
+  - Maintains state for multiple criteria: media type, release year, minimum rating, genre IDs, production region, and original language.
+- **Filter Controls**
+  - **Range Sliders**: Custom-styled for "Release Year" (1900 to current) and "Min Rating" (0 to 10).
+  - **Genre Selection**: Multi-select animated checkbox list fetching IDs from `GENRE_MAP`.
+  - **Dropdowns**: Premium selectors for **Region** and **Content Language** based on pre-vetted datasets.
+  - **Sorting**: Instant toggle between Popularity, Release Date, Vote Average, and Vote Count.
+- **Responsive Layout**
+  - **Desktop**: Dual-pane layout where the left column is a sticky glassmorphic aside and the right column is the results grid.
+  - **Mobile**: Floating "Refine" button at `z-index: 45` that triggers a slide-out drawer overlay containing all filter controls.
+  - Interactions: Media toggles and resets on mobile automatically dismiss the drawer for immediate feedback.
+- **Visual Feedback**
+  - "Live Database" status indicator with pulsing glow.
+  - Dynamic "Discovering {count} Titles" result counter.
+  - Grid responsiveness: 2 columns on mobile, scaling up to 5 on large desktops.
 
 ### 5. Non‑Functional Requirements
 

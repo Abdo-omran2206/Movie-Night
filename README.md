@@ -34,12 +34,19 @@
 - **Remote Configuration**: Home page sections are dynamically driven by a **Supabase** backend.
 - **Glassmorphic UI**: Modern backdrop blur effects, premium typography, and an interactive Sidebar & Desktop Navigation.
 
-### 🔍 Search & Discovery
+### 🧭 Explore Hub & Advanced Discovery
 
-- **Global Search**: Find movies, TV shows, and actors instantly across the TMDB database.
-- **Advanced Filtering**: Quickly refine search results by media type (All, Movies, TV Shows, Actors) using a premium UI dropdown.
-- **Real-time Results & URL Sync**: Fast API integration with dedicated loading states, result counters, and full URL syncing for easy shareability.
-- **Pagination**: Seamlessly browse through thousands of search results.
+- **Premium Dual-Pane Layout**: A high-end discovery experience featuring a sticky, glassmorphic filter sidebar on desktop and a slide-over drawer for mobile.
+- **Deep Filtering & Sorting**:
+  - **Release Year & Rating**: Custom-styled range sliders for precise year and minimum vote average filtering.
+  - **Global Library**: Discovery by **Production Region** (US, UK, JP, EG, etc.) and item **Original Language**.
+  - **Enhanced Sorting**: Sort instantly by Popularity, Premiere Date, Vote Average, or Vote Count.
+  - **Genre Precision**: Multi-select animated checkboxes for granular genre exploration.
+- **Micro-animations**: Interactive hover states for checkboxes and sliders with dynamic gradient tracks.
+- **Live Database Status**: Real-time feedback on discovery results and pulsing live status indicators.
+- **Mobile Optimized**: A dedicated floating "Refine" button that triggers a full-screen filter overlay on small screens.
+
+### 🔍 Search
 
 ### 📱 Movie & TV Show Details
 
