@@ -304,7 +304,18 @@ export interface TvDetail {
   vote_count: number;
 }
 
+export interface ExternalIds {
+  facebook_id?: string | null;
+  imdb_id?: string | null;
+  instagram_id?: string | null;
+  tiktok_id?: string | null;
+  twitter_id?: string | null;
+  wikidata_id?: string | null;
+  youtube_id?: string | null;
+}
+
 export interface ActorDetail {
+  external_ids?: ExternalIds;
   id: number;
   name: string;
   biography: string;

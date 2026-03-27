@@ -94,7 +94,7 @@ export async function fetchTvGenres() {
 export async function getActorById(actorId: string) {
   try {
     const response = await axios.get(
-      `${BASE_URL}/person/${actorId}?api_key=${API_KEY}&language=en-US&append_to_response=movie_credits,tv_credits,images`,
+      `${BASE_URL}/person/${actorId}?api_key=${API_KEY}&language=en-US&append_to_response=movie_credits,tv_credits,images,external_ids`,
     );
     return response.data;
   } catch (error) {

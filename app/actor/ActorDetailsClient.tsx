@@ -12,6 +12,16 @@ import { decodeId } from "../lib/hash";
 import { profileUrl } from "@/app/constant/main";
 import { ActorDetail } from "../constant/types";
 
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaTiktok,
+  FaImdb,
+} from "react-icons/fa6";
+import { SiWikidata } from "react-icons/si";
+
 export default function ActorDetailsClient() {
   const [data, setData] = useState<ActorDetail | null>(null);
   const params = useParams();
@@ -103,6 +113,117 @@ export default function ActorDetailsClient() {
                     </div>
                   )}
                 </div>
+
+                {data.external_ids && (
+                  <div className="mt-8 pt-6 border-t border-white/5">
+                    <div className="flex flex-wrap gap-3 mb-6">
+                      {data.external_ids.imdb_id && (
+                        <a
+                          href={`https://www.imdb.com/name/${data.external_ids.imdb_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-yellow-500 rounded-xl hover:text-black transition-all cursor-pointer group"
+                          title="IMDb"
+                        >
+                          <FaImdb
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                      {data.external_ids.instagram_id && (
+                        <a
+                          href={`https://www.instagram.com/${data.external_ids.instagram_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-xl hover:text-white transition-all cursor-pointer group shadow-lg"
+                          title="Instagram"
+                        >
+                          <FaInstagram
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                      {data.external_ids.facebook_id && (
+                        <a
+                          href={`https://www.facebook.com/${data.external_ids.facebook_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-blue-600 rounded-xl hover:text-white transition-all cursor-pointer group"
+                          title="Facebook"
+                        >
+                          <FaFacebook
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                      {data.external_ids.twitter_id && (
+                        <a
+                          href={`https://twitter.com/${data.external_ids.twitter_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-sky-500 rounded-xl hover:text-white transition-all cursor-pointer group"
+                          title="Twitter"
+                        >
+                          <FaTwitter
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                      {data.external_ids.tiktok_id && (
+                        <a
+                          href={`https://www.tiktok.com/@${data.external_ids.tiktok_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-black hover:ring-1 hover:ring-white rounded-xl hover:text-white transition-all cursor-pointer group"
+                          title="TikTok"
+                        >
+                          <FaTiktok
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                      {data.external_ids.youtube_id && (
+                        <a
+                          href={`https://www.youtube.com/${data.external_ids.youtube_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-red-600 rounded-xl hover:text-white transition-all cursor-pointer group"
+                          title="YouTube"
+                        >
+                          <FaYoutube
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                      {data.external_ids.wikidata_id && (
+                        <a
+                          href={`https://www.wikidata.org/wiki/${data.external_ids.wikidata_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-[#003399] rounded-xl hover:text-white transition-all cursor-pointer group"
+                          title="Wikidata"
+                        >
+                          <SiWikidata
+                            size={20}
+                            className="group-hover:scale-110 transition-transform"
+                          />
+                        </a>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg border border-white/5 w-fit">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-neutral-500">
+                        Official Socials
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -125,29 +246,26 @@ export default function ActorDetailsClient() {
             </div>
           </div>
           <div className="mt-15">
-            {data.movie_credits?.cast &&
-              data.movie_credits.cast.length > 0 &&
-              data.tv_credits?.cast &&
-              data.tv_credits.cast.length > 0 && (
-                <div>
-                  <div className="mb-10 flex justify-center items-center flex-col">
-                    <h2 className="text-4xl font-bold mb-2 tracking-widest text-center">
-                      Filmography
-                    </h2>
-                    <div className="w-20 h-1.5 bg-red-600 rounded-full" />
-                  </div>
-                  <MovieMiniCard
-                    movies={[
-                      ...data.movie_credits.cast,
-                      ...data.tv_credits.cast,
-                    ].sort((a: any, b: any) =>
-                      (b.release_date || b.first_air_date || "").localeCompare(
-                        a.release_date || a.first_air_date || "",
-                      ),
-                    )}
-                  />
+            {data.movie_credits?.cast && data.tv_credits?.cast && (
+              <div>
+                <div className="mb-10 flex justify-center items-center flex-col">
+                  <h2 className="text-4xl font-bold mb-2 tracking-widest text-center">
+                    Filmography
+                  </h2>
+                  <div className="w-20 h-1.5 bg-red-600 rounded-full" />
                 </div>
-              )}
+                <MovieMiniCard
+                  movies={[
+                    ...data.movie_credits.cast,
+                    ...data.tv_credits.cast,
+                  ].sort((a: any, b: any) =>
+                    (b.release_date || b.first_air_date || "").localeCompare(
+                      a.release_date || a.first_air_date || "",
+                    ),
+                  )}
+                />
+              </div>
+            )}
           </div>
         </div>
       </main>
