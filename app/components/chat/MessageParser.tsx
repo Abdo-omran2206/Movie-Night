@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { search } from "../lib/tmdb";
+import { search } from "../../lib/tmdb";
 import ChatMovieCard from "./ChatMovieCard";
-import { Movie } from "../constant/types";
+import { Movie } from "../../constant/types";
 
 interface MessageParserProps {
   content: string;

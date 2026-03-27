@@ -1,12 +1,12 @@
 "use client";
-import Footer from "@/app/components/Footer";
-import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/ui/Footer";
+import Navbar from "@/app/components/ui/Navbar";
 import Image from "next/image";
 import { getActorById } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import MovieMiniCard from "@/app/components/MovieMiniCard";
-import LoadingModel from "@/app/components/LoadingModel";
+import MovieMiniCard from "@/app/components/cards/MovieMiniCard";
+import LoadingModel from "@/app/components/models/LoadingModel";
 import Link from "next/link";
 import { decodeId } from "../lib/hash";
 import { profileUrl } from "@/app/constant/main";

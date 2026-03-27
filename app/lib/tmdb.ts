@@ -139,6 +139,44 @@ export async function search(query: string, page: number, type: string = "multi"
   }
 }
 
+export async function discover(
+  type: "movie" | "tv" = "movie",
+  params: {
+    page?: number;
+    with_genres?: string;
+    with_original_language?: string;
+    "vote_average.gte"?: number;
+    "primary_release_date.gte"?: string;
+    "primary_release_date.lte"?: string;
+    "first_air_date.gte"?: string;
+    "first_air_date.lte"?: string;
+    sort_by?: string;
+  }
+) {
+  const queryParams = new URLSearchParams({
+    api_key: API_KEY as string,
+    language: "en-US",
+    include_adult: "false",
+    ...Object.fromEntries(
+      Object.entries(params)
+        .filter(([key, value]) => key !== undefined && value !== undefined && value !== "")
+        .map(([key, value]) => [key, String(value)])
+    ),
+  });
+
+  try {
+    const res = await axios.get(`${BASE_URL}/discover/${type}?${queryParams.toString()}`);
+    return {
+      results: res.data.results || [],
+      total_pages: res.data.total_pages || 0,
+      total_results: res.data.total_results || 0,
+    };
+  } catch (err) {
+    console.error(`Error in discover ${type}:`, err);
+    return { results: [], total_pages: 0, total_results: 0 };
+  }
+}
+
 export const getCategoryInfo = (cat: string, type: string = "movie") => {
   const slug = (cat || "").toLowerCase().replace(/-/g, "_");
   const isTv = type === "tv";

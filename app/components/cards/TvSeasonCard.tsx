@@ -1,12 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import generateMovieAvatar from "../lib/generateMovieAvatar";
+import generateMovieAvatar from "../../lib/generateMovieAvatar";
 import Link from "next/link";
-import { slugify } from "../lib/slugify";
-import { encodeId } from "../lib/hash";
+import { slugify } from "../../lib/slugify";
+import { encodeId } from "../../lib/hash";
 import { posterUrl } from "@/app/constant/main";
-import { TvSeasonCardProps } from "../constant/types";
+import { TvSeasonCardProps } from "../../constant/types";
 
 export default function TvSeasonCard({
   season,

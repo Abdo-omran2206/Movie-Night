@@ -5,14 +5,14 @@ import { useState } from "react";
 import { FaPlay, FaStar, FaClock } from "react-icons/fa";
 import { FaCirclePlay } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
+import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/app/components/ui/Footer";
 import { TvDetail, SeasonDetail, Episode } from "../../constant/types";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { slugify } from "@/app/lib/slugify";
 import { Ships, RatingStars } from "@/app/tv/TvDetailsClient";
-import TrailerModal from "@/app/components/TrailerModel";
-import CastList from "@/app/components/CastCard";
+import TrailerModal from "@/app/components/models/TrailerModel";
+import CastList from "@/app/components/cards/CastCard";
 import { encodeId } from "@/app/lib/hash";
 import { posterUrl, backdropUrl } from "@/app/constant/main";
 interface SeasonDetailsClientProps {

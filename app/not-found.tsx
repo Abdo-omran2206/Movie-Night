@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
 import { FaHome, FaFilm } from "react-icons/fa";
-
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-black px-4">

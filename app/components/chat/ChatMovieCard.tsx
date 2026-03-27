@@ -4,11 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
-import generateMovieAvatar from "../lib/generateMovieAvatar";
-import { slugify } from "../lib/slugify";
-import { encodeId } from "../lib/hash";
+import generateMovieAvatar from "../../lib/generateMovieAvatar";
+import { slugify } from "../../lib/slugify";
+import { encodeId } from "../../lib/hash";
 import { posterUrl } from "@/app/constant/main";
-import { Movie } from "../constant/types";
+import { Movie } from "../../constant/types";
 
 export default function ChatMovieCard({ movie }: { movie: Movie }) {
   const [imgError, setImgError] = useState(false);

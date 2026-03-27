@@ -1,6 +1,6 @@
 "use client";
-import Footer from "@/app/components/Footer";
-import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/ui/Footer";
+import Navbar from "@/app/components/ui/Navbar";
 import Image from "next/image";
 import {
   fetchMovieDetails,
@@ -10,11 +10,11 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaCirclePlay, FaPlay } from "react-icons/fa6";
-import CastList from "@/app/components/CastCard";
-import MovieMiniCard from "@/app/components/MovieMiniCard";
-import TrailerModal from "@/app/components/TrailerModel";
+import CastList from "@/app/components/cards/CastCard";
+import MovieMiniCard from "@/app/components/cards/MovieMiniCard";
+import TrailerModal from "@/app/components/models/TrailerModel";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import LoadingModel from "@/app/components/LoadingModel";
+import LoadingModel from "@/app/components/models/LoadingModel";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { slugify } from "@/app/lib/slugify";
 import { decodeId } from "@/app/lib/hash";

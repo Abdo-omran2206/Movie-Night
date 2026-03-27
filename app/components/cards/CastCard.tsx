@@ -2,11 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import generateMovieAvatar from "../lib/generateMovieAvatar";
-import { slugify } from "../lib/slugify";
-import { encodeId } from "../lib/hash";
-import { posterUrl } from "../constant/main";
-import { Cast, CastSectionProps } from "../constant/types";
+import generateMovieAvatar from "../../lib/generateMovieAvatar";
+import { slugify } from "../../lib/slugify";
+import { encodeId } from "../../lib/hash";
+import { posterUrl } from "../../constant/main";
+import { Cast, CastSectionProps } from "../../constant/types";
 
 // 👇 كل ممثل ليه حالته الخاصة
 function CastImage({ item }: { item: Cast }) {

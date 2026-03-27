@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { genres, navigationLinks, socialMedia } from "../constant/main";
+import { discoverLinks, genres, navigationLinks, socialMedia } from "../../constant/main";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -53,13 +53,31 @@ export default function Footer() {
             </ul>
           </div>
 
+          <div>
+            <h3 className="text-white font-semibold text-lg mb-4">
+              Discover
+            </h3>
+            <ul className="space-y-2">
+              {discoverLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-300 hover:text-red-500 transition-colors duration-200 text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Quick Links */}
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">
               Quick Links
             </h3>
             <ul className="space-y-2">
-              {genres.slice(0, 6).map((link) => (
+              {genres.slice(0, 5).map((link) => (
                 <li key={link.href + link.name}>
                   <Link
                     href={link.href}
@@ -73,7 +91,7 @@ export default function Footer() {
           </div>
 
           {/* Install App */}
-          <div>
+          {/* <div>
             <h3 className="text-white font-semibold text-lg mb-4">
               Get the App
             </h3>
@@ -87,7 +105,7 @@ export default function Footer() {
             >
               Install App
             </Link>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom Bar */}

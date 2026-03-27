@@ -1,5 +1,5 @@
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
+import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/app/components/ui/Footer";
 import { Metadata } from "next";
 import { siteUrl, socialMedia } from "@/app/constant/main";
 import Link from "next/link";

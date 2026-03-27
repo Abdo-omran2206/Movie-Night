@@ -8,7 +8,7 @@ import {
   getQuickSuggestions,
 } from "../lib/NightGuide";
 import { Message } from "@/app/constant/types";
-import { MessageParser } from "../components/MessageParser";
+import { MessageParser } from "../components/chat/MessageParser";
 import { FaPaperPlane, FaTrash } from "react-icons/fa";
 import { MdArrowBackIos } from "react-icons/md";
 import Link from "next/link";

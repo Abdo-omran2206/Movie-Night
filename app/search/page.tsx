@@ -3,10 +3,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { search } from "@/app/lib/tmdb";
 import { Movie } from "@/app/constant/types";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
-import MovieCard from "../components/MovieCard";
-import LoadingModel from "@/app/components/LoadingModel";
+import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/app/components/ui/Footer";
+import MovieCard from "../components/cards/MovieCard";
+import LoadingModel from "@/app/components/models/LoadingModel";
 import { siteUrl } from "@/app/constant/main";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 

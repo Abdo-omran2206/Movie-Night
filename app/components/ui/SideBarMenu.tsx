@@ -1,5 +1,5 @@
 import { IoClose, IoHome } from "react-icons/io5";
-import { FaDownload, FaRobot, FaInfoCircle } from "react-icons/fa";
+import { FaDownload, FaRobot, FaInfoCircle, FaCompass } from "react-icons/fa";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { categories, genres } from "@/app/constant/main";
@@ -55,29 +55,12 @@ export default function SideBarMenu({
             <span>Home</span>
           </Link>
           <Link
-            href="/about"
+            href="/explore"
             className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
             onClick={handleClose}
           >
-            <FaInfoCircle className="group-hover:scale-110 transition-transform" />
-            <span>About</span>
-          </Link>
-          <Link
-            href="/nightguide"
-            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
-            onClick={handleClose}
-          >
-            <FaRobot className="group-hover:scale-110 transition-transform" />
-            <span>Night Guide</span>
-          </Link>
-
-          <Link
-            href="/install"
-            className="flex items-center gap-3 mb-8 hover:text-red-500 transition-colors group"
-            onClick={handleClose}
-          >
-            <FaDownload className="group-hover:scale-110 transition-transform text-red-600" />
-            <span>Install App</span>
+            <FaCompass className="group-hover:scale-110 transition-transform" />
+            <span>Explore</span>
           </Link>
 
           <p className="text-gray-500 text-[10px] sm:text-xs font-bold tracking-widest mb-3 uppercase">
@@ -119,6 +102,32 @@ export default function SideBarMenu({
               </Link>
             ))}
           </div>
+          <hr className="border-neutral-800 mb-4" />
+          <Link
+            href="/about"
+            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <FaInfoCircle className="group-hover:scale-110 transition-transform" />
+            <span>About</span>
+          </Link>
+          <Link
+            href="/nightguide"
+            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <FaRobot className="group-hover:scale-110 transition-transform" />
+            <span>Night Guide</span>
+          </Link>
+
+          <Link
+            href="/install"
+            className="flex items-center gap-3 mb-8 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <FaDownload className="group-hover:scale-110 transition-transform text-red-600" />
+            <span>Install App</span>
+          </Link>
         </div>
       </div>
     </div>

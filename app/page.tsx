@@ -1,12 +1,11 @@
-import Navbar from "./components/Navbar";
-import Banner from "./components/Banner";
-import Section from "./components/sections";
-import Footer from "./components/Footer";
-import { supabaseClient } from "./lib/supabase";
-import { getRegion } from "./lib/getRegion";
-import NightGuide from "./components/NightGuide";
-import { SectionData } from "./constant/types";
-import { regions } from "./constant/main";
+import Navbar from "@/app/components/ui/Navbar";
+import Banner from "@/app/components/layout/Banner";
+import Section from "@/app/components/layout/sections";
+import Footer from "@/app/components/ui/Footer";
+import { supabaseClient } from "@/app/lib/supabase";
+import { getRegion } from "@/app/lib/getRegion";
+import { SectionData } from "@/app/constant/types";
+import { regions } from "@/app/constant/main";
 
 export default async function Home() {
   const region = await getRegion();
@@ -123,7 +122,6 @@ export default async function Home() {
           />
         ))}
       </main>
-      <NightGuide/>
       <Footer />
     </div>
   );

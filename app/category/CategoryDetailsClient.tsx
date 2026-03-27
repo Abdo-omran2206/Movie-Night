@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { fetchMovies, getCategoryInfo } from "@/app/lib/tmdb";
 import { Movie, CategoryDetailsClientProps } from "@/app/constant/types";
-import MovieCard from "@/app/components/MovieCard";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
+import MovieCard from "@/app/components/cards/MovieCard";
+import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/app/components/ui/Footer";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Link from "next/link";
-import LoadingModel from "@/app/components/LoadingModel";
-import NightGuide from "../components/NightGuide";
+import LoadingModel from "@/app/components/models/LoadingModel";
 
 export default function CategoryDetailsClient({ 
   initialMovies = [], 
@@ -98,7 +97,7 @@ export default function CategoryDetailsClient({
             <div className="flex items-center gap-2 md:gap-4 group">
               <div className="w-1 md:w-1.5 h-8 md:h-14 bg-red-700 rounded-full shadow-[0_0_15px_rgba(185,28,28,0.7)] group-hover:h-16 transition-all duration-300" />
               <div className="flex flex-col">
-                <h1 className="text-2xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter uppercase leading-none">
+                <h1 className="text-2xl md:text-5xl lg:text-6xl font-black text-white tracking-wide uppercase leading-none">
                   {safeTitle}
                 </h1>
                 <div className="h-1 w-24 bg-linear-to-r from-red-700 to-transparent mt-3 rounded-full" />
@@ -184,8 +183,6 @@ export default function CategoryDetailsClient({
           </div>
         )}
       </main>
-            <NightGuide/>
-      
       <Footer />
     </>
   );

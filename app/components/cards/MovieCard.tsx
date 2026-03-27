@@ -5,9 +5,9 @@ import { posterUrl } from "@/app/constant/main";
 import Link from "next/link";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useState } from "react";
-import generateMovieAvatar from "../lib/generateMovieAvatar";
-import { slugify } from "../lib/slugify";
-import { encodeId } from "../lib/hash";
+import generateMovieAvatar from "../../lib/generateMovieAvatar";
+import { slugify } from "../../lib/slugify";
+import { encodeId } from "../../lib/hash";
 
 export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
   const [imgError, setImgError] = useState(false);

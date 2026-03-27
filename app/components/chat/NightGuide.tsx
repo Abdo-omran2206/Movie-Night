@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { askAI, clearConversation, getQuickSuggestions } from "../lib/NightGuide";
+import { askAI, clearConversation, getQuickSuggestions } from "@/app/lib/NightGuide";
 import { MessageParser } from "./MessageParser";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -102,7 +102,7 @@ export default function NightGuide() {
   };
 
   // Don't show the floating widget on the full-page chat route
-  if (pathname === "/nightguide") {
+  if (pathname === "/nightguide" || pathname.includes("player")) {
     return null;
   }
 

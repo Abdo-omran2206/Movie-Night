@@ -6,13 +6,13 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { fetchGenres, fetchMovies} from "../lib/tmdb";
+import { fetchGenres, fetchMovies} from "../../lib/tmdb";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import Link from "next/link";
-import { slugify } from "../lib/slugify";
-import { encodeId } from "../lib/hash";
-import { Genre, Movie } from "../constant/types";
-import { backdropUrl } from "../constant/main";
+import { slugify } from "../../lib/slugify";
+import { encodeId } from "../../lib/hash";
+import { Genre, Movie } from "../../constant/types";
+import { backdropUrl } from "../../constant/main";
 
 
 export default function Banner() {

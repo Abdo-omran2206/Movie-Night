@@ -3,15 +3,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MdMenu } from "react-icons/md";
-import { FaSearch } from "react-icons/fa";
+import { FaCompass, FaSearch } from "react-icons/fa";
 import SideBarMenu from "./SideBarMenu";
 import { search } from "@/app/lib/tmdb";
 import Image from "next/image";
-import { slugify } from "../lib/slugify";
-import generateMovieAvatar from "../lib/generateMovieAvatar";
-import { encodeId } from "../lib/hash";
+import { slugify } from "../../lib/slugify";
+import generateMovieAvatar from "../../lib/generateMovieAvatar";
+import { encodeId } from "../../lib/hash";
 import { categories, genres, thumbnailUrl } from "@/app/constant/main";
-import { Movie } from "../constant/types";
+import { Movie } from "../../constant/types";
 export default function Navbar() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -56,7 +56,7 @@ export default function Navbar() {
         className={`transition-all duration-500 ${
           isScrolled
             ? "bg-neutral-950/60 backdrop-blur-xl py-3 shadow-2xl"
-            : "bg-gradient-to-b from-black/80 to-transparent py-5"
+            : "bg-linear-to-b from-black/80 to-transparent py-5"
         }`}
       >
         <div className="container mx-auto px-4 lg:px-20 flex items-center justify-between gap-4">
@@ -93,10 +93,19 @@ export default function Navbar() {
             <div className="relative group/nav">
               <button className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
                 Explore
-                <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">▼</span>
+                <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">
+                  ▼
+                </span>
               </button>
               <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto transition-all duration-300 z-50">
                 <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-48">
+                  <Link
+                    href='/explore'
+                    className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
+                  >
+                    <FaCompass className="text-red-500 group-hover/item:scale-110 transition-transform" />
+                    <span className="text-xs font-semibold">Explore</span>
+                  </Link>
                   {categories.map((item) => (
                     <Link
                       key={item.name}
@@ -115,7 +124,9 @@ export default function Navbar() {
             <div className="relative group/nav">
               <button className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
                 Genres
-                <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">▼</span>
+                <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">
+                  ▼
+                </span>
               </button>
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto transition-all duration-300 z-50">
                 <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-[480px] grid grid-cols-2 gap-1 uppercase">
@@ -126,7 +137,9 @@ export default function Navbar() {
                       className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
                     >
                       <item.icon className="text-red-500 shrink-0 group-hover/item:scale-110 transition-transform" />
-                      <span className="text-[11px] font-semibold truncate">{item.name}</span>
+                      <span className="text-[11px] font-semibold truncate">
+                        {item.name}
+                      </span>
                     </Link>
                   ))}
                 </div>
@@ -156,7 +169,7 @@ export default function Navbar() {
           <div className="hidden md:flex flex-1 max-w-sm relative group/search">
             <form
               onSubmit={handleSubmit}
-              className="flex items-center w-full bg-neutral-900/60 hover:bg-neutral-900/90 border border-neutral-800 focus-within:border-red-600/50 focus-within:ring-2 focus-within:ring-red-600/20 rounded-xl px-4 py-2 transition-all duration-300"
+              className="flex items-center w-full bg-neutral-900/60 hover:bg-neutral-900/90 border border-neutral-600 focus-within:border-red-600/50 focus-within:ring-2 focus-within:ring-red-600/20 rounded-xl px-4 py-2 transition-all duration-300"
             >
               <input
                 type="search"
@@ -232,7 +245,7 @@ function SearchModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-start justify-center z-[100] pt-[15vh] px-4">
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-start justify-center z-100 pt-[15vh] px-4">
       <div className="bg-neutral-950 border border-neutral-800 rounded-2xl p-6 w-full max-w-xl shadow-[0_0_50px_-12px_rgba(220,38,38,0.3)] relative animate-in fade-in zoom-in duration-300">
         <button
           onClick={() => setIsSearchModelOpen(false)}
