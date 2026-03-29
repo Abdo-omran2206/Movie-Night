@@ -129,7 +129,7 @@ export default function MovieDetailsClient() {
             <div className="flex flex-col gap-8 text-center lg:text-left">
               <div className="flex flex-col gap-4">
                 <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold text-white text-shadow-lg leading-tight">
-                  {data?.title}
+                  {data?.title ? data.title.length > 30 ? data.title.slice(0, 30) + "..." : data.title : "Untitled title"}
                 </h1>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start items-center text-sm md:text-base text-gray-200">
                   <Ships ship={formatDate(data?.release_date)} />
@@ -200,6 +200,52 @@ export default function MovieDetailsClient() {
           </div>
         </section>
 
+        
+
+        {data.videos?.results && data.videos?.results.length > 2 && data.videos.results.some(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) && (
+          <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/30">
+            <div className="container mx-auto px-0 md:px-4">
+              <div className="mb-6 md:mb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
+                  Trailers & Clips
+                </h2>
+                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
+              </div>
+
+              <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 custom-scrollbar scroll-smooth">
+                {data.videos.results
+                  .filter((v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser"))
+                  .map((video) => (
+                    <div key={video.id} className="min-w-[240px] md:min-w-[450px] flex flex-col gap-3 group">
+                      <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-xl transition-all duration-300 group-hover:border-red-600/30 group-hover:scale-[1.02]">
+                        <iframe
+                          src={`https://www.youtube.com/embed/${video.key}?rel=0&modestbranding=1`}
+                          title={video.name}
+                          className="w-full h-full border-0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="px-1">
+                        <h3 className="text-sm md:text-base font-bold text-white line-clamp-1 group-hover:text-red-500 transition-colors duration-300">
+                          {video.name}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[9px] font-black uppercase tracking-wider text-red-600 bg-red-600/10 px-1.5 py-0.5 rounded">
+                            {video.type}
+                          </span>
+                          <span className="text-[11px] text-gray-500 font-medium">
+                            YouTube
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </section>
+        )}
         {data.credits && data.credits.cast.length > 0 && (
           <section className="py-10 md:py-16 px-4 md:px-10">
             <div className="container mx-auto px-0 md:px-4">
