@@ -1,11 +1,14 @@
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { askAI, clearConversation, getQuickSuggestions } from "@/app/lib/NightGuide";
+import {
+  askAI,
+  clearConversation,
+  getQuickSuggestions,
+} from "@/app/lib/NightGuide";
 import { MessageParser } from "./MessageParser";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { Message } from "@/app/constant/types";
 
 export default function NightGuide() {
@@ -14,7 +17,8 @@ export default function NightGuide() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "👋 Hello! I'm NightGuide. What kind of movies or shows are you looking for?",
+      content:
+        "👋 Hello! I'm NightGuide. What kind of movies or shows are you looking for?",
       timestamp: new Date(),
     },
   ]);
@@ -22,8 +26,9 @@ export default function NightGuide() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
+  const params = useParams();
 
-  const suggestions = getQuickSuggestions();
+  let suggestions = getQuickSuggestions();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -45,7 +50,7 @@ export default function NightGuide() {
     e?.preventDefault();
 
     const textToSend = suggestionText || message.trim();
-    
+
     if (!textToSend || loading) return;
 
     const userMessage: Message = {
@@ -61,7 +66,7 @@ export default function NightGuide() {
 
     try {
       const response = await askAI(textToSend);
-      
+
       const assistantMessage: Message = {
         role: "assistant",
         content: response,
@@ -71,7 +76,7 @@ export default function NightGuide() {
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("Night Guide error:", error);
-      
+
       const errorMessage: Message = {
         role: "assistant",
         content: "Sorry, I encountered an error. Please try again.",
@@ -84,14 +89,13 @@ export default function NightGuide() {
     }
   }
 
-
-
   const handleClearChat = () => {
     clearConversation(); // Clear AI conversation history
     setMessages([
       {
         role: "assistant",
-        content: "👋 Hello! I'm NightGuide. What kind of movies or shows are you looking for?",
+        content:
+          "👋 Hello! I'm NightGuide. What kind of movies or shows are you looking for?",
         timestamp: new Date(),
       },
     ]);
@@ -104,6 +108,16 @@ export default function NightGuide() {
   // Don't show the floating widget on the full-page chat route
   if (pathname === "/nightguide" || pathname.includes("player")) {
     return null;
+  }
+  if (pathname.includes("movie") || pathname.includes("tv")) {
+    const slug = params?.slug as string | string[] | undefined;
+    const slugName = Array.isArray(slug) ? slug[1] : slug;
+    const formattedName = slugName?.replace(/-/g, " ");
+    suggestions = [
+      `Can you recommend movies or tv similar to ${formattedName}?`,
+      `What genre is ${formattedName} and what are the best movies or tv in it?`,
+      `What are some recent movies or tv like ${formattedName}?`,
+    ];
   }
 
   return (
@@ -153,7 +167,12 @@ export default function NightGuide() {
           <div className="flex justify-between items-center px-5 py-4 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <Link href="/nightguide" className="text-lg font-bold tracking-wider text-red-600">Night Guide</Link>
+              <Link
+                href="/nightguide"
+                className="text-lg font-bold tracking-wider text-red-600"
+              >
+                Night Guide
+              </Link>
               <span className="text-xs text-gray-400">🎬 AI</span>
             </div>
             <div className="flex items-center gap-2">
@@ -176,7 +195,7 @@ export default function NightGuide() {
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth bg-linear-to-b from-white/5 to-transparent">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide scroll-smooth bg-linear-to-b from-white/5 to-transparent">
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -185,7 +204,9 @@ export default function NightGuide() {
                 }`}
               >
                 {msg.role === "assistant" && (
-                  <span className="text-[10px] text-gray-500 mb-1 ml-1 select-none font-medium">NightGuide</span>
+                  <span className="text-[10px] text-gray-500 mb-1 ml-1 select-none font-medium">
+                    NightGuide
+                  </span>
                 )}
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed shadow-sm ${
@@ -216,26 +237,38 @@ export default function NightGuide() {
                 ))}
               </div>
             )}
-            
+
             {/* Loading Indicator */}
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-transparent border border-white/5 rounded-2xl rounded-bl-sm px-4 py-4">
                   <div className="flex gap-1.5 items-center">
-                    <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    <div
+                      className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <div
+                      className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce"
+                      style={{ animationDelay: "150ms" }}
+                    />
+                    <div
+                      className="w-1.5 h-1.5 bg-red-500/50 rounded-full animate-bounce"
+                      style={{ animationDelay: "300ms" }}
+                    />
                   </div>
                 </div>
               </div>
             )}
-            
+
             <div ref={messagesEndRef} className="h-2" />
           </div>
 
           {/* Input Form */}
           <div className="p-4 border-t border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md">
-            <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-[#141414] border border-white/10 p-1.5 rounded-full ring-1 ring-transparent focus-within:ring-red-500/30 transition-all">
+            <form
+              onSubmit={handleSubmit}
+              className="flex gap-2 items-center bg-[#141414] border border-white/10 p-1.5 rounded-full ring-1 ring-transparent focus-within:ring-red-500/30 transition-all"
+            >
               <input
                 ref={inputRef}
                 type="text"
@@ -257,8 +290,12 @@ export default function NightGuide() {
                 disabled={!message.trim() || loading}
                 className="bg-white text-black h-9 w-9 rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-all disabled:opacity-20 disabled:hover:bg-white disabled:hover:text-black shrink-0"
               >
-                <svg className="w-4 h-4 ml-[-2px]" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                <svg
+                  className="w-4 h-4 ml-[-2px]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                 </svg>
               </button>
             </form>
