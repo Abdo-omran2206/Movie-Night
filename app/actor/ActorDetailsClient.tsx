@@ -83,7 +83,9 @@ export default function ActorDetailsClient() {
                   priority
                 />
               </div>
-
+              <h1 className="text-center justify-center flex md:hidden text-5xl md:text-7xl font-bold text-white mb-8">
+                {data.name}
+              </h1>
               <div className="bg-neutral-900/40 rounded-2xl p-6 ring-1 ring-white/10">
                 <h2 className="text-xl font-bold mb-4 border-b border-red-600/30 pb-2">
                   Personal Info
@@ -229,11 +231,11 @@ export default function ActorDetailsClient() {
 
             {/* Right Column: Name, Bio, Movie Credits */}
             <div className="flex-1">
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-8">
+              <h1 className="hidden md:flex text-5xl md:text-7xl font-bold text-white mb-8">
                 {data.name}
               </h1>
 
-              {data.biography && (
+              {data.biography ? (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold mb-4 text-red-600 uppercase tracking-widest font-bebas">
                     Biography
@@ -242,9 +244,20 @@ export default function ActorDetailsClient() {
                     {data.biography}
                   </p>
                 </div>
+              ) : (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold mb-4 text-red-600 uppercase tracking-widest font-bebas">
+                    Biography
+                  </h2>
+                  <p className="text-gray-300 leading-relaxed text-lg max-w-4xl whitespace-pre-line">
+                    Oops! We couldn’t find a biography for this actor at the
+                    moment.{" "}
+                  </p>
+                </div>
               )}
             </div>
           </div>
+
           <div className="mt-15">
             {data.movie_credits?.cast && data.tv_credits?.cast && (
               <div>
