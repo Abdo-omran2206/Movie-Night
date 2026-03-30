@@ -140,6 +140,9 @@ export const metadata: Metadata = {
   verification: {
     google: "hlHSbQJzQ4VDUcjMonNN_7QiWcxdSefIYRkBV96LT4w",
   },
+  alternates: {
+    canonical: "https://mymovienight.vercel.app", 
+  }
 };
 
 export default function RootLayout({
