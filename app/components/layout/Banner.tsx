@@ -6,7 +6,7 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { fetchGenres, fetchMovies} from "../../lib/tmdb";
+import { fetchGenres, fetchMovies } from "../../lib/tmdb";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import Link from "next/link";
 import { slugify } from "../../lib/slugify";
@@ -14,12 +14,10 @@ import { encodeId } from "../../lib/hash";
 import { Genre, Movie } from "../../constant/types";
 import { backdropUrl } from "../../constant/main";
 
-
 export default function Banner() {
   const [data, setData] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(true);
-  
 
   useEffect(() => {
     async function fetchBanner() {
@@ -57,7 +55,7 @@ export default function Banner() {
   if (!data.length) return null;
 
   return (
-    <div className="w-full max-h-96 h-96 md:max-h-[100svh] md:h-[100svh] max-sm:h-screen relative group">
+    <div className="w-full max-h-100 h-100 md:max-h-[100svh] md:h-[100svh] max-sm:h-screen relative group">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -90,21 +88,28 @@ export default function Banner() {
                     </h1>
 
                     <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-start md:items-center text-xs sm:text-sm md:text-base text-gray-200">
-                      <Ships ship={item.release_date} />
                       <Ships ship={<StarRating rating={item.vote_average} />} />
                       <Ships ship={`(${item.vote_count} Votes)`} />
+                      <div className="hidden md:flex">
+                        <Ships ship={item.release_date} />
+                      </div>
+                      <div className="flex md:hidden">
+                        <Ships ship={item.release_date?.split("-")[0]} />
+                      </div>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
-                      {getGenreNames(item.genre_ids).slice(0,4).map((name, idx) => (
-                        <Ships key={idx} ship={name} />
-                      ))}
+                    <div className="hidden md:flex flex-wrap justify-center gap-2 md:gap-4 items-center text-xs sm:text-sm md:text-base text-gray-200">
+                      {getGenreNames(item.genre_ids)
+                        .slice(0, 4)
+                        .map((name, idx) => (
+                          <Ships key={idx} ship={name} />
+                        ))}
                     </div>
                   </div>
 
                   <div className="flex flex-col items-start md:items-start gap-4 md:gap-8">
-                    <div className="space-y-1 hidden md:flex flex-col text-left md:text-left">
-                      <h2 className="text-xl md:text-3xl font-semibold text-red-700">
+                    <div className="space-y-1  flex-col text-left md:text-left">
+                      <h2 className="hidden md:flex text-xl md:text-3xl font-semibold text-red-700">
                         OVERVIEW
                       </h2>
                       <p className="text-gray-300 line-clamp-3 md:line-clamp-4 max-w-xl md:max-w-2xl text-xs sm:text-sm md:text-base">

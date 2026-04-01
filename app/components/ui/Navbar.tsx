@@ -64,7 +64,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4 md:gap-8 shrink-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white visible md:hidden hover:text-red-600 transition-colors p-1"
+              className="text-white visible lg:hidden hover:text-red-600 transition-colors p-1"
               aria-label="Toggle menu"
             >
               <MdMenu size={28} />
@@ -81,7 +81,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 flex-1 justify-center uppercase font-bold tracking-wider text-[13px]">
+          <div className="hidden lg:flex items-center gap-6 lg:gap-8 flex-1 justify-center uppercase font-bold tracking-wider text-[13px]">
             <Link
               href="/"
               className="text-neutral-400 hover:text-white transition-all duration-300 hover:scale-105"
@@ -166,7 +166,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Search */}
-          <div className="hidden md:flex flex-1 max-w-sm relative group/search">
+          <div className="hidden lg:flex flex-1 max-w-sm relative group/search">
             <form
               onSubmit={handleSubmit}
               className="flex items-center w-full bg-neutral-900/60 hover:bg-neutral-900/90 border border-neutral-600 focus-within:border-red-600/50 focus-within:ring-2 focus-within:ring-red-600/20 rounded-xl px-4 py-2 transition-all duration-300"
@@ -194,7 +194,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Search Trigger */}
-          <div className="flex md:hidden items-center">
+          <div className="flex lg:hidden items-center">
             <button
               onClick={() => setIsSearchModelOpen(true)}
               className="p-2 text-white hover:text-red-600 transition-colors"
