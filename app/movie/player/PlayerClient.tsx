@@ -1,19 +1,19 @@
 "use client";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Navbar from "@/app/components/Navbar";
+import Navbar from "@/app/components/ui/Navbar";
 import { useEffect, useState } from "react";
-import { fetchMovieDetails } from "@/app/lib/tmdb";
-import { MovieDetail, StreamSource } from "@/app/constant/types";
-import LoadingModel from "@/app/components/LoadingModel";
+import { fetchMovieDetails, fetchTvDetails } from "@/app/lib/tmdb";
+import { MovieDetail, StreamSource, TvDetail } from "@/app/constant/types";
+import LoadingModel from "@/app/components/models/LoadingModel";
 import Link from "next/link";
 import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
 import { supabaseClient } from "@/app/lib/supabase";
-import { StreamButtonSkeleton } from "@/app/components/Skeleton";
+import { StreamButtonSkeleton } from "@/app/components/ui/Skeleton";
 import { decodeId } from "@/app/lib/hash";
 
 export default function PlayerClient() {
-  const [movie, setMovie] = useState<MovieDetail | null>(null);
+  const [movie, setMovie] = useState<MovieDetail | TvDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [streamsLoading, setStreamsLoading] = useState(true);
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
@@ -64,8 +64,6 @@ export default function PlayerClient() {
 
         // If no movie found, try fetching as a TV show
         if (!data || (!data.title && !data.name)) {
-          // Check for both title and name
-          const { fetchTvDetails } = await import("@/app/lib/tmdb");
           data = await fetchTvDetails(id);
         }
 
@@ -83,7 +81,7 @@ export default function PlayerClient() {
     return <LoadingModel message="Loading Player" />;
   }
 
-  const title = movie?.title || "Unknown Content";
+  const title = (movie && ('title' in movie ? movie.title : (movie as any).name)) || "Unknown Content";
 
   if (!movie) {
     return (

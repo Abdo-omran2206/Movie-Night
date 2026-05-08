@@ -1,11 +1,11 @@
 "use client";
-import Footer from "@/app/components/Footer";
-import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/ui/Footer";
+import Navbar from "@/app/components/ui/Navbar";
 import { fetchMovieDetails } from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CastList from "@/app/components/CastCard";
-import LoadingModel from "@/app/components/LoadingModel";
+import CastList from "@/app/components/cards/CastCard";
+import LoadingModel from "@/app/components/models/LoadingModel";
 import Link from "next/link";
 import { decodeId } from "@/app/lib/hash";
 

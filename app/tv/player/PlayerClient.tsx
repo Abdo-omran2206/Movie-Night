@@ -1,15 +1,15 @@
 "use client";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Navbar from "@/app/components/Navbar";
+import Navbar from "@/app/components/ui/Navbar";
 import { useEffect, useState } from "react";
 import { fetchTvDetails } from "@/app/lib/tmdb";
 import { StreamSource, TvDetail } from "@/app/constant/types";
-import LoadingModel from "@/app/components/LoadingModel";
+import LoadingModel from "@/app/components/models/LoadingModel";
 import Link from "next/link";
 import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
 import { supabaseClient } from "@/app/lib/supabase";
-import { StreamButtonSkeleton } from "@/app/components/Skeleton";
+import { StreamButtonSkeleton } from "@/app/components/ui/Skeleton";
 import { slugify } from "@/app/lib/slugify";
 import { decodeId } from "@/app/lib/hash";
 
@@ -86,15 +86,8 @@ export default function PlayerClient() {
       if (!id) return;
       setLoading(true);
       try {
-        // Try fetching as a movie first
-        let data = await fetchTvDetails(id);
-
-        // If no movie found, try fetching as a TV show
-        if (!data || (!data.title && !data.name)) {
-          // Check for both title and name
-          const { fetchTvDetails } = await import("@/app/lib/tmdb");
-          data = await fetchTvDetails(id);
-        }
+        // Fetch as TV show (this is the TV player)
+        const data = await fetchTvDetails(id);
 
         setMovie(data);
       } catch (err) {

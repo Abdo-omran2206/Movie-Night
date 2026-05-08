@@ -24,9 +24,6 @@ export async function generateMetadata({
           ? data.biography.slice(0, 157) + "..."
           : data.biography
         : `Learn more about ${data.name} on Movie Night.`,
-      alternates: {
-        canonical: `${siteUrl}/person/${data.id}`,
-      },
       openGraph: {
         title: `${data.name} - Movie Night`,
         description: data.biography

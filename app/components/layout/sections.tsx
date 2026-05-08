@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchMovies } from "../lib/tmdb";
-import MovieCard from "./MovieCard";
-import { SectionSkeleton } from "./Skeleton";
-import { Movie, SectionProps } from "../constant/types";
+import { fetchMovies } from "../../lib/tmdb";
+import MovieCard from "../cards/MovieCard";
+import { SectionSkeleton } from "../ui/Skeleton";
+import { Movie, SectionProps } from "../../constant/types";
 
 
 export default function Section({

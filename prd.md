@@ -20,7 +20,7 @@
 - **Success metrics**
   - Time to first meaningful interaction (home page fully interactive) ≤ 3s on modern devices.
   - Search to result display ≤ 2s p95 under normal network conditions.
-  - ≥ 60% of sessions include at least one detail page view (`/movie/[id]/[slug]` or `/actor/[id]/[slug]`).
+  - ≥ 60% of sessions include at least one detail page view (`/movie/[hash]/[slug]` or `/actor/[hash]/[slug]`).
   - Bounce rate on movie detail pages < 40%.
   - Uptime of external API calls (TMDB + streaming providers) ≥ 99% over a rolling 30 days.
 
@@ -32,25 +32,25 @@
     - Numeric genre ID: e.g. `/category/28` for Action via TMDB genres.
   - Movies are listed in a grid with pagination via `?page={n}`.
 2. **View movie details**
-  - User visits `/movie/[id]/[slug]`.
+  - User visits `/movie/[hash]/[slug]`.
   - App fetches movie details with appended `credits`, `similar`, `videos`, `recommendations`, `keywords`.
   - Page shows poster/backdrop, title, release date, runtime, rating (with stars), genres, overview.
   - User can:
     - See cast carousel and open full cast page.
     - See recommended and similar movies in mini-card carousels.
     - Open trailer modal (YouTube) if available.
-    - Click “Watch Now” to navigate to `/movie/player/[id]/[slug]` when `runtime > 0` (available).
+    - Click “Watch Now” to navigate to `/movie/player/[hash]/[slug]` when `runtime > 0` (available).
 3. **View full cast**
-  - User clicks into `/movie/cast/[id]` from movie detail.
+  - User clicks into `/movie/cast/[hash]` from movie detail.
   - Page shows full cast list with actor thumbnails and roles.
-  - User can click an actor to open `/actor/[id]/[slug]`.
+  - User can click an actor to open `/actor/[hash]/[slug]`.
 4. **View actor details & filmography**
-  - User visits `/actor/[id]/[slug]`.
+  - User visits `/actor/[hash]/[slug]`.
   - App fetches actor details with `movie_credits` and `images`.
   - Page shows profile image, personal info (department, birthday, place of birth), biography, and filmography grid.
-  - User can click any movie in filmography to open `/movie/[id]/[slug]`.
+  - User can click any movie in filmography to open `/movie/[hash]/[slug]`.
 5. **Watch content via external streams**
-  - User clicks “Watch Now” on `/movie/[id]/[slug]` or `/tv/[id]/[slug]` and is navigated to `/movie/player/[id]/[slug]` or `/tv/player/[id]/[slug]/1/1`.
+  - User clicks “Watch Now” on `/movie/[hash]/[slug]` or `/tv/[hash]/[slug]` and is navigated to `/movie/player/[hash]/[slug]` or `/tv/player/[hash]/[slug]?s=1&e=1`.
   - App loads details and constructs an initial embed URL using TV Season/Episode routing or pure Movie ID routing through integrated streaming API tables.
   - User sees video player iframe and a row of stream source buttons.
   - User may switch streams without reloading the page; iframe `src` updates dynamically to selected provider URL via client-state mapping.
@@ -60,7 +60,14 @@
   - User visits `/install` from the footer or a shared link.
   - Page highlights the Movie Night experience and shows an install call-to-action.
   - On click, user is directed to the latest app download/store URL configured via Supabase `app_config`.
-7. **Ask NightGuide for Recommendations (AI Chat)**
+7. **Discover content via Explore Hub**
+  - User visits `/explore`.
+  - Sees a premium dual-pane layout with a sticky filter sidebar (or mobile drawer).
+  - User adjusts range sliders (Year, Rating), selects genres, or picks a region/language.
+  - Results update in real-time in a responsive grid.
+  - User can toggle between Media Types (Movies/TV) without losing filter context.
+  - User uses pagination to browse large filtered lists.
+8. **Ask NightGuide for Recommendations (AI Chat)**
   - User clicks the floating "NightGuide" widget or navigates to `/nightguide`.
   - User types a prompt (e.g., "Recommend a sci-fi movie from 2014").
   - The Gemini AI processes the request using a custom prompt, formatted as text with `🎬 **Title** (Year)`.
@@ -76,6 +83,7 @@
   - Contains:
     - Menu toggle opening a sidebar with key navigation (Home, Trending, Categories, etc.).
     - Logo linking back to `/`.
+    - Desktop navigation links with glassmorphic dropdowns for **Explore** and **Genres**.
     - Search input integrated with `/search` route.
   - On submit, empty or whitespace-only queries should be ignored.
 - **Sidebar menu**
@@ -100,7 +108,7 @@
     - Movie title, release date, rating with star visualization, vote count.
     - Genre chips based on TMDB genre IDs.
     - Overview snippet with truncation.
-    - “View Movie” button linking to `/movie/[id]/[slug]`.
+    - “View Movie” button linking to `/movie/[hash]/[slug]`.
 - **Sections**
   - Configured from **Supabase** `sections_content` table based on the user's IP-detected region.
   - Falls back to hardcoded default sections if no DB matching or failure:
@@ -115,45 +123,46 @@
 #### 4.3 Search (`/search`)
 
 - **Inputs & URL**
-  - Accepts `q` (string) and `page` (optional, default 1) via query parameters.
+  - Accepts `q` (string), `page` (optional, default 1), and `type` (optional, default "multi") via query parameters.
   - If `q` is missing or empty, show prompt text instead of results.
 - **Behavior**
-  - On mount, parse `q` and `page` from URL.
-  - Fetch results from TMDB `search/movie` with `include_adult=false`.
-  - Sync component state with URL so that back/forward navigation works.
+  - On mount, parse `q`, `page`, and `type` from URL.
+  - Fetch results from TMDB via dynamic search endpoints (`search/multi`, `search/movie`, `search/tv`, `search/person`) based on the selected `type`.
+  - Sync component state with URL (including the active filter) so that back/forward navigation works.
   - Auto-scroll to top on new searches or page changes.
 - **UI**
-  - Heading “Search results for "{query}"” when query present.
-  - Movie results shown as `MovieCard`s in a responsive grid.
-  - Loading state shows full-page loading component.
-  - Empty state message when no results.
+  - Heading “RESULTS FOR "{query}"” with a pulsing result count and accent bar.
+  - Dropdown filter to switch between All Items, Movies, TV Shows, and Actors.
+  - Results shown as `MovieCard`s or `SearchItem`s in a responsive grid.
+  - Premium loading state and customized empty state message when no results are found.
   - Pagination:
-    - Prev/Next buttons, disabled at boundaries.
-    - Current page and total pages displayed.
+    - Prev/Next buttons, disabled at boundaries, synced with URL.
+    - Current page and total pages displayed visually.
 
 #### 4.4 Category & Genre (`/category/[category]`)
 
 - **Category resolution**
-  - Map known slugs to TMDB endpoints:
-    - `trending` → `/trending/movie/week`
-    - `top_rated` → `/movie/top_rated`
-    - `popular`/`populer` → `/movie/popular`
-    - `upcoming` → `/movie/upcoming`
-    - `now_playing` → `/movie/now_playing`
+  - Map known slugs to TMDB endpoints dynamically supporting `movie` or `tv` based on the URL `type` parameter:
+    - `trending` → `/trending/{mediaType}/week`
+    - `top_rated` → `/{mediaType}/top_rated`
+    - `popular`/`populer` → `/{mediaType}/popular`
+    - `upcoming` → `/movie/upcoming` or `/tv/on_the_air`
+    - `now_playing` → `/movie/now_playing` or `/tv/airing_today`
   - Numeric `category` (all digits) is treated as genre ID:
-    - Endpoint: `/discover/movie?with_genres={id}`.
-    - Display title fetched dynamically from genre list.
-  - For unknown slugs, default to `/movie/{slug}` and title derived from slug.
-- **Pagination**
-  - Use `page` query parameter.
+    - Endpoint: `/discover/{mediaType}?with_genres={id}`.
+    - Display title fetched dynamically from genre list based on the slug.
+  - For unknown slugs, default to `/{mediaType}/{slug}` and title derived from slug.
+- **Pagination & Filtering**
+  - Use `page` query parameter for infinite-like pagination, synced with the URL.
+  - Use `type` query parameter (`movie` or `tv`) to toggle media type.
   - Update URL and smooth scroll to top on change.
   - Display current and total pages with Prev/Next controls.
 - **UI**
-  - Page header with category/genre title and accent bar.
-  - Movies displayed via `MovieCard` components (`size="small"`).
-  - Loading skeleton grid while fetching.
+  - Page header with category/genre title, subtext, and a media type dropdown filter.
+  - Content displayed via `MovieCard` components (`size="medium"`).
+  - Premium Loading skeleton grid while fetching and tailored empty states.
 
-#### 4.5 Movie Details (`/movie/[id]/[slug]`)
+#### 4.5 Movie Details (`/movie/[hash]/[slug]`)
 
 - **Data**
   - Use single TMDB call with `append_to_response=credits,similar,videos,recommendations,keywords`.
@@ -176,7 +185,7 @@
     - Each section displayed only if results are present.
     - Uses `MovieMiniCard` grid for compact cards.
 
-#### 4.6 Full Cast (`/movie/cast/[id]` and `/tv/cast/[id]`)
+#### 4.6 Full Cast (`/movie/cast/[hash]` and `/tv/cast/[hash]`)
 
 - **Data**
   - Reuse `fetchMovieDetails` or `fetchTvDetails`, using `credits` from response.
@@ -187,7 +196,7 @@
   - Accent divider for visual structure.
   - Cast list rendered in a scrollable container using `CastList`.
 
-#### 4.7 Actor Details (`/actor/[id]/[slug]`)
+#### 4.7 Actor Details (`/actor/[hash]/[slug]`)
 
 - **Data**
   - Use TMDB `/person/{id}` with appended `movie_credits,images`.
@@ -203,7 +212,7 @@
     - Heading “Filmography”.
     - `MovieMiniCard` grid from `movie_credits.cast`.
 
-#### 4.8 Player (`/movie/player/[id]/[slug]` and `/tv/player/[id]/[slug]/[season]/[episode]`)
+#### 4.8 Player (`/movie/player/[hash]/[slug]` and `/tv/player/[hash]/[slug]?s=[season]&e=[episode]`)
 
 - **Data**
   - Fetch movie or TV details by ID for page title and context.
@@ -230,6 +239,25 @@
 - **AI Logic & Fallbacks**
   - Prompted strictly to return recommendations avoiding internal IDs, only referencing Titles and Years.
   - Implements an automated capability fallback hierarchy: if `gemini-2.5-flash` is rate-limited or errors, it falls back to `gemini-2.5-flash-lite`, and then to `gemini-1.5-flash` to ensure uninterrupted service.
+
+#### 4.10 Explore Hub (`/explore`)
+
+- **Discovery Flow**
+  - Fetches results from TMDB via the advanced `/discover` endpoints.
+  - Maintains state for multiple criteria: media type, release year, minimum rating, genre IDs, production region, and original language.
+- **Filter Controls**
+  - **Range Sliders**: Custom-styled for "Release Year" (1900 to current) and "Min Rating" (0 to 10).
+  - **Genre Selection**: Multi-select animated checkbox list fetching IDs from `GENRE_MAP`.
+  - **Dropdowns**: Premium selectors for **Region** and **Content Language** based on pre-vetted datasets.
+  - **Sorting**: Instant toggle between Popularity, Release Date, Vote Average, and Vote Count.
+- **Responsive Layout**
+  - **Desktop**: Dual-pane layout where the left column is a sticky glassmorphic aside and the right column is the results grid.
+  - **Mobile**: Floating "Refine" button at `z-index: 45` that triggers a slide-out drawer overlay containing all filter controls.
+  - Interactions: Media toggles and resets on mobile automatically dismiss the drawer for immediate feedback.
+- **Visual Feedback**
+  - "Live Database" status indicator with pulsing glow.
+  - Dynamic "Discovering {count} Titles" result counter.
+  - Grid responsiveness: 2 columns on mobile, scaling up to 5 on large desktops.
 
 ### 5. Non‑Functional Requirements
 
@@ -268,8 +296,8 @@
 - Provide structured data (JSON‑LD) for the website and site search action.
 - Ensure clean, keyword-rich URL patterns:
   - `/`, `/search`, `/category/[category]`
-  - `/movie/[id]/[slug]`, `/tv/[id]/[slug]`, `/actor/[id]/[slug]`
-  - `/movie/cast/[id]`, `/movie/player/[id]/[slug]`, `/tv/player/[id]/[slug]/[season]/[episode]`
+  - `/movie/[hash]/[slug]`, `/tv/[hash]/[slug]`, `/actor/[hash]/[slug]`
+  - `/movie/cast/[hash]`, `/movie/player/[hash]/[slug]`, `/tv/player/[hash]/[slug]?s=[season]&e=[episode]`
   - `/nightguide` (AI assistant full screen)
   - `/install` (web app install and download page)
 

@@ -25,18 +25,28 @@
 
 ## ✨ Features
 
-### 🏠 Home Page
+### 🏠 Home Page & Categories
 
-- **Cinematic Hero Slider**: Trending movies featured with high-quality backdrops.
-- **Dynamic Categories & Regional Content**: Instant access to Top Rated, Popular, Upcoming, and Now Playing sections. Uses IP Geolocation (`ipwho.is`) to show regional trending content natively.
-- **Remote Configuration**: Home page sections are dynamically driven by a **Supabase** backend, allowing updates without code redeployment.
-- **Glassmorphic UI**: Modern backdrop blur effects and premium typography.
+- **Cinematic Hero Slider**: Trending titles featured with high-quality backdrops.
+- **Dynamic Categories**: Instant access to Top Rated, Popular, Upcoming, and Now Playing sections with a dynamic filter to seamlessly toggle between **Movies** and **TV Shows**.
+- **Global Genres**: Explore specialized categories via our **Explore** and **Genres** desktop navigation dropdowns.
+- **Regional Content**: Uses IP Geolocation (`ipwho.is`) to show regional trending content.
+- **Remote Configuration**: Home page sections are dynamically driven by a **Supabase** backend.
+- **Glassmorphic UI**: Modern backdrop blur effects, premium typography, and an interactive Sidebar & Desktop Navigation.
 
-### 🔍 Search & Discovery
+### 🧭 Explore Hub & Advanced Discovery
 
-- **Global Search**: Find any movie in the TMDB database instantly.
-- **Real-time Results**: Fast API integration with dedicated loading states.
-- **Pagination**: Seamlessly browse through thousands of search results.
+- **Premium Dual-Pane Layout**: A high-end discovery experience featuring a sticky, glassmorphic filter sidebar on desktop and a slide-over drawer for mobile.
+- **Deep Filtering & Sorting**:
+  - **Release Year & Rating**: Custom-styled range sliders for precise year and minimum vote average filtering.
+  - **Global Library**: Discovery by **Production Region** (US, UK, JP, EG, etc.) and item **Original Language**.
+  - **Enhanced Sorting**: Sort instantly by Popularity, Premiere Date, Vote Average, or Vote Count.
+  - **Genre Precision**: Multi-select animated checkboxes for granular genre exploration.
+- **Micro-animations**: Interactive hover states for checkboxes and sliders with dynamic gradient tracks.
+- **Live Database Status**: Real-time feedback on discovery results and pulsing live status indicators.
+- **Mobile Optimized**: A dedicated floating "Refine" button that triggers a full-screen filter overlay on small screens.
+
+### 🔍 Search
 
 ### 📱 Movie & TV Show Details
 
@@ -102,7 +112,9 @@ Create a `.env.local` file in the root:
 
 ```env
 NEXT_PUBLIC_API_KEY=your_tmdb_api_key
-NEXT_PUBLIC_STREAM_API=your_streaming_api_url
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_KEY=your_supabase_anon_key
+NEXT_PUBLIC_HASH_SALT=your_custom_hash_salt
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
 ```
 
@@ -148,15 +160,16 @@ npm run dev
 
 - Home: `/`
 - Search: `/search?q=Inception&page=1`
-- Category: `/category/top_rated?page=1`
+- Category: `/category/top_rated?page=1&type=movie`
 - Genre: `/category/28` (Action), `/category/12` (Adventure), etc.
-- Movie Details: `/movie/[id]/[slug]` (primary)
-- TV Details: `/tv/[id]/[slug]`
-- Cast Details: `/movie/cast/[id]` and `/tv/cast/[id]`
-- Actor Details: `/actor/[id]/[slug]`
-- Movie Player: `/movie/player/[id]/[slug]`
-- TV Player: `/tv/player/[id]/[slug]/[season]/[episode]`
-- TV Season: `/tv/season/[id]/[seasonNum]/[slug]`
+- Movie Details: `/movie/[hash]/[slug]` (primary)
+- TV Details: `/tv/[hash]/[slug]`
+- Cast Details: `/movie/cast/[hash]` and `/tv/cast/[hash]`
+- Actor Details: `/actor/[hash]/[slug]`
+- Movie Player: `/movie/player/[hash]/[slug]`
+- TV Player: `/tv/player/[hash]/[slug]?s=[season]&e=[episode]`
+- TV Season: `/tv/season/[hash]/[seasonNum]/[slug]`
+- NightGuide AI: `/nightguide`
 - Install Page: `/install`
 
 ---

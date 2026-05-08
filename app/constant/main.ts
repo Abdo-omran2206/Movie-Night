@@ -17,10 +17,10 @@ import {
   FaFlag, 
   FaHatCowboy, 
   FaSearch,
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaYoutube
+  FaRedditAlien,
+  FaGithub,
+  FaDiscord,
+  FaLinkedin
 } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoFlame, IoStar, IoCalendar, IoPlay } from "react-icons/io5";
@@ -89,6 +89,13 @@ export const GENRE_MAP: Record<string, number> = {
 
 export const navigationLinks = [
   { href: "/", label: "Home" },
+  { href: "/explore", label: "Discover" },
+  { href: "/nightguide", label: "Night Guide" },
+  { href: "/install", label: "Install App" },
+  { href: "/about", label: "About" },
+];
+
+export const discoverLinks = [
   { href: "/category/trending", label: "Trending" },
   { href: "/category/top_rated", label: "Top Rated" },
   { href: "/category/popular", label: "Popular" },
@@ -97,10 +104,10 @@ export const navigationLinks = [
 ];
 
 export const socialMedia = [
-  { href: "/", icon: FaFacebookF, label: "Facebook" },
-  { href: "/", icon: FaTwitter, label: "Twitter" },
-  { href: "/", icon: FaInstagram, label: "Instagram" },
-  { href: "/", icon: FaYoutube, label: "YouTube" },
+  { href: "https://www.linkedin.com/in/abdalla-omran-388572361/", icon: FaLinkedin, label: "Linkedin" },
+  { href: "https://github.com/Abdo-omran2206", icon: FaGithub , label: "Github " },
+  { href: "https://www.reddit.com/r/myMovieNight/", icon: FaRedditAlien  , label: "Reddit" },
+  { href: "https://discord.gg/yep7xvZj", icon: FaDiscord, label: "Discord" },
 ];
 
 export const categories = [
@@ -131,4 +138,41 @@ export const genres = [
   { name: "Thriller", icon: FaSkull, href: "/category/thriller" },
   { name: "War", icon: FaFlag, href: "/category/war" },
   { name: "Western", icon: FaHatCowboy, href: "/category/western" },
+];
+
+
+export const SORT_OPTIONS = [
+  { label: "Popularity", value: "popularity.desc" },
+  { label: "Release Date", value: "primary_release_date.desc" },
+  { label: "Vote Average", value: "vote_average.desc" },
+  { label: "Vote Count", value: "vote_count.desc" },
+];
+
+export const REGIONS = [
+  { label: "All Regions", value: "" },
+  { label: "United States", value: "US" },
+  { label: "United Kingdom", value: "GB" },
+  { label: "Japan", value: "JP" },
+  { label: "South Korea", value: "KR" },
+  { label: "France", value: "FR" },
+  { label: "Germany", value: "DE" },
+  { label: "Spain", value: "ES" },
+  { label: "Italy", value: "IT" },
+  { label: "China", value: "CN" },
+  { label: "India", value: "IN" },
+  { label: "Egypt", value: "EG" },
+];
+
+export const LANGUAGES = [
+  { label: "All Languages", value: "" },
+  { label: "English", value: "en" },
+  { label: "Japanese", value: "ja" },
+  { label: "Korean", value: "ko" },
+  { label: "French", value: "fr" },
+  { label: "German", value: "de" },
+  { label: "Spanish", value: "es" },
+  { label: "Arabic", value: "ar" },
+  { label: "Chinese", value: "zh" },
+  { label: "Hindi", value: "hi" },
+  { label: "Russian", value: "ru" },
 ];

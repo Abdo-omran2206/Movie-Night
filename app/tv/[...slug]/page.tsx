@@ -22,12 +22,6 @@ export async function generateMetadata({
       title: `${data.name} (${data.first_air_date?.split("-")[0] || ""}) - Movie Night`,
       description: data.overview || "No description available.",
 
-      alternates: {
-        canonical: `${siteUrl}/tv/${data.id}/${slugify(
-          data.name + "-" + (data.first_air_date?.split("-")[0] || ""),
-        )}`,
-      },
-
       openGraph: {
         title: data.name,
         description: data.overview,

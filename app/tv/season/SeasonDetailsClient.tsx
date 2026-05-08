@@ -5,14 +5,14 @@ import { useState } from "react";
 import { FaPlay, FaStar, FaClock } from "react-icons/fa";
 import { FaCirclePlay } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
+import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/app/components/ui/Footer";
 import { TvDetail, SeasonDetail, Episode } from "../../constant/types";
 import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
 import { slugify } from "@/app/lib/slugify";
 import { Ships, RatingStars } from "@/app/tv/TvDetailsClient";
-import TrailerModal from "@/app/components/TrailerModel";
-import CastList from "@/app/components/CastCard";
+import TrailerModal from "@/app/components/models/TrailerModel";
+import CastList from "@/app/components/cards/CastCard";
 import { encodeId } from "@/app/lib/hash";
 import { posterUrl, backdropUrl } from "@/app/constant/main";
 interface SeasonDetailsClientProps {
@@ -60,11 +60,16 @@ export default function SeasonDetailsClient({
                 src={backdropUrl + series.backdrop_path}
                 alt={series.name}
                 fill
-                className="object-cover opacity-60 blur-sm"
+                className="object-cover opacity-80"
                 priority
               />
             )}
-            <div className="absolute inset-0 bg-linear-to-t from-black/65  to-transparent" />
+            {/* Main bottom-up gradient for blending */}
+            <div className="absolute inset-0 bg-linear-to-b from-transparent via-black/40 to-black" />
+            {/* Top-down gradient for better navbar contrast */}
+            <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-transparent h-1/3" />
+            {/* Subtle solid-ish bottom layer to hide image edges */}
+            <div className="absolute inset-0 bottom-0 left-0 right-0 backdrop-blur-xs" />
           </div>
 
           <div className="container mx-auto px-4 lg:px-20 relative z-10">
