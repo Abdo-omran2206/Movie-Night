@@ -92,12 +92,13 @@ export default function Navbar() {
             </Link>
 
             {/* Explore Dropdown */}
-            <div className="relative group/nav">
+            <div className="relative"
+              onMouseEnter={() => setIsExploreOpen(true)}
+              onMouseLeave={() => setIsExploreOpen(false)}
+            >
               <button
                 className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 hover:cursor-pointer transition-all outline-none"
                 onClick={() => setIsExploreOpen(!isExploreOpen)}
-                onMouseEnter={() => setIsExploreOpen(true)}
-                onMouseLeave={() => setIsExploreOpen(false)}
               >
                 Explore
                 <span className="text-[10px] transition-transform opacity-50">
@@ -132,12 +133,13 @@ export default function Navbar() {
             </div>
 
             {/* Genres Dropdown */}
-            <div className="relative group/nav">
+            <div className="relative"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
               <button
                 className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 transition-all outline-none"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
               >
                 Genres
                 <span className="text-[10px] transition-transform opacity-50">
@@ -145,8 +147,8 @@ export default function Navbar() {
                 </span>
               </button>
               {isDropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-100 translate-y-2 pointer-events-none transition-all duration-300 z-50">
-                  <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-[480px] grid grid-cols-2 gap-1 uppercase">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-100 translate-y-2 pointer-events-auto transition-all duration-300 z-50">
+                  <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-120 grid grid-cols-2 gap-1 uppercase">
                     {genres.map((item) => (
                       <Link
                         key={item.name}
