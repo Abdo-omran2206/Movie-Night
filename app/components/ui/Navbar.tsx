@@ -15,6 +15,8 @@ import { Movie } from "../../constant/types";
 export default function Navbar() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isSearchModelOpen, setIsSearchModelOpen] = useState(false);
@@ -91,59 +93,75 @@ export default function Navbar() {
 
             {/* Explore Dropdown */}
             <div className="relative group/nav">
-              <button className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
+              <button
+                className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 hover:cursor-pointer transition-all outline-none"
+                onClick={() => setIsExploreOpen(!isExploreOpen)}
+                onMouseEnter={() => setIsExploreOpen(true)}
+                onMouseLeave={() => setIsExploreOpen(false)}
+              >
                 Explore
-                <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">
+                <span className="text-[10px] transition-transform opacity-50">
                   ▼
                 </span>
               </button>
-              <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto transition-all duration-300 z-50">
-                <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-48">
-                  <Link
-                    href='/explore'
-                    className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
-                  >
-                    <FaCompass className="text-red-500 group-hover/item:scale-110 transition-transform" />
-                    <span className="text-xs font-semibold">Explore</span>
-                  </Link>
-                  {categories.map((item) => (
+              {isExploreOpen && (
+                <div className="absolute top-full left-0 pt-2 opacity-100 translate-y-2 pointer-events-auto transition-all duration-300 z-50">
+                  <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-48">
                     <Link
-                      key={item.name}
-                      href={item.href}
+                      href="/explore"
                       className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
                     >
-                      <item.icon className="text-red-500 group-hover/item:scale-110 transition-transform" />
-                      <span className="text-xs font-semibold">{item.name}</span>
+                      <FaCompass className="text-red-500 group-hover/item:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold">Explore</span>
                     </Link>
-                  ))}
+                    {categories.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
+                      >
+                        <item.icon className="text-red-500 group-hover/item:scale-110 transition-transform" />
+                        <span className="text-xs font-semibold">
+                          {item.name}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Genres Dropdown */}
             <div className="relative group/nav">
-              <button className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 group-hover/nav:scale-105 transition-all outline-none">
+              <button
+                className="text-neutral-400 hover:text-white flex items-center gap-1.5 py-2 transition-all outline-none"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
                 Genres
-                <span className="text-[10px] transition-transform group-hover/nav:rotate-180 opacity-50">
+                <span className="text-[10px] transition-transform opacity-50">
                   ▼
                 </span>
               </button>
-              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto transition-all duration-300 z-50">
-                <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-[480px] grid grid-cols-2 gap-1 uppercase">
-                  {genres.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
-                    >
-                      <item.icon className="text-red-500 shrink-0 group-hover/item:scale-110 transition-transform" />
-                      <span className="text-[11px] font-semibold truncate">
-                        {item.name}
-                      </span>
-                    </Link>
-                  ))}
+              {isDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-100 translate-y-2 pointer-events-none transition-all duration-300 z-50">
+                  <div className="bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-[480px] grid grid-cols-2 gap-1 uppercase">
+                    {genres.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-white hover:bg-red-600/10 rounded-lg transition-all group/item"
+                      >
+                        <item.icon className="text-red-500 shrink-0 group-hover/item:scale-110 transition-transform" />
+                        <span className="text-[11px] font-semibold truncate">
+                          {item.name}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <Link
