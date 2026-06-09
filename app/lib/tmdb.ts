@@ -1,7 +1,8 @@
 import axios from "axios";
 import { 
   Movie,
-  TMDBResponse 
+  TMDBResponse,
+  DiscoverParams
 } from "@/app/constant/types";
 import { GENRE_MAP, tmdbBaseUrl } from "@/app/constant/main";
 
@@ -141,17 +142,7 @@ export async function search(query: string, page: number, type: string = "multi"
 
 export async function discover(
   type: "movie" | "tv" = "movie",
-  params: {
-    page?: number;
-    with_genres?: string;
-    with_original_language?: string;
-    "vote_average.gte"?: number;
-    "primary_release_date.gte"?: string;
-    "primary_release_date.lte"?: string;
-    "first_air_date.gte"?: string;
-    "first_air_date.lte"?: string;
-    sort_by?: string;
-  }
+  params: DiscoverParams
 ) {
   const queryParams = new URLSearchParams({
     api_key: API_KEY as string,

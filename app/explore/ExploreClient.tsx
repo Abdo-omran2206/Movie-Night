@@ -69,7 +69,7 @@ export default function ExploreClient() {
         }
       }
 
-      const data = await discover(mediaType, params as any);
+      const data = await discover(mediaType, params);
       setResults(data.results || []);
       setTotalPages(Math.min(data.total_pages || 1, 500));
       setTotalResults(data.total_results || 0);

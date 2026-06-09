@@ -18,6 +18,22 @@ export default function generateMovieAvatar(title: string) {
 
   return avatar.toDataUri();
 }
+
+export function generateUserAvatar(name: string) {
+  const avatar = createAvatar(initials, {
+    seed: name, // يخلي كل مستخدم له avatar فريد
+    backgroundColor: ["e50914"], // dark gradient vibe
+    textColor: ["e5e7eb"],
+    fontWeight: 700,
+    radius: 50, // يخليها دائرية
+    size: 512,
+    // يخلي الحروف كبيرة ومركزة
+    scale: 80,
+  
+  });
+  return avatar.toDataUri();
+}
+
 export function generateServerAvatar(title: string) {
   const avatar = createAvatar(bottts, {
     seed: title,

@@ -20,7 +20,12 @@ import {
   FaRedditAlien,
   FaGithub,
   FaDiscord,
-  FaLinkedin
+  FaLinkedin,
+  FaCheckCircle,
+  FaList,
+  FaTimesCircle,
+  FaClock,
+  FaPlayCircle
 } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoFlame, IoStar, IoCalendar, IoPlay } from "react-icons/io5";
@@ -175,4 +180,12 @@ export const LANGUAGES = [
   { label: "Chinese", value: "zh" },
   { label: "Hindi", value: "hi" },
   { label: "Russian", value: "ru" },
+];
+
+export const STATUS = [
+  { name: "All", icon: FaList },
+  { name: "Completed", icon: FaCheckCircle },
+  { name: "Watching", icon: FaPlayCircle },
+  { name: "Watch Later", icon: FaClock },
+  { name: "Dropped", icon: FaTimesCircle },
 ];

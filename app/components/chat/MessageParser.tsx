@@ -25,7 +25,7 @@ export function MessageParser({ content, customCss = "" }: MessageParserProps) {
     const matches = [...content.matchAll(regex)];
 
     if (matches.length === 0) {
-      setMoviesData([]);
+      setMoviesData((prev) => (prev.length === 0 ? prev : []));
       return;
     }
 

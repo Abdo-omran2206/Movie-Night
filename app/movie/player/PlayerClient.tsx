@@ -81,7 +81,7 @@ export default function PlayerClient() {
     return <LoadingModel message="Loading Player" />;
   }
 
-  const title = (movie && ('title' in movie ? movie.title : (movie as any).name)) || "Unknown Content";
+  const title = (movie && ('title' in movie ? movie.title : (movie as TvDetail).name)) || "Unknown Content";
 
   if (!movie) {
     return (

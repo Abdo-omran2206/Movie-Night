@@ -8,9 +8,10 @@ import CastList from "@/app/components/cards/CastCard";
 import LoadingModel from "@/app/components/models/LoadingModel";
 import Link from "next/link";
 import { decodeId } from "@/app/lib/hash";
+import { MovieDetail } from "@/app/constant/types";
 
 export default function MovieCastPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<MovieDetail | null>(null);
   const { id: encodedId } = useParams<{ id: string }>();
   const id = decodeId(encodedId);
   const [loading, setLoading] = useState(true);
@@ -68,7 +69,7 @@ export default function MovieCastPage() {
           </div>
 
           <div className="bg-neutral-900/20 p-8 rounded-3xl ring-1 ring-white/5">
-            <CastList cast={data.credits.cast} navig="movie" />
+            <CastList cast={data.credits?.cast || []} navig="movie" />
           </div>
         </div>
       </main>
