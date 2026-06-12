@@ -1,52 +1,82 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaPlay, FaStar, FaClock } from "react-icons/fa";
-import { FaCirclePlay } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
-import { TvDetail, SeasonDetail, Episode } from "../../constant/types";
-import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
-import { slugify } from "@/app/lib/slugify";
-import { Ships, RatingStars } from "@/app/tv/TvDetailsClient";
-import TrailerModal from "@/app/components/models/TrailerModel";
-import CastList from "@/app/components/cards/CastCard";
-import { encodeId } from "@/app/lib/hash";
-import { posterUrl, backdropUrl } from "@/app/constant/main";
-interface SeasonDetailsClientProps {
-  series: TvDetail;
-  season: SeasonDetail;
-}
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import { TvDetail, SeasonDetail, Episode } from "../../../constant/types";
+import generateMovieAvatar from "@/lib/generateMovieAvatar";
+import { slugify } from "@/lib/slugify";
+import { Ships, RatingStars } from "@/components/ships";
+import CastList from "@/components/cards/CastCard";
+import { decodeId, encodeId } from "@/lib/hash";
+import { posterUrl, backdropUrl } from "@/constant/main";
+import TrailerButtonModel from "@/components/models/TrailerButtonModel";
+import formatDate from "@/lib/formatDate";
+import { useParams } from "next/navigation";
+import LoadingModel from "@/components/models/LoadingModel";
 
-export default function SeasonDetailsClient({
-  series,
-  season,
-}: SeasonDetailsClientProps) {
+export default function SeasonDetailsClient() {
+  const params = useParams();
+  const slug = params?.slug;
+  const slugArray = Array.isArray(slug) ? slug : [slug as string];
+  const encodedId = slugArray[0];
+  const idStr = decodeId(encodedId);
+  const id = idStr ? idStr : ""; // Use empty string if decoding fails
+  const seasonNUM = slugArray[1];
+
+  const [loading, setLoading] = useState(true);
+  const [series, setSeries] = useState<TvDetail | null>(null);
+  const [season, setSeason] = useState<SeasonDetail | null>(null);
   const [imgError, setImgError] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    async function loadData() {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const resData = await fetch(`/api/tv/${id}`);
+        const res = await resData.json();
+        setSeries(res);
+        const seasonData = await fetch(`/api/tv/${id}/${seasonNUM}`);
+        const returnSeason = await seasonData.json();
+        setSeason(returnSeason);
+      } catch (error) {
+        console.error("Failed to fetch tv details:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
 
   const imageSrc =
-    !imgError && season.poster_path
+    !imgError && season?.poster_path
       ? posterUrl + season.poster_path
-      : generateMovieAvatar(season.name || series.name);
+      : generateMovieAvatar(season?.name || series?.name || "");
 
   // Extract Trailer Key
   const trailerKey =
-    season.videos?.results?.find(
+    season?.videos?.results?.find(
       (v) => v.type === "Trailer" && v.site === "YouTube",
-    )?.key || season.videos?.results?.[0]?.key;
+    )?.key || season?.videos?.results?.[0]?.key;
 
-  function formatDate(dateString: string) {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  if (loading) {
+    return <LoadingModel message="Fetching TV Show Details..." />;
   }
 
+  if (!series || !season) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+        <p className="text-white text-xl">TV Show not found.</p>
+        <Link href="/" className="text-red-500 hover:underline mt-4">
+          Back to Home
+        </Link>
+      </div>
+    );
+  }
   return (
     <>
       <Navbar />
@@ -128,16 +158,7 @@ export default function SeasonDetailsClient({
                 </div>
 
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                  {trailerKey && (
-                    <button
-                      onClick={() => setIsOpen(true)}
-                      className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:cursor-pointer hover:scale-105 active:scale-95 shadow-lg shadow-red-900/40 relative overflow-hidden group"
-                    >
-                      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity" />
-                      <FaCirclePlay size={20} />
-                      Watch Trailer
-                    </button>
-                  )}
+                  <TrailerButtonModel trailerKey={trailerKey} />
                 </div>
               </div>
             </div>
@@ -155,7 +176,7 @@ export default function SeasonDetailsClient({
             <div className="grid grid-cols-1 gap-6">
               {season.episodes.map((episode: Episode) => (
                 <Link
-                  href={`/tv/player/${encodeId(series.id)}/${slugify(series.name  + "-s" + season.season_number + "-e" + episode.episode_number)}/${season.season_number}/${episode.episode_number}`}
+                  href={`/tv/player/${encodeId(series.id)}/${slugify(series.name + "-s" + season.season_number + "-e" + episode.episode_number)}/${season.season_number}/${episode.episode_number}`}
                   key={episode.id}
                   className="group bg-neutral-900/40 border border-white/5 rounded-2xl overflow-hidden hover:bg-neutral-900/60 transition-all duration-300 flex flex-col md:flex-row cursor-pointer"
                 >
@@ -229,36 +250,7 @@ export default function SeasonDetailsClient({
               </div>
             </section>
           )}
-
-        {/* {season.credits &&
-          season.credits.crew &&
-          season.credits.crew.length > 0 && (
-            <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
-              <div className="container mx-auto px-0 md:px-4">
-                <div className="mb-6 md:mb-10">
-                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
-                    Crew
-                  </h2>
-                  <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
-                </div>
-                <CastList
-                  limit={11}
-                  cast={season.credits.crew.map((c) => ({
-                    id: c.id,
-                    name: c.name,
-                    character: c.job,
-                    profile_path: c.profile_path,
-                  }))}
-                  movieId={undefined}
-                />
-              </div>
-            </section>
-          )} */}
       </main>
-
-      {isOpen && trailerKey && (
-        <TrailerModal url={trailerKey} onClose={() => setIsOpen(false)} />
-      )}
       <Footer />
     </>
   );

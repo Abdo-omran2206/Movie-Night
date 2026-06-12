@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { supabaseClient } from "@/app/lib/supabase";
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
+// Dashboard now fetches server-side via /api/dashboard and uses /api/account/logout for sign out
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
 import {
   FaUserCircle,
   FaSignOutAlt,
@@ -13,13 +13,16 @@ import {
   FaHistory,
   FaStar,
 } from "react-icons/fa";
-import { fetchNewBookmarks, fetchStatusCount } from "@/app/api/BookmarkManager";
-import DashboardMovieCard from "../components/cards/DashboardMovieCard";
-import Watchlist from "../components/layout/watchlist";
-import { generateUserAvatar } from "../lib/generateMovieAvatar";
+
+import DashboardMovieCard from "../../components/cards/DashboardMovieCard";
+import Watchlist from "../../components/layout/watchlist";
+import { generateUserAvatar } from "../../lib/generateMovieAvatar";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const setUserStore = useUserStore((state) => state.setUser);
+  const clearUserStore = useUserStore((state) => state.clearUser);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -31,33 +34,55 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const {
-        data: { session },
-      } = await supabaseClient.auth.getSession();
+      try {
+        const res = await fetch("/api/dashboard");
+        if (res.status === 401) {
+          router.replace("/account/login");
+          return;
+        }
+        const data = await res.json();
+        if (!res.ok) {
+          console.error("Dashboard API error:", data);
+          router.replace("/account/login");
+          return;
+        }
 
-      if (!session) {
+        setUser(data.user);
+
+        const name =
+          data.user?.user_metadata?.username ||
+          data.user?.user_metadata?.full_name ||
+          data.user?.email?.split("@")[0] ||
+          "User";
+        setUserStore(name, data.user.id);
+
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7);
+        document.cookie = `movie_night_auth=true; path=/; expires=${expirationDate.toUTCString()};`;
+
+        setStatus(data.status || {});
+        setNewBookmarks(data.newBookmarks || []);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching dashboard:", err);
         router.replace("/account/login");
-        return;
       }
-
-      setUser(session.user);
-
-      // Save auth status in cookies as requested
-      const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + 7); // 7 days
-      document.cookie = `movie_night_auth=true; path=/; expires=${expirationDate.toUTCString()};`;
-
-      setLoading(false);
-
-      setStatus(await fetchStatusCount(session.user.id));
-      setNewBookmarks(await fetchNewBookmarks(session.user.id));
     };
 
     fetchUser();
   }, [router]);
 
   const handleLogout = async () => {
-    await supabaseClient.auth.signOut();
+    try {
+      const res = await fetch("/api/account/logout", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Logout failed:", data);
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+    clearUserStore();
     document.cookie =
       "movie_night_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     router.push("/account/login");
@@ -166,10 +191,10 @@ export default function DashboardPage() {
                     <FaHeart className="text-lg" />
                     <span>Watchlist</span>
                   </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors border border-transparent">
+                  {/* <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors border border-transparent">
                     <FaCog className="text-lg" />
                     <span>Settings</span>
-                  </button>
+                  </button> */}
                   <button
                     onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-600/10 text-neutral-400 hover:text-red-500 transition-colors mt-4 border border-transparent"
@@ -241,7 +266,7 @@ export default function DashboardPage() {
                     <p className="text-sm text-neutral-500 mt-1">Titles watched</p>
                   </div>
 
-                  <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 hover:border-red-600/30 transition-all group cursor-pointer">
+                  {/* <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 hover:border-red-600/30 transition-all group cursor-pointer">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-10 h-10 rounded-full bg-red-600/10 flex items-center justify-center">
                         <FaStar className="text-red-500" />
@@ -257,13 +282,13 @@ export default function DashboardPage() {
                     <p className="text-sm text-neutral-500 mt-1">
                       Ratings submitted
                     </p>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Recent Activity Mock */}
-                <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-3xl p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+                <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-3xl px-3 py-8 lg:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
                   <h2
-                    className="text-2xl font-bold tracking-widest mb-6"
+                    className="text-2xl font-bold tracking-widest mb-6 px-2 lg:p-0"
                     style={{ fontFamily: "var(--font-bebas)" }}
                   >
                     Recent Activity
@@ -278,7 +303,7 @@ export default function DashboardPage() {
                         </button>
                       </>
                     ) : (
-                      <div className="w-full flex flex-wrap flex-col justify-center items-center gap-6 p-4">
+                      <div className="w-full flex flex-wrap flex-col justify-center items-center gap-6 p-1 lg:p-4">
                         {newBookmarks.map((bookmark) => (
                           <div
                             key={bookmark.created_at}

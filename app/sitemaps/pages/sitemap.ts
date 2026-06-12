@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { siteUrl } from "../../constant/main";
+import { siteUrl } from "../../../constant/main";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categories = ["trending", "popular", "top_rated", "upcoming", "now_playing"];

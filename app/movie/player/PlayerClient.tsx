@@ -1,16 +1,14 @@
 "use client";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Navbar from "@/app/components/ui/Navbar";
+import Navbar from "@/components/ui/Navbar";
 import { useEffect, useState } from "react";
-import { fetchMovieDetails, fetchTvDetails } from "@/app/lib/tmdb";
-import { MovieDetail, StreamSource, TvDetail } from "@/app/constant/types";
-import LoadingModel from "@/app/components/models/LoadingModel";
+import { MovieDetail, StreamSource, TvDetail } from "@/constant/types";
+import LoadingModel from "@/components/models/LoadingModel";
 import Link from "next/link";
-import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
-import { supabaseClient } from "@/app/lib/supabase";
-import { StreamButtonSkeleton } from "@/app/components/ui/Skeleton";
-import { decodeId } from "@/app/lib/hash";
+import { generateServerAvatar } from "@/lib/generateMovieAvatar";
+import { StreamButtonSkeleton } from "@/components/ui/Skeleton";
+import { decodeId } from "@/lib/hash";
 
 export default function PlayerClient() {
   const [movie, setMovie] = useState<MovieDetail | TvDetail | null>(null);
@@ -29,25 +27,19 @@ export default function PlayerClient() {
     async function fetchStreams() {
       if (!id) return;
       setStreamsLoading(true);
+      try {
+        const resp = await fetch(`/api/watch/movie`);
+        const data = await resp.json();
 
-      const { data, error } = await supabaseClient
-        .from("stream_urls")
-        .select("full_url,name")
-        .eq("is_active", true)
-        .order("added_at", { ascending: true });
-
-      if (error) {
-        console.error("Error fetching stream URLs:", error);
-        setStreamsLoading(false);
-        return;
-      }
-
-      if (data && data.length > 0) {
-        setStreamApi(data as StreamSource[]);
-        const firstUrl = data[0].full_url;
-        if (firstUrl && id) {
-          setEmbedUrl(firstUrl + id);
+        if (Array.isArray(data) && data.length > 0) {
+          setStreamApi(data as StreamSource[]);
+          const firstUrl = data[0].full_url;
+          if (firstUrl && id) {
+            setEmbedUrl(firstUrl + id);
+          }
         }
+      } catch (err) {
+        console.error("Error fetching stream URLs:", err);
       }
       setStreamsLoading(false);
     }
@@ -59,12 +51,14 @@ export default function PlayerClient() {
       if (!id) return;
       setLoading(true);
       try {
-        // Try fetching as a movie first
-        let data = await fetchMovieDetails(id);
+        // Try fetching as a movie first via API route
+        let resp = await fetch(`/api/movies/${id}`);
+        let data = await resp.json();
 
-        // If no movie found, try fetching as a TV show
+        // If no movie found, try fetching as a TV show via API route
         if (!data || (!data.title && !data.name)) {
-          data = await fetchTvDetails(id);
+          const tvResp = await fetch(`/api/tv/${id}`);
+          data = await tvResp.json();
         }
 
         setMovie(data);

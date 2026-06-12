@@ -1,17 +1,15 @@
 "use client";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Navbar from "@/app/components/ui/Navbar";
+import Navbar from "@/components/ui/Navbar";
 import { useEffect, useState } from "react";
-import { fetchTvDetails } from "@/app/lib/tmdb";
-import { StreamSource, TvDetail } from "@/app/constant/types";
-import LoadingModel from "@/app/components/models/LoadingModel";
+import { StreamSource, TvDetail } from "@/constant/types";
+import LoadingModel from "@/components/models/LoadingModel";
 import Link from "next/link";
-import { generateServerAvatar } from "@/app/lib/generateMovieAvatar";
-import { supabaseClient } from "@/app/lib/supabase";
-import { StreamButtonSkeleton } from "@/app/components/ui/Skeleton";
-import { slugify } from "@/app/lib/slugify";
-import { decodeId } from "@/app/lib/hash";
+import { generateServerAvatar } from "@/lib/generateMovieAvatar";
+import { StreamButtonSkeleton } from "@/components/ui/Skeleton";
+import { slugify } from "@/lib/slugify";
+import { decodeId } from "@/lib/hash";
 
 const getStreamUrl = (
   templateUrl: string,
@@ -59,22 +57,16 @@ export default function PlayerClient() {
     async function fetchStreams() {
       if (!id) return;
       setStreamsLoading(true);
+      try {
+        const resp = await fetch(`/api/watch/tv`);
+        const data = await resp.json();
 
-      const { data, error } = await supabaseClient
-        .from("stream_urls")
-        .select("full_url_tv,name")
-        .eq("is_active", true)
-        .order("added_at", { ascending: true });
-
-      if (error) {
-        console.error("Error fetching stream URLs:", error);
-        setStreamsLoading(false);
-        return;
-      }
-
-      if (data && data.length > 0) {
-        setStreamApi(data as StreamSource[]);
-        setActiveSource(data[0].full_url_tv || null);
+        if (Array.isArray(data) && data.length > 0) {
+          setStreamApi(data as StreamSource[]);
+          setActiveSource(data[0].full_url_tv || null);
+        }
+      } catch (err) {
+        console.error("Error fetching stream URLs:", err);
       }
       setStreamsLoading(false);
     }
@@ -86,9 +78,8 @@ export default function PlayerClient() {
       if (!id) return;
       setLoading(true);
       try {
-        // Fetch as TV show (this is the TV player)
-        const data = await fetchTvDetails(id);
-
+        const resp = await fetch(`/api/tv/${id}`);
+        const data = await resp.json();
         setMovie(data);
       } catch (err) {
         console.error("Failed to fetch content details:", err);

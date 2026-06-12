@@ -1,13 +1,13 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { search } from "@/app/lib/tmdb";
-import { Movie } from "@/app/constant/types";
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
-import MovieCard from "../components/cards/MovieCard";
-import LoadingModel from "@/app/components/models/LoadingModel";
-import { siteUrl } from "@/app/constant/main";
+// Use Next API search endpoint from frontend
+import { Movie } from "@/constant/types";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import MovieCard from "../../components/cards/MovieCard";
+import LoadingModel from "@/components/models/LoadingModel";
+import { siteUrl } from "@/constant/main";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 function SearchContent() {
@@ -61,7 +61,8 @@ function SearchContent() {
       }
       setLoading(true);
       try {
-        const results = await search(query, page, mediaType);
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&page=${page}&type=${encodeURIComponent(mediaType)}`);
+        const results = await res.json();
         if (results && results.results) {
           setMovies(results.results);
           setTotalPages(results.total_pages || 1);

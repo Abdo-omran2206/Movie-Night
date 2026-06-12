@@ -1,9 +1,9 @@
-import { fetchTvDetails, fetchTvSeasonDetails } from "@/app/lib/tmdb";
+import { fetchTvDetails, fetchTvSeasonDetails } from "@/lib/services/tmdb";
 import { Metadata } from "next";
 import SeasonDetailsClient from "../SeasonDetailsClient";
-import { slugify } from "@/app/lib/slugify";
+import { slugify } from "@/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
-import { decodeId } from "@/app/lib/hash";
+import { decodeId } from "@/lib/hash";
 
 export async function generateMetadata({
   params,
@@ -72,7 +72,7 @@ export default async function SeasonPage({
       permanentRedirect(`/tv/season/${encodedId}/${seasonNum}/${expectedSlug}`);
     }
 
-    return <SeasonDetailsClient series={series} season={season} />;
+    return <SeasonDetailsClient />;
   }
 
   notFound();

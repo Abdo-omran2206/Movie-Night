@@ -1,10 +1,10 @@
-import { fetchMovies, getCategoryInfo } from "@/app/lib/tmdb";
-import { Movie } from "@/app/constant/types";
+import { fetchMovies, getCategoryInfo } from "@/lib/services/tmdb";
+import { Movie } from "@/constant/types";
 import { Metadata } from "next";
-import { encodeId } from "@/app/lib/hash";
-import { slugify } from "@/app/lib/slugify";
+import { encodeId } from "@/lib/hash";
+import { slugify } from "@/lib/slugify";
 import CategoryDetailsClient from "../CategoryDetailsClient";
-import { siteUrl, posterUrl } from "@/app/constant/main";
+import { siteUrl, posterUrl } from "@/constant/main";
 
 export async function generateMetadata({
   params,

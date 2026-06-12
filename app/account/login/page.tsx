@@ -4,34 +4,47 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { supabaseClient } from "@/app/lib/supabase";
+import { useUserStore } from "@/store/useUserStore";
+// login now uses server-side API at /api/account/login
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const setUserStore = useUserStore((state) => state.setUser);
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    supabaseClient.auth
-      .signInWithPassword({
-        email,
-        password,
-      })
-      .then(({ error }) => {
-        if (error) {
-          alert("Login failed: " + error.message);
-        } else {
-          // Redirect to dashboard after successful login
-          router.push("/dashboard");
-        }
+    try {
+      const res = await fetch("/api/account/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
+      const data = await res.json();
+      if (!res.ok) {
+        alert("Login failed: " + (data.error || "Unknown error"));
+        return;
+      }
+
+      const name =
+        data.user?.user_metadata?.username ||
+        data.user?.user_metadata?.full_name ||
+        data.user?.email?.split("@")[0] ||
+        "User";
+      setUserStore(name, data.user.id);
+
+      router.push("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Login failed: " + String(err));
+    }
   };
 
   const handleGoogleLogin = () => {
     // Empty backend functionality as requested
-    console.log("Google Login initiated");
+    alert("Google Login initiated");
   };
 
   return (

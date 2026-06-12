@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { discover } from "@/app/lib/tmdb";
-import { DiscoverParams, Movie } from "@/app/constant/types";
-import MovieCard from "@/app/components/cards/MovieCard";
-import { GENRE_MAP, LANGUAGES, REGIONS, SORT_OPTIONS } from "@/app/constant/main";
+// Use Next API discover endpoint from frontend
+import { DiscoverParams, Movie } from "@/constant/types";
+import MovieCard from "@/components/cards/MovieCard";
+import { GENRE_MAP, LANGUAGES, REGIONS, SORT_OPTIONS } from "@/constant/main";
 import { FaChevronLeft, FaChevronRight, FaXmark } from "react-icons/fa6";
 import {
   HiOutlineChevronDown,
@@ -69,10 +69,25 @@ export default function ExploreClient() {
         }
       }
 
-      const data = await discover(mediaType, params);
-      setResults(data.results || []);
-      setTotalPages(Math.min(data.total_pages || 1, 500));
-      setTotalResults(data.total_results || 0);
+      try {
+        const searchParams = new URLSearchParams();
+        Object.entries(params).forEach(([k, v]) => {
+          if (v !== undefined && v !== null && v !== "") {
+            searchParams.set(k, String(v));
+          }
+        });
+
+        const res = await fetch(`/api/discover?type=${encodeURIComponent(mediaType)}&${searchParams.toString()}`);
+        const data = await res.json();
+        setResults(data.results || []);
+        setTotalPages(Math.min(data.total_pages || 1, 500));
+        setTotalResults(data.total_results || 0);
+      } catch (err) {
+        console.error("Discover API error:", err);
+        setResults([]);
+        setTotalPages(1);
+        setTotalResults(0);
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
     fetchResults();

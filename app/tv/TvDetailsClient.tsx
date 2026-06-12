@@ -1,32 +1,32 @@
 "use client";
-import Footer from "@/app/components/ui/Footer";
-import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
 import Image from "next/image";
-import { fetchTvDetails} from "@/app/lib/tmdb";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaCirclePlay } from "react-icons/fa6";
-import CastList from "@/app/components/cards/CastCard";
-import MovieMiniCard from "@/app/components/cards/MovieMiniCard";
-import TrailerModal from "@/app/components/models/TrailerModel";
-import TvSeasonCard from "@/app/components/cards/TvSeasonCard";
-import { FaStar, FaRegStar } from "react-icons/fa";
-import LoadingModel from "@/app/components/models/LoadingModel";
-import generateMovieAvatar from "@/app/lib/generateMovieAvatar";
-import { decodeId } from "@/app/lib/hash";
-import { posterUrl, backdropUrl } from "@/app/constant/main";
-import { Season, TvDetail } from "../constant/types";
+import CastList from "@/components/cards/CastCard";
+import MovieMiniCard from "@/components/cards/MovieMiniCard";
+import TvSeasonCard from "@/components/cards/TvSeasonCard";
+import LoadingModel from "@/components/models/LoadingModel";
+import generateMovieAvatar from "@/lib/generateMovieAvatar";
+import { decodeId } from "@/lib/hash";
+import { posterUrl, backdropUrl } from "@/constant/main";
+import { Season, TvDetail } from "../../constant/types";
+import { GenresShips, RatingStars, Ships } from "@/components/ships";
+import formatDate from "@/lib/formatDate";
+import TrailerButtonModel from "@/components/models/TrailerButtonModel";
+import BookMarkModel from "@/components/models/BookMarkModel";
 
 export default function TvDetailsClient() {
-  const [data, setData] = useState<TvDetail | null>(null);
   const params = useParams();
   const slug = params?.slug;
   const slugArray = Array.isArray(slug) ? slug : [slug as string];
   const encodedId = slugArray[0];
   const idStr = decodeId(encodedId);
   const id = idStr ? idStr : ""; // Use empty string if decoding fails
-  const [isOpen, setIsOpen] = useState(false);
+
+  const [data, setData] = useState<TvDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
 
@@ -36,7 +36,8 @@ export default function TvDetailsClient() {
       if (!id) return;
       setLoading(true);
       try {
-        const res = await fetchTvDetails(id);
+        const resData = await fetch(`/api/tv/${id}`);
+        const res = await resData.json();
         setData(res);
       } catch (error) {
         console.error("Failed to fetch tv details:", error);
@@ -53,15 +54,6 @@ export default function TvDetailsClient() {
       : data
         ? generateMovieAvatar(data.name)
         : "";
-
-  function formatDate(dateString: string) {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }
 
   if (loading) {
     return <LoadingModel message="Fetching TV Show Details..." />;
@@ -159,16 +151,8 @@ export default function TvDetailsClient() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                  {trailerKey && (
-                    <button
-                      onClick={() => setIsOpen(true)}
-                      className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:cursor-pointer hover:scale-105 active:scale-95 shadow-lg shadow-red-900/40 relative overflow-hidden group"
-                    >
-                      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity" />
-                      <FaCirclePlay size={20} />
-                      Watch Trailer
-                    </button>
-                  )}
+                  <TrailerButtonModel trailerKey={trailerKey}/>
+                  <BookMarkModel movieID={Number(idStr)}  title={data.name} overview={data.overview || ""} backdrop={data.backdrop_path || undefined} poster={data.poster_path || ""} type="tv"/>
                 </div>
               </div>
             </div>
@@ -290,41 +274,7 @@ export default function TvDetailsClient() {
         )}
       </main>
 
-      {isOpen && trailerKey && (
-        <TrailerModal url={trailerKey} onClose={() => setIsOpen(false)} />
-      )}
       <Footer />
     </>
-  );
-}
-
-export function Ships({ ship }: { ship: React.ReactNode }) {
-  return (
-    <div className="px-3 py-2 bg-red-800/20 rounded-full ring-1 ring-red-700">
-      <span className="text-sm flex items-center gap-1">{ship}</span>
-    </div>
-  );
-}
-
-function GenresShips({ ship }: { ship: React.ReactNode }) {
-  return (
-    <div className="px-3 py-2 bg-neutral-200/10 rounded-full ring-1 ring-neutral-200/50">
-      <span className="text-sm flex items-center gap-1">{ship}</span>
-    </div>
-  );
-}
-
-interface RatingStarsProps {
-  rating: number;
-}
-
-export function RatingStars({ rating }: RatingStarsProps) {
-  const fullStars = Math.round(rating / 2);
-  return (
-    <span className="flex items-center gap-1 text-neutral-200">
-      {[...Array(5)].map((_, i) =>
-        i < fullStars ? <FaStar key={i} /> : <FaRegStar key={i} />,
-      )}
-    </span>
   );
 }

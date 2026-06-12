@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetchMovies } from "../../lib/tmdb";
-import { MovieSummary } from "../../constant/types";
-import { slugify } from "../../lib/slugify";
-import { encodeId } from "../../lib/hash";
-import { siteUrl } from "../../constant/main";
+import { fetchMovies } from "../../../lib/services/tmdb";
+import { MovieSummary } from "../../../constant/types";
+import { slugify } from "../../../lib/slugify";
+import { encodeId } from "../../../lib/hash";
+import { siteUrl } from "../../../constant/main";
 
 async function getPopularActorIds() {
   const pages = [1, 2, 3, 4, 5];

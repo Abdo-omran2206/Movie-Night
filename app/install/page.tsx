@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaDownload, FaArrowLeft } from "react-icons/fa";
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
-import { supabaseClient } from "../lib/supabase";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import { supabaseClient } from "../../lib/supabase";
 
 export default function InstallPage() {
   const [appConfig, setAppConfig] = useState<{
