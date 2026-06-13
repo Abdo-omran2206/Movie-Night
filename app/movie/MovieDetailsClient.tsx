@@ -175,8 +175,8 @@ export default function MovieDetailsClient() {
                     movieID={data.id}
                     title={data.title}
                     overview={data.overview}
-                    backdrop={data.backdrop_path}
-                    poster={data.poster_path}
+                    backdrop={data.backdrop_path || ""}
+                    poster={data.poster_path || ""}
                     type="movie"
                   />
                 </div>
