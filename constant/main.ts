@@ -41,7 +41,7 @@ export const posterUrl = "https://image.tmdb.org/t/p/w500";
 export const posterUrl780 = "https://image.tmdb.org/t/p/w780";
 export const profileUrl = "https://image.tmdb.org/t/p/h632";
 export const thumbnailUrl = "https://image.tmdb.org/t/p/w92";
-
+export const reviewUrl = "https://image.tmdb.org/t/p/w200"
 // ─── YouTube Embed ────────────────────────────────────────────────────────────
 export const youtubeEmbedUrl = "https://www.youtube.com/embed/";
 

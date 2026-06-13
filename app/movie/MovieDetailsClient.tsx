@@ -18,6 +18,7 @@ import BookMarkModel from "@/components/models/BookMarkModel";
 import TrailerButtonModel from "@/components/models/TrailerButtonModel";
 import formatDate from "@/lib/formatDate";
 import { GenresShips, RatingStars, Ships } from "@/components/ships";
+import ReviewsModel from "@/components/models/ReviewsModel";
 
 export default function MovieDetailsClient() {
   const params = useParams();
@@ -168,7 +169,17 @@ export default function MovieDetailsClient() {
                       : "No description available."}
                   </p>
                 </div>
-                <div className="flex"></div>
+                <div className="flex justify-center items-center lg:justify-start lg:items-center gap-5">
+                  <ReviewsModel id={id} type="movie" />
+                  <BookMarkModel
+                    movieID={data.id}
+                    title={data.title}
+                    overview={data.overview}
+                    backdrop={data.backdrop_path}
+                    poster={data.poster_path}
+                    type="movie"
+                  />
+                </div>
                 <div className="flex flex-wrap gap-4 justify-center flex-col items-center lg:flex-row lg:justify-start">
                   <Link
                     href={
@@ -184,14 +195,6 @@ export default function MovieDetailsClient() {
                   </Link>
 
                   <TrailerButtonModel trailerKey={trailerKey} />
-                  <BookMarkModel
-                    movieID={data.id}
-                    title={data.title}
-                    overview={data.overview}
-                    backdrop={data.backdrop_path}
-                    poster={data.poster_path}
-                    type="movie"
-                  />
                 </div>
               </div>
             </div>
@@ -327,4 +330,3 @@ export default function MovieDetailsClient() {
     </>
   );
 }
-

@@ -17,6 +17,7 @@ import { GenresShips, RatingStars, Ships } from "@/components/ships";
 import formatDate from "@/lib/formatDate";
 import TrailerButtonModel from "@/components/models/TrailerButtonModel";
 import BookMarkModel from "@/components/models/BookMarkModel";
+import ReviewsModal from "@/components/models/ReviewsModel";
 
 export default function TvDetailsClient() {
   const params = useParams();
@@ -150,9 +151,12 @@ export default function TvDetailsClient() {
                       : "No description available."}
                   </p>
                 </div>
+                <div className="flex justify-center items-center lg:justify-start lg:items-center gap-5">
+                  <ReviewsModal id={id} type="tv"/>
+                  <BookMarkModel movieID={Number(idStr)}  title={data.name} overview={data.overview || ""} backdrop={data.backdrop_path || undefined} poster={data.poster_path || ""} type="tv"/>
+                </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                   <TrailerButtonModel trailerKey={trailerKey}/>
-                  <BookMarkModel movieID={Number(idStr)}  title={data.name} overview={data.overview || ""} backdrop={data.backdrop_path || undefined} poster={data.poster_path || ""} type="tv"/>
                 </div>
               </div>
             </div>

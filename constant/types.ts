@@ -436,3 +436,12 @@ export interface DashboardMovieCardProps {
   type: string;
   status:string;
 }
+
+export interface Review {
+  id: string;
+  author: string;
+  content: string;
+  author_details?: {
+    avatar_path?: string;
+  };
+};
