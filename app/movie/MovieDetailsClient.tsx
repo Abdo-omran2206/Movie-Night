@@ -20,6 +20,7 @@ import { slugify } from "@/app/lib/slugify";
 import { decodeId } from "@/app/lib/hash";
 import { posterUrl, backdropUrl } from "@/app/constant/main";
 import { Collection, MovieDetail, MovieSummary } from "../constant/types";
+import BookMarkModel from "../components/models/BookMarkModel";
 
 export default function MovieDetailsClient() {
   const [data, setData] = useState<MovieDetail | null>(null);
@@ -170,7 +171,9 @@ export default function MovieDetailsClient() {
                       : "No description available."}
                   </p>
                 </div>
-                <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <div className="flex">
+                </div>
+                <div className="flex flex-wrap gap-4 justify-center flex-col items-center lg:flex-row lg:justify-start">
                   <Link
                     href={
                       isAvailable
@@ -194,6 +197,7 @@ export default function MovieDetailsClient() {
                       Watch Trailer
                     </button>
                   )}
+                  <BookMarkModel movieID={data.id} title={data.title} overview={data.overview} backdrop={data.backdrop_path} poster={data.poster_path} type="movie"/>
                 </div>
               </div>
             </div>

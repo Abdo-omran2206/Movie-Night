@@ -12,6 +12,9 @@ import generateMovieAvatar from "../../lib/generateMovieAvatar";
 import { encodeId } from "../../lib/hash";
 import { categories, genres, thumbnailUrl } from "@/app/constant/main";
 import { Movie } from "../../constant/types";
+import { generateUserAvatar } from "@/app/lib/generateMovieAvatar";
+import { supabaseClient } from "@/app/lib/supabase";
+
 export default function Navbar() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -21,6 +24,7 @@ export default function Navbar() {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isSearchModelOpen, setIsSearchModelOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +32,17 @@ export default function Navbar() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { session },
+      } = await supabaseClient.auth.getSession();
+
+      setUserName(session?.user.user_metadata.full_name || "User");
+    };
+    fetchUser();
   }, []);
 
   useEffect(() => {
@@ -51,6 +66,16 @@ export default function Navbar() {
 
     router.push(`/search?q=${encodeURIComponent(query.trim())}`);
   };
+
+    const handleClick = () => {
+      if(userName && userName !== "User"){
+        router.push("/dashboard");
+      }
+      if(!userName || userName === "User"){
+        router.push("/account/login");
+      }
+
+    }
 
   return (
     <header className="fixed top-0 left-0 w-full z-50">
@@ -92,7 +117,8 @@ export default function Navbar() {
             </Link>
 
             {/* Explore Dropdown */}
-            <div className="relative"
+            <div
+              className="relative"
               onMouseEnter={() => setIsExploreOpen(true)}
               onMouseLeave={() => setIsExploreOpen(false)}
             >
@@ -133,7 +159,8 @@ export default function Navbar() {
             </div>
 
             {/* Genres Dropdown */}
-            <div className="relative"
+            <div
+              className="relative"
               onMouseEnter={() => setIsDropdownOpen(true)}
               onMouseLeave={() => setIsDropdownOpen(false)}
             >
@@ -214,6 +241,8 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Search Trigger */}
+          <div className="flex flex-row gap-5">
+
           <div className="flex lg:hidden items-center">
             <button
               onClick={() => setIsSearchModelOpen(true)}
@@ -222,6 +251,18 @@ export default function Navbar() {
             >
               <FaSearch size={22} />
             </button>
+          </div>
+          <button onClick={()=>{handleClick()}} className="shrink-0 hover:cursor-pointer rounded-full border-2 border-neutral-800 p-0.5 transition-colors hover:border-red-600">
+            {userName && (
+              <Image
+                src={generateUserAvatar(userName)}
+                alt={userName}
+                width={150}
+                height={150}
+                className="w-10 h-10 lg:w-11 lg:h-11 object-cover"
+              />
+            )}
+          </button>
           </div>
         </div>
       </nav>

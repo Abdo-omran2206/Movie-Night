@@ -10,7 +10,6 @@ import {
   FaUsers,
   FaRocket,
   FaHeart,
-  FaGithub,
 } from "react-icons/fa";
 import { MdMovieFilter, MdOutlineExplore, MdSupportAgent } from "react-icons/md";
 

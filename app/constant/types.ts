@@ -408,4 +408,18 @@ export interface DiscoverParams {
   sort_by?: string;
   region?: string;
   with_original_language?: string;
+  "primary_release_date.gte"?: string;
+  "primary_release_date.lte"?: string;
+  "first_air_date.gte"?: string;
+  "first_air_date.lte"?: string;
+}
+
+export interface DashboardMovieCardProps {
+  movie_id: number;
+  title: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  type: string;
+  status:string;
 }

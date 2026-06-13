@@ -10,7 +10,7 @@ import LoadingModel from "@/app/components/models/LoadingModel";
 import Link from "next/link";
 import { decodeId } from "../lib/hash";
 import { profileUrl } from "@/app/constant/main";
-import { ActorDetail } from "../constant/types";
+import { ActorDetail, MovieSummary } from "../constant/types";
 
 import {
   FaFacebook,
@@ -271,7 +271,7 @@ export default function ActorDetailsClient() {
                   movies={[
                     ...data.movie_credits.cast,
                     ...data.tv_credits.cast,
-                  ].sort((a: any, b: any) =>
+                  ].sort((a: MovieSummary, b: MovieSummary) =>
                     (b.release_date || b.first_air_date || "").localeCompare(
                       a.release_date || a.first_air_date || "",
                     ),

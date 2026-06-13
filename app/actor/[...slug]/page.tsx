@@ -5,7 +5,7 @@ import ActorDetailsClient from "../ActorDetailsClient";
 import { slugify } from "@/app/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
 import { decodeId } from "@/app/lib/hash";
-import { siteUrl, profileUrl } from "@/app/constant/main";
+import { profileUrl } from "@/app/constant/main";
 export async function generateMetadata({
   params,
 }: {
