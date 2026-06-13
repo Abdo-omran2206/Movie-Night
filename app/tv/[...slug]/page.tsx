@@ -1,10 +1,10 @@
-import { fetchTvDetails } from "@/app/lib/tmdb";
+import { fetchTvDetails } from "@/lib/services/tmdb";
 import { Metadata } from "next";
 import TvDetailsClient from "../TvDetailsClient";
-import { slugify } from "@/app/lib/slugify";
+import { slugify } from "@/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
-import { decodeId } from "@/app/lib/hash";
-import { siteUrl, posterUrl, posterUrl780 } from "@/app/constant/main";
+import { decodeId } from "@/lib/hash";
+import { siteUrl, posterUrl, posterUrl780 } from "@/constant/main";
 export async function generateMetadata({
   params,
 }: {

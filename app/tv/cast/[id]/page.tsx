@@ -1,14 +1,14 @@
 "use client";
-import Footer from "@/app/components/ui/Footer";
-import Navbar from "@/app/components/ui/Navbar";
-import { fetchTvDetails } from "@/app/lib/tmdb";
+import Footer from "@/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
+import { fetchTvDetails } from "@/lib/services/tmdb";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CastList from "@/app/components/cards/CastCard";
-import LoadingModel from "@/app/components/models/LoadingModel";
+import CastList from "@/components/cards/CastCard";
+import LoadingModel from "@/components/models/LoadingModel";
 import Link from "next/link";
-import { decodeId } from "@/app/lib/hash";
-import { TvDetail } from "@/app/constant/types";
+import { decodeId } from "@/lib/hash";
+import { TvDetail } from "@/constant/types";
 
 export default function TvCastPage() {
   const [data, setData] = useState<TvDetail | null>(null);

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Roboto_Slab } from "next/font/google";
 import { SkeletonTheme } from "react-loading-skeleton";
-import { siteUrl } from "./constant/main";
+import { siteUrl } from "../constant/main";
 import "./globals.css";
-import DynamicNightGuide from "./components/chat/DynamicNightGuide";
+import DynamicNightGuide from "../components/chat/DynamicNightGuide";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],

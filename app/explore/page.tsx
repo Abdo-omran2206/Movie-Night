@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import ExploreClient from "./ExploreClient";
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
 
 export const metadata: Metadata = {
   title: "Explore Movies & TV Shows - Movie Night",

@@ -1,7 +1,7 @@
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
 import { Metadata } from "next";
-import { siteUrl, socialMedia } from "@/app/constant/main";
+import { siteUrl, socialMedia } from "@/constant/main";
 import Link from "next/link";
 import {
   FaFilm,

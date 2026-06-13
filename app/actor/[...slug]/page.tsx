@@ -1,11 +1,11 @@
-import { getActorById } from "@/app/lib/tmdb";
-import { ActorDetail } from "@/app/constant/types";
+import { getActorById } from "@/lib/services/tmdb";
+import { ActorDetail } from "@/constant/types";
 import { Metadata } from "next";
 import ActorDetailsClient from "../ActorDetailsClient";
-import { slugify } from "@/app/lib/slugify";
+import { slugify } from "@/lib/slugify";
 import { permanentRedirect, notFound } from "next/navigation";
-import { decodeId } from "@/app/lib/hash";
-import { profileUrl } from "@/app/constant/main";
+import { decodeId } from "@/lib/hash";
+import { profileUrl } from "@/constant/main";
 export async function generateMetadata({
   params,
 }: {

@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetchMovies, fetchTvGenres } from "../../lib/tmdb";
-import { MovieSummary } from "../../constant/types";
-import { slugify } from "../../lib/slugify";
-import { encodeId } from "../../lib/hash";
-import { siteUrl } from "../../constant/main";
+import { fetchMovies, fetchTvGenres } from "../../../lib/services/tmdb";
+import { MovieSummary } from "../../../constant/types";
+import { slugify } from "../../../lib/slugify";
+import { encodeId } from "../../../lib/hash";
+import { siteUrl } from "../../../constant/main";
 
 async function getAllTvIds() {
   const pages = [1, 2, 3, 4, 5];

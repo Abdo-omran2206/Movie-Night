@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { supabaseClient } from "@/app/lib/supabase";
+// signup now uses server-side API at /api/account/signup
 
 export default function SignupPage() {
   const router = useRouter();
@@ -25,49 +25,48 @@ export default function SignupPage() {
         alert("Passwords do not match");
         return;
       }
-
-      const { error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username: username,
-            full_name: username,
-          },
-        },
-      });
-
-      if (error) {
-        console.error("Error during sign up:", error);
-        alert(error.message || "Signup failed");
+      try {
+        const res = await fetch("/api/account/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ step: 1, email, password, username }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert("Signup failed: " + (data.error || "Unknown error"));
+          return;
+        }
+        console.log("Sign up initiated, verification email sent.");
+        setStep(2);
+      } catch (err) {
+        console.error("Signup error:", err);
+        alert("Signup failed: " + String(err));
         return;
       }
-
-      console.log("Sign up successful, verification email sent.");
-      setStep(2); // ✅ هنا بس
     } else {
       if (verificationCode.length !== 8) {
         alert("Please enter a valid 8-digit code");
         return;
       }
-
-      const { error } = await supabaseClient.auth.verifyOtp({
-        email,
-        token: verificationCode,
-        type: "signup",
-      });
-
-      if (error) {
-        console.error("Error during email verification:", error);
-        alert(error.message || "Invalid code");
+      try {
+        const res = await fetch("/api/account/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ step: 2, email, verificationCode }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert("Verification failed: " + (data.error || "Unknown error"));
+          return;
+        }
+        console.log("Email verified successfully!");
+        alert("Your account has been created and verified!");
+        router.push("/account/login");
+      } catch (err) {
+        console.error("Verification error:", err);
+        alert("Verification failed: " + String(err));
         return;
       }
-
-      console.log("Email verified successfully!");
-      alert("Your account has been created and verified!");
-
-      // redirect هنا
-      router.push("/account/login");
     }
   };
 

@@ -1,16 +1,15 @@
 "use client";
-import Footer from "@/app/components/ui/Footer";
-import Navbar from "@/app/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
 import Image from "next/image";
-import { getActorById } from "@/app/lib/tmdb";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import MovieMiniCard from "@/app/components/cards/MovieMiniCard";
-import LoadingModel from "@/app/components/models/LoadingModel";
-import Link from "next/link";
-import { decodeId } from "../lib/hash";
-import { profileUrl } from "@/app/constant/main";
-import { ActorDetail, MovieSummary } from "../constant/types";
+import MovieMiniCard from "@/components/cards/MovieMiniCard";
+import LoadingModel from "@/components/models/LoadingModel";
+import { decodeId } from "@/lib/hash";
+import { profileUrl } from "@/constant/main";
+import { ActorDetail, MovieSummary } from "@/constant/types";
 
 import {
   FaFacebook,
@@ -36,7 +35,8 @@ export default function ActorDetailsClient() {
     async function loadData() {
       setLoading(true);
       try {
-        const res = await getActorById(id.toString());
+        const resp = await fetch(`/api/actor/${id}`);
+        const res = await resp.json();
         setData(res);
       } catch (error) {
         console.error("Failed to fetch actor details:", error);

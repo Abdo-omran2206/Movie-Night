@@ -6,9 +6,9 @@ import {
   askAI,
   clearConversation,
   getQuickSuggestions,
-} from "../lib/NightGuide";
-import { Message } from "@/app/constant/types";
-import { MessageParser } from "../components/chat/MessageParser";
+} from "@/lib/NightGuide";
+import { Message } from "@/constant/types";
+import { MessageParser } from "@/components/chat/MessageParser";
 import { FaPaperPlane, FaTrash } from "react-icons/fa";
 import { MdArrowBackIos } from "react-icons/md";
 import Link from "next/link";
@@ -59,11 +59,12 @@ export default function NightGuidePage() {
     setLoading(true);
 
     try {
-      const response = await askAI(textToSend);
+      const aiResult = await askAI(textToSend);
+      const responseText = typeof aiResult === "string" ? aiResult : aiResult.text;
 
       const assistantMessage: Message = {
         role: "assistant",
-        content: response,
+        content: responseText,
         timestamp: new Date(),
       };
 
@@ -269,7 +270,7 @@ export default function NightGuidePage() {
               ref={inputRef}
               rows={1}
               placeholder="Ask for a movie recommendation..."
-              className="flex-1 max-h-40 min-h-[44px] py-3 pl-3 bg-transparent text-gray-100 outline-none resize-none placeholder:text-gray-500 text-[15px] leading-relaxed no-scrollbar"
+              className="flex-1 max-h-40 min-h-[44px] py-3 pl-3 bg-transparent text-gray-100 outline-none resize-none placeholder:text-gray-500 placeholder:text-xs lg:placeholder:text-lg text-[15px] leading-relaxed no-scrollbar"
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);

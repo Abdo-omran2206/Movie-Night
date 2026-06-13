@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { fetchMovies, getCategoryInfo } from "@/app/lib/tmdb";
-import { Movie, CategoryDetailsClientProps } from "@/app/constant/types";
-import MovieCard from "@/app/components/cards/MovieCard";
-import Navbar from "@/app/components/ui/Navbar";
-import Footer from "@/app/components/ui/Footer";
+import { getCategoryInfo } from "@/lib/services/tmdb";
+import { Movie, CategoryDetailsClientProps } from "@/constant/types";
+import MovieCard from "@/components/cards/MovieCard";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Link from "next/link";
-import LoadingModel from "@/app/components/models/LoadingModel";
+import LoadingModel from "@/components/models/LoadingModel";
 
 export default function CategoryDetailsClient({ 
   initialMovies = [], 
@@ -65,9 +65,10 @@ export default function CategoryDetailsClient({
       if (!endpoint) return;
       setLoading(true);
       try {
-        const { results, total_pages } = await fetchMovies(endpoint, currentPage);
-        setMovies(results);
-        setTotalPages(total_pages);
+        const res = await fetch(`/api/movies?endpoint=${encodeURIComponent(endpoint)}&page=${currentPage}`);
+        const data = await res.json();
+        setMovies(data.results || []);
+        setTotalPages(data.total_pages || 1);
       } catch (error) {
         console.error("Failed to fetch movies:", error);
       } finally {
@@ -150,18 +151,18 @@ export default function CategoryDetailsClient({
               ))}
             </div>
 
-            {/* Pagination Controls */}
-            <div className="flex items-center justify-center gap-4 md:gap-8 mt-16 md:mt-24 mb-6">
+            {/* Pagination Controls - responsive: stacked on small screens, unchanged on large screens */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-8 mt-8 md:mt-16 mb-6">
               <button
                 disabled={currentPage <= 1}
                 onClick={() => handlePageChange(currentPage - 1)}
-                className="group flex items-center gap-3 px-6 py-3.5 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-2xl hover:bg-red-600 hover:border-red-600 transition-all disabled:opacity-20 disabled:hover:bg-neutral-900/50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-widest"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 px-4 py-2 sm:px-6 sm:py-3.5 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-2xl hover:bg-red-600 hover:border-red-600 transition-all disabled:opacity-20 disabled:hover:bg-neutral-900/50 disabled:cursor-not-allowed text-xs sm:text-xs font-black uppercase tracking-widest"
               >
                 <FaChevronLeft className="group-hover:-translate-x-1 transition-transform" />
                 <span>Prev</span>
               </button>
 
-              <div className="flex items-center gap-4 px-6 py-3.5 bg-neutral-900/30 rounded-2xl border border-white/5">
+              <div className="flex items-center justify-center gap-3 px-4 py-2 sm:px-6 sm:py-3.5 bg-neutral-900/30 rounded-2xl border border-white/5 w-full sm:w-auto">
                 <span className="text-red-600 font-black text-lg min-w-6 text-center">
                   {currentPage}
                 </span>
@@ -174,7 +175,7 @@ export default function CategoryDetailsClient({
               <button
                 disabled={currentPage >= totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
-                className="group flex items-center gap-3 px-6 py-3.5 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-2xl hover:bg-red-600 hover:border-red-600 transition-all disabled:opacity-20 disabled:hover:bg-neutral-900/50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-widest"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 px-4 py-2 sm:px-6 sm:py-3.5 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-2xl hover:bg-red-600 hover:border-red-600 transition-all disabled:opacity-20 disabled:hover:bg-neutral-900/50 disabled:cursor-not-allowed text-xs sm:text-xs font-black uppercase tracking-widest"
               >
                 <span>Next</span>
                 <FaChevronRight className="group-hover:translate-x-1 transition-transform" />
