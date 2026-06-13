@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { fetchGenres, fetchTvGenres } from "@/lib/services/tmdb";
 
-export async function GET(req:Request,{ params }: { params: { type: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ type: string }> }
+) {
   const { type } = await params;
   try {
     if (type == "movie") {
