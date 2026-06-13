@@ -46,7 +46,7 @@ export function MessageParser({ content, customCss = "" }: MessageParserProps) {
             const items = data.results ?? [];
 
             // 1st priority: exact year match
-            let found = items.find((m) => {
+            let found = items.find((m: { first_air_date: any; release_date: any; }) => {
               const date = isTv ? m.first_air_date : m.release_date;
               return date?.startsWith(year);
             });
