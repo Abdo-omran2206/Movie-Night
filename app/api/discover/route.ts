@@ -11,8 +11,12 @@ export async function GET(req: Request) {
   const params = Object.fromEntries(searchParams.entries());
   delete params.type;
 
+  // Ensure required properties with defaults
+  const page = parseInt(params.page as string) || 1;
+  const discoverParams = { ...params, page } as any;
+
   try {
-    const discoverData = await discover(type as "movie" | "tv", params);
+    const discoverData = await discover(type as "movie" | "tv", discoverParams);
 
     return NextResponse.json(discoverData);
   } catch (error) {
