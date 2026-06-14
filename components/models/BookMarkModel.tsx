@@ -38,6 +38,10 @@ export default function BookMarkModel({
   }, [movieID, userID]);
 
   const handleToogleBookmark = () => {
+    if (!userID) {
+      console.warn('User not logged in');
+      return;
+    }
     if (isBookmarked) {
       setIsBookmarked(false);
       removeBookMark(userID.id, movieID);
@@ -49,6 +53,10 @@ export default function BookMarkModel({
 
   const handleAddbookmark = (statusParam?: string) => {
     const finalStatus = statusParam ?? status;
+    if (!userID) {
+      console.warn('User not logged in');
+      return;
+    }
     addBookMark(
       userID.id,
       movieID,
