@@ -73,6 +73,17 @@
   - The Gemini AI processes the request using a custom prompt, formatted as text with `🎬 **Title** (Year)`.
   - The client parses the AI response and invisibly invokes a local TMDB search.
   - The interface seamlessly displays the text response alongside accurate `ChatMovieCard` visual components without AI ID hallucination.
+9. **User Authentication & Dashboard**
+  - User visits `/account/login` or `/account/signup`.
+  - User authenticates and logs in; session is saved.
+  - User is redirected to `/dashboard` containing customized statistics (Watchlist count, History count) and a personalized activity feed.
+  - User can toggle between **Profile Overview** and **Watchlist** tabs to manage their bookmarked movies and TV shows.
+10. **Browse & Add Bookmarks**
+  - Authenticated user can click bookmark/heart buttons on movie/TV cards or detail pages to save to "Watch Later" or mark as "Completed".
+  - Changes are persisted server-side via `/api/bookmark` and reflected in the user's dashboard.
+11. **Read Reviews**
+  - User browses to a movie or TV show detail page.
+  - User opens reviews modal or section to read reviews fetched directly from the TMDB API, rendered using the custom `ReviewCard` and `ReviewsModel`.
 
 ### 4. Functional Requirements
 
@@ -259,6 +270,31 @@
   - Dynamic "Discovering {count} Titles" result counter.
   - Grid responsiveness: 2 columns on mobile, scaling up to 5 on large desktops.
 
+#### 4.11 User Authentication & Accounts
+
+- **Authentication Flow**
+  - Supports sign-up (`/account/signup`) and log-in (`/account/login`) pages.
+  - Authenticates users securely and maintains sessions via custom API routes (`/api/account/login`, `/api/account/signup`, `/api/account/logout`).
+- **DiceBear Avatars**
+  - Automatically generates customized visual user avatars based on their usernames using the DiceBear avatar collection/core library.
+
+#### 4.12 User Dashboard & Watchlist
+
+- **Dashboard Page (`/dashboard`)**
+  - Provides a personalized dashboard for logged-in users.
+  - Contains navigation tabs for **Profile Overview** and **Watchlist**.
+  - Displays user stats like number of items in "Watch Later" (Watchlist) and "Completed" (History).
+  - Displays a "Recent Activity" feed of newly bookmarked movies/TV shows using a specialized `DashboardMovieCard` component.
+- **Watchlist Manager**
+  - Communicates with `/api/bookmark` to retrieve and modify user bookmarks.
+  - Allows items to be classified into states (e.g., "Watch Later", "Completed").
+
+#### 4.13 Reviews Component
+
+- **Visual Reviews**
+  - Detail pages integrate a reviews modal (`ReviewsModel`) powered by TMDB reviews API.
+  - Uses `ReviewCard` component to format review authors, content, ratings, and timestamps.
+
 ### 5. Non‑Functional Requirements
 
 #### 5.1 Performance
@@ -327,15 +363,12 @@
 
 ### 7. Out of Scope (for this version)
 
-- User authentication, profiles, and personalized watchlists.
-- Persistence of viewing history or favorites.
 - Multi-language/i18n.
 - Offline mode or advanced caching.
 - Social features (sharing, comments, ratings from users).
 
 ### 8. Future Enhancements (High‑Level)
 
-- Add user accounts with synced watchlists and continue‑watching rows.
 - Integrate multi-language support and region-based content.
 - Offline caching for common lists and recently visited details.
 - Enhanced analytics (top searches, most-watched categories, engagement funnels).

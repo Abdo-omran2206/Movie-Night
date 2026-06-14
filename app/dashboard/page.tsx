@@ -5,72 +5,44 @@ import { useRouter } from "next/navigation";
 // Dashboard now fetches server-side via /api/dashboard and uses /api/account/logout for sign out
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
-import {
-  FaUserCircle,
-  FaSignOutAlt,
-  FaHeart,
-  FaCog,
-  FaHistory,
-  FaStar,
-} from "react-icons/fa";
-
-import DashboardMovieCard from "../../components/cards/DashboardMovieCard";
-import Watchlist from "../../components/layout/watchlist";
-import { generateUserAvatar } from "../../lib/generateMovieAvatar";
+import { FaUserCircle, FaSignOutAlt, FaHeart, FaHistory } from "react-icons/fa";
+import DashboardMovieCard from "@/components/cards/DashboardMovieCard";
+import Watchlist from "@/components/layout/watchlist";
+import { generateUserAvatar } from "@/lib/generateMovieAvatar";
 import { useUserStore } from "@/store/useUserStore";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const setUserStore = useUserStore((state) => state.setUser);
   const clearUserStore = useUserStore((state) => state.clearUser);
+  const userStore = useUserStore((state) => state.user);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
   const [status, setStatus] = useState<Record<string, number>>({});
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [newBookmarks, setNewBookmarks] = useState<any[]>([]);
-
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("/api/dashboard");
-        if (res.status === 401) {
-          router.replace("/account/login");
-          return;
+        if(!userStore){
+          router.replace("/account/login")
         }
+        if (!userStore?.id) return;
+        const res = await fetch(`/api/dashboard?id=${userStore.id}`);
+        if (!res.ok) throw new Error("API error");
         const data = await res.json();
-        if (!res.ok) {
-          console.error("Dashboard API error:", data);
-          router.replace("/account/login");
-          return;
-        }
-
-        setUser(data.user);
-
-        const name =
-          data.user?.user_metadata?.username ||
-          data.user?.user_metadata?.full_name ||
-          data.user?.email?.split("@")[0] ||
-          "User";
-        setUserStore(name, data.user.id);
-
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 7);
-        document.cookie = `movie_night_auth=true; path=/; expires=${expirationDate.toUTCString()};`;
-
         setStatus(data.status || {});
         setNewBookmarks(data.newBookmarks || []);
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching dashboard:", err);
-        router.replace("/account/login");
+      } finally {
+        setLoadingData(false);
       }
     };
 
     fetchUser();
-  }, [router]);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -83,12 +55,10 @@ export default function DashboardPage() {
       console.error("Logout error:", err);
     }
     clearUserStore();
-    document.cookie =
-      "movie_night_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     router.push("/account/login");
   };
 
-  if (loading) {
+  if (loadingData) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
         <Navbar />
@@ -115,7 +85,10 @@ export default function DashboardPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-32 bg-neutral-900/40 border border-neutral-800 rounded-2xl animate-pulse p-6">
+                <div
+                  key={i}
+                  className="h-32 bg-neutral-900/40 border border-neutral-800 rounded-2xl animate-pulse p-6"
+                >
                   <div className="flex gap-4 mb-4">
                     <div className="w-10 h-10 bg-neutral-800 rounded-full" />
                     <div className="w-20 h-6 bg-neutral-800 rounded mt-2" />
@@ -129,13 +102,6 @@ export default function DashboardPage() {
       </div>
     );
   }
-
-  // Placeholder for user name parsing
-  const userName =
-    user?.user_metadata?.username ||
-    user?.user_metadata?.full_name ||
-    user?.email?.split("@")[0] ||
-    "User";
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden selection:bg-red-500/30">
@@ -154,16 +120,22 @@ export default function DashboardPage() {
 
               <div className="flex flex-col items-center text-center">
                 <div className="w-24 h-24 bg-neutral-800 border-2 border-red-600/50 rounded-full flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(220,38,38,0.2)]">
-                  <Image src={generateUserAvatar(userName)} alt={userName} width={150} height={150} className="w-full h-full object-cover" />
+                  <Image
+                    src={generateUserAvatar(userStore?.name || "")}
+                    alt={userStore?.name || ""}
+                    width={150}
+                    height={150}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h2
                   className="text-xl font-bold tracking-wider mb-1"
                   style={{ fontFamily: "var(--font-bebas)" }}
                 >
-                  {userName}
+                  {userStore?.name || ""}
                 </h2>
                 <p className="text-sm text-neutral-400 mb-6 truncate w-full px-2">
-                  {user?.email}
+                  {userStore?.email}
                 </p>
 
                 <div className="w-full flex-1 border-t border-neutral-800/80 mb-6"></div>
@@ -220,18 +192,20 @@ export default function DashboardPage() {
                       style={{ fontFamily: "var(--font-bebas)" }}
                     >
                       WELCOME BACK,{" "}
-                      <span className="text-red-600">{userName.toUpperCase()}</span>
+                      <span className="text-red-600">
+                        {userStore?.name || "".toUpperCase()}
+                      </span>
                     </h1>
                     <p className="text-neutral-400 text-lg max-w-xl">
-                      Ready for your next cinematic adventure? Pick up right where
-                      you left off or explore new trending titles.
+                      Ready for your next cinematic adventure? Pick up right
+                      where you left off or explore new trending titles.
                     </p>
                   </div>
                 </div>
 
                 {/* Quick Stats/Widgets Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-                  <div 
+                  <div
                     onClick={() => setActiveTab("watchlist")}
                     className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 hover:border-red-600/30 transition-all group cursor-pointer"
                   >
@@ -247,7 +221,9 @@ export default function DashboardPage() {
                     >
                       {status["Watch Later"] || 0}
                     </p>
-                    <p className="text-sm text-neutral-500 mt-1">Saved for later</p>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      Saved for later
+                    </p>
                   </div>
 
                   <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 hover:border-red-600/30 transition-all group cursor-pointer">
@@ -263,7 +239,9 @@ export default function DashboardPage() {
                     >
                       {status["Completed"] || 0}
                     </p>
-                    <p className="text-sm text-neutral-500 mt-1">Titles watched</p>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      Titles watched
+                    </p>
                   </div>
 
                   {/* <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 hover:border-red-600/30 transition-all group cursor-pointer">
@@ -309,7 +287,10 @@ export default function DashboardPage() {
                             key={bookmark.created_at}
                             className="w-full md:w-auto justify-center items-center"
                           >
-                            <DashboardMovieCard {...bookmark.movies} status={bookmark.status} />
+                            <DashboardMovieCard
+                              {...bookmark.movies}
+                              status={bookmark.status}
+                            />
                           </div>
                         ))}
                       </div>
@@ -321,7 +302,7 @@ export default function DashboardPage() {
 
             {activeTab === "watchlist" && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <Watchlist userId={user.id} />
+                <Watchlist userId={userStore?.id || ""} />
               </div>
             )}
           </div>

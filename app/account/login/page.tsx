@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const setUserStore = useUserStore((state) => state.setUser);
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await fetch("/api/account/login", {
@@ -28,12 +28,11 @@ export default function LoginPage() {
         return;
       }
 
-      const name =
-        data.user?.user_metadata?.username ||
-        data.user?.user_metadata?.full_name ||
-        data.user?.email?.split("@")[0] ||
-        "User";
-      setUserStore(name, data.user.id);
+      setUserStore({
+        id: data.user?.id,
+        email: data.user?.email,
+        name: data.user?.user_metadata?.username || "User",
+      });
 
       router.push("/dashboard");
     } catch (err) {
@@ -55,11 +54,13 @@ export default function LoginPage() {
 
       {/* Auth Card */}
       <div className="w-full max-w-md bg-neutral-900/60 backdrop-blur-2xl border border-neutral-800 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 relative animate-in fade-in slide-in-from-bottom-8 duration-700">
-        
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Link href="/" className="group flex items-center gap-2 select-none">
-            <h1 className="text-red-600 text-shadow-black text-3xl tracking-widest font-black transition-transform group-hover:scale-105" style={{ fontFamily: "var(--font-bebas)" }}>
+            <h1
+              className="text-red-600 text-shadow-black text-3xl tracking-widest font-black transition-transform group-hover:scale-105"
+              style={{ fontFamily: "var(--font-bebas)" }}
+            >
               MOVIE NIGHT
             </h1>
           </Link>
@@ -96,7 +97,10 @@ export default function LoginPage() {
               <label className="text-sm font-medium text-neutral-300">
                 Password
               </label>
-              <Link href="#" className="text-xs text-red-500 hover:text-red-400 transition-colors">
+              <Link
+                href="#"
+                className="text-xs text-red-500 hover:text-red-400 transition-colors"
+              >
                 Forgot password?
               </Link>
             </div>

@@ -48,13 +48,24 @@
 
 ### 🔍 Search
 
+- **Global Multi-Search**: Search seamlessly for movies, TV shows, and actors with real-time pagination and type filters.
+- **Interactive Search Modal**: Premium inline search modal overlay for lightning-fast queries and visual results preview using mini-cards without leaving the current view.
+
 ### 📱 Movie & TV Show Details
 
 - **Full Analytics**: Ratings, runtime, release dates, and localized genre tags.
 - **Interactive Trailers**: Integrated YouTube player for the latest clips.
 - **Immersive Posters**: Full-screen Image Viewer modal for inspecting posters and high-res promotional backdrops.
 - **TV Series Support**: Full support for TV Seasons and Episodes with an interactive, seamless episode controller that updates the stream instantly without page reloads.
+- **User Reviews**: Integrated reviews directly on details pages utilizing TMDB reviews API, displaying detailed feedback in custom reviews overlays (`ReviewCard`, `ReviewsModel`).
 - **Similar Recommendations**: AI-driven suggestions based on the current film or show.
+
+### 🔐 User Authentication & Dashboard
+
+- **Secure Login & Registration**: Account registration and login flows (`/account/signup`, `/account/login`) utilizing secure custom authentication API routes.
+- **Personalized Dashboard**: A dedicated `/dashboard` containing profile overviews, recent activity, and customized statistics (watchlist, completed titles).
+- **Watchlist & History (Bookmarks)**: Save titles to "Watch Later" or mark them as "Completed" (History), persisted in Supabase and synchronized on your dashboard.
+- **DiceBear Avatars**: Generates customized user avatars based on usernames.
 
 ### 🤖 NightGuide AI Assistant
 
@@ -156,27 +167,77 @@ npm run dev
 - **Endpoints**: trending, top-rated, popular, upcoming, now-playing, search.
 - **Error Boundaries**: Graceful handling of network failures and empty states.
 
-### **URL Structure**
+### **File Structure Tree (App Router)**
 
-- Home: `/`
-- Search: `/search?q=Inception&page=1`
-- Category: `/category/top_rated?page=1&type=movie`
-- Genre: `/category/28` (Action), `/category/12` (Adventure), etc.
-- Movie Details: `/movie/[hash]/[slug]` (primary)
-- TV Details: `/tv/[hash]/[slug]`
-- Cast Details: `/movie/cast/[hash]` and `/tv/cast/[hash]`
-- Actor Details: `/actor/[hash]/[slug]`
-- Movie Player: `/movie/player/[hash]/[slug]`
-- TV Player: `/tv/player/[hash]/[slug]?s=[season]&e=[episode]`
-- TV Season: `/tv/season/[hash]/[seasonNum]/[slug]`
-- NightGuide AI: `/nightguide`
-- Install Page: `/install`
+```
+app/
+├── about/
+│   └── page.tsx                      # About page
+├── account/
+│   ├── login/
+│   │   └── page.tsx                  # Login page
+│   └── signup/
+│       └── page.tsx                  # Signup page
+├── actor/
+│   ├── [...slug]/
+│   │   └── page.tsx                  # Actor details (/actor/[hash]/[slug])
+│   └── ActorDetailsClient.tsx
+├── api/                              # Backend route handlers
+│   ├── account/                      # Login, signup, logout API
+│   ├── bookmark/                     # Watchlist & history bookmark API
+│   ├── dashboard/                    # Stats and activity API
+│   └── ...                           # Other metadata fetch routes
+├── category/
+│   ├── [category]/
+│   │   └── page.tsx                  # Category/Genre grid (/category/[slug])
+│   └── CategoryDetailsClient.tsx
+├── dashboard/
+│   └── page.tsx                      # User profile & watchlist dashboard
+├── explore/
+│   ├── page.tsx                      # Explore Hub page
+│   └── ExploreClient.tsx
+├── install/
+│   └── page.tsx                      # Install guide page
+├── movie/
+│   ├── [...slug]/
+│   │   └── page.tsx                  # Movie details (/movie/[hash]/[slug])
+│   ├── cast/
+│   │   └── [id]/
+│   │       └── page.tsx              # Movie cast list (/movie/cast/[id])
+│   ├── player/
+│   │   ├── [...slug]/
+│   │   │   └── page.tsx              # Movie player (/movie/player/[hash]/[slug])
+│   │   └── PlayerClient.tsx
+│   └── MovieDetailsClient.tsx
+├── nightguide/
+│   └── page.tsx                      # NightGuide AI Chat page
+├── search/
+│   └── page.tsx                      # Search results page
+├── tv/
+│   ├── [...slug]/
+│   │   └── page.tsx                  # TV details (/tv/[hash]/[slug])
+│   ├── cast/
+│   │   └── [id]/
+│   │       └── page.tsx              # TV cast list (/tv/cast/[id])
+│   ├── player/
+│   │   ├── [...slug]/
+│   │   │   └── page.tsx              # TV Player (/tv/player/[hash]/[slug])
+│   │   └── PlayerClient.tsx
+│   ├── season/
+│   │   ├── [...slug]/
+│   │   │   └── page.tsx              # TV Season (/tv/season/[hash]/[seasonNum]/[slug])
+│   │   └── SeasonDetailsClient.tsx
+│   └── TvDetailsClient.tsx
+├── layout.tsx                        # Root layout
+├── page.tsx                          # Home page
+└── globals.css                       # Global styles
+```
 
 ---
 
 ## 🚀 Future Enhancements
 
-- [ ] User Authentication & Personalized Watchlists.
+- [x] User Authentication & Personalized Watchlists.
 - [ ] Multi-language support (i18n).
 - [ ] Offline caching with Service Workers.
 - [ ] Enhanced social sharing features.
