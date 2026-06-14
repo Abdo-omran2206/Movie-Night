@@ -22,7 +22,8 @@ export default function Navbar() {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isSearchModelOpen, setIsSearchModelOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [userName, setUserName] = useState<string>();
+  const storeUserName = useUserStore((state) => state.user);
+  const userName = storeUserName?.name || "user";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,16 +33,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const storeUserName = useUserStore((state) => state.userName);
-
-  useEffect(() => {
-    setUserName(storeUserName);
-  }, [storeUserName]);
 
   useEffect(() => {
     async function syncSearch() {
       try {
-        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&page=1&type=multi`);
+        const res = await fetch(
+          `/api/search?query=${encodeURIComponent(query)}&page=1&type=multi`,
+        );
         const data = await res.json();
         setSearchResults(data.results || []);
       } catch (err) {
@@ -66,14 +64,14 @@ export default function Navbar() {
     router.push(`/search?q=${encodeURIComponent(query.trim())}`);
   };
 
-    const handleClick = () => {
-      if(storeUserName){
-        router.push("/dashboard");
-      }
-      if(!storeUserName){
-        router.push("/account/login");
-      }
+  const handleClick = () => {
+    if (storeUserName?.name && storeUserName?.id) {
+      router.push("/dashboard");
     }
+    if (!storeUserName?.name && !storeUserName?.id) {
+      router.push("/account/login");
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full z-50">
@@ -240,35 +238,39 @@ export default function Navbar() {
 
           {/* Mobile Search Trigger */}
           <div className="flex flex-row gap-5">
-
-          <div className="flex lg:hidden items-center">
+            <div className="flex lg:hidden items-center">
+              <button
+                onClick={() => setIsSearchModelOpen(true)}
+                className="p-2 text-white hover:text-red-600 transition-colors"
+                aria-label="Open mobile search"
+              >
+                <FaSearch size={22} />
+              </button>
+            </div>
             <button
-              onClick={() => setIsSearchModelOpen(true)}
-              className="p-2 text-white hover:text-red-600 transition-colors"
-              aria-label="Open mobile search"
+              onClick={() => {
+                handleClick();
+              }}
+              className="shrink-0 hover:cursor-pointer rounded-full border-2 border-neutral-800 p-0.5 transition-colors hover:border-red-600"
             >
-              <FaSearch size={22} />
+              {userName ? (
+                <Image
+                  src={generateUserAvatar(userName)}
+                  alt={userName}
+                  width={150}
+                  height={150}
+                  className="w-10 h-10 lg:w-11 lg:h-11 object-cover"
+                />
+              ) : (
+                <Image
+                  src={generateUserAvatar("user")}
+                  alt="user"
+                  width={150}
+                  height={150}
+                  className="w-10 h-10 lg:w-11 lg:h-11 object-cover"
+                />
+              )}
             </button>
-          </div>
-          <button onClick={()=>{handleClick()}} className="shrink-0 hover:cursor-pointer rounded-full border-2 border-neutral-800 p-0.5 transition-colors hover:border-red-600">
-            {userName ? (
-              <Image
-                src={generateUserAvatar(userName)}
-                alt={userName}
-                width={150}
-                height={150}
-                className="w-10 h-10 lg:w-11 lg:h-11 object-cover"
-              />
-            ) : (
-              <Image
-                src={generateUserAvatar("user")}
-                alt="user"
-                width={150}
-                height={150}
-                className="w-10 h-10 lg:w-11 lg:h-11 object-cover"
-              />
-            )}
-          </button>
           </div>
         </div>
       </nav>
@@ -279,6 +281,3 @@ export default function Navbar() {
     </header>
   );
 }
-
-
-

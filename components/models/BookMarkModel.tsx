@@ -19,13 +19,13 @@ export default function BookMarkModel({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isWatshList, setISWatchList] = useState(false);
   const [status, setStatus] = useState("");
-  const userID = useUserStore((state) => state.userId);
+  const userID = useUserStore((state) => state.user);
 
   useEffect(() => {
     const fetchBookmarkStatus = async () => {
       if (!userID) return;
 
-      const bookmarked = await fetchIsBookMarked(userID, movieID);
+      const bookmarked = await fetchIsBookMarked(userID.id, movieID);
       if (bookmarked.length > 0) {
         setIsBookmarked(true);
         setStatus(bookmarked[0].status);
@@ -40,7 +40,7 @@ export default function BookMarkModel({
   const handleToogleBookmark = () => {
     if (isBookmarked) {
       setIsBookmarked(false);
-      removeBookMark(userID, movieID);
+      removeBookMark(userID.id, movieID);
       setStatus("");
       return;
     }
@@ -50,7 +50,7 @@ export default function BookMarkModel({
   const handleAddbookmark = (statusParam?: string) => {
     const finalStatus = statusParam ?? status;
     addBookMark(
-      userID,
+      userID.id,
       movieID,
       title,
       overview,
