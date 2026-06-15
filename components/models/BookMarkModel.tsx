@@ -4,7 +4,11 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { FaPlay } from "react-icons/fa";
 import { MdOutlineAccessTimeFilled } from "react-icons/md";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
-import { fetchIsBookMarked, removeBookMark, addBookMark } from "@/lib/services/BookmarkManager";
+import {
+  fetchIsBookMarked,
+  removeBookMark,
+  addBookMark,
+} from "@/lib/services/BookmarkManager";
 import { useUserStore } from "@/store/useUserStore";
 import { Bookmark } from "@/constant/types";
 
@@ -23,9 +27,7 @@ export default function BookMarkModel({
 
   useEffect(() => {
     const fetchBookmarkStatus = async () => {
-      if (!userID) return;
-
-      const bookmarked = await fetchIsBookMarked(userID.id, movieID);
+      const bookmarked = await fetchIsBookMarked(movieID);
       if (bookmarked.length > 0) {
         setIsBookmarked(true);
         setStatus(bookmarked[0].status);
@@ -35,16 +37,16 @@ export default function BookMarkModel({
     };
 
     fetchBookmarkStatus();
-  }, [movieID, userID]);
+  }, [movieID]);
 
   const handleToogleBookmark = () => {
     if (!userID) {
-      console.warn('User not logged in');
+      console.warn("User not logged in");
       return;
     }
     if (isBookmarked) {
       setIsBookmarked(false);
-      removeBookMark(userID.id, movieID);
+      removeBookMark(movieID);
       setStatus("");
       return;
     }
@@ -54,30 +56,26 @@ export default function BookMarkModel({
   const handleAddbookmark = (statusParam?: string) => {
     const finalStatus = statusParam ?? status;
     if (!userID) {
-      console.warn('User not logged in');
+      console.warn("User not logged in");
       return;
     }
     addBookMark(
-      userID.id,
       movieID,
       title,
       overview,
       backdrop || "",
       poster,
       type,
-      finalStatus
+      finalStatus,
     );
   };
-  if(!userID){
-    return(
-      <>
-      </>
-    )
+  if (!userID) {
+    return <></>;
   }
   return (
     <div
       onClick={handleToogleBookmark}
-      className="flex justify-center items-center "
+      className="flex justify-center items-center"
     >
       {isBookmarked ? (
         <FaBookmark

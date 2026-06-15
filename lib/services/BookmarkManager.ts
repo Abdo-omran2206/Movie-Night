@@ -1,19 +1,8 @@
-export interface BookmarkData {
-  status: string;
-  created_at: string;
-  movies: {
-    movie_id: number;
-    title: string;
-    overview: string;
-    poster_path: string | null;
-    backdrop_path: string | null;
-    type: string;
-  } | null;
-}
+import { BookmarkData } from "@/constant/types";
 
-export async function fetchStatusCount(userId: string): Promise<Record<string, number>> {
+export async function fetchStatusCount(): Promise<Record<string, number>> {
   try {
-    const res = await fetch(`/api/bookmark?action=count&userId=${encodeURIComponent(userId)}`);
+    const res = await fetch(`/api/bookmark?action=count`);
     return await res.json();
   } catch (error) {
     console.error("Error fetching status count:", error);
@@ -21,9 +10,9 @@ export async function fetchStatusCount(userId: string): Promise<Record<string, n
   }
 }
 
-export async function fetchNewBookmarks(userId: string): Promise<BookmarkData[]> {
+export async function fetchNewBookmarks(): Promise<BookmarkData[]> {
   try {
-    const res = await fetch(`/api/bookmark?action=new&userId=${encodeURIComponent(userId)}`);
+    const res = await fetch(`/api/bookmark?action=new`);
     return await res.json();
   } catch (error) {
     console.error("Error fetching new bookmarks:", error);
@@ -31,9 +20,9 @@ export async function fetchNewBookmarks(userId: string): Promise<BookmarkData[]>
   }
 }
 
-export async function fetchIsBookMarked(userID: string, movieID: number) {
+export async function fetchIsBookMarked(movieID: number) {
   try {
-    const res = await fetch(`/api/bookmark?userId=${encodeURIComponent(userID)}&movieId=${movieID}`);
+    const res = await fetch(`/api/bookmark?movieId=${movieID}`);
     return await res.json();
   } catch (error) {
     console.error("Error fetching is bookmarked:", error);
@@ -41,9 +30,9 @@ export async function fetchIsBookMarked(userID: string, movieID: number) {
   }
 }
 
-export async function removeBookMark(userID: string, movieID: number) {
+export async function removeBookMark( movieID: number) {
   try {
-    const res = await fetch(`/api/bookmark?userId=${encodeURIComponent(userID)}&movieId=${movieID}`, {
+    const res = await fetch(`/api/bookmark?movieId=${movieID}`, {
       method: "DELETE",
     });
     return await res.json();
@@ -54,7 +43,6 @@ export async function removeBookMark(userID: string, movieID: number) {
 }
 
 export async function addBookMark(
-  userID: string,
   movieID: number,
   title: string,
   overview: string,
@@ -68,7 +56,6 @@ export async function addBookMark(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: userID,
         movieId: movieID,
         title,
         overview,

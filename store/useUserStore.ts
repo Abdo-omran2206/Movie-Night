@@ -9,7 +9,9 @@ interface User {
 
 interface UserState {
   user: User | null;
+
   setUser: (user: User | null) => void;
+
   clearUser: () => void;
 }
 
@@ -24,6 +26,6 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: "movie-night-user-store",
-    }
-  )
+    },
+  ),
 );
