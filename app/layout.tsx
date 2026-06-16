@@ -4,6 +4,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import { siteUrl } from "../constant/main";
 import "./globals.css";
 import DynamicNightGuide from "../components/chat/DynamicNightGuide";
+import ToastProvider from "@/components/models/ToastProvider";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -190,6 +191,7 @@ export default function RootLayout({
         <SkeletonTheme baseColor="#1a1a1a" highlightColor="#333">
           {children}
           <DynamicNightGuide />
+          <ToastProvider/>
         </SkeletonTheme>
       </body>
     </html>

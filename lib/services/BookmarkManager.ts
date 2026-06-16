@@ -30,7 +30,7 @@ export async function fetchIsBookMarked(movieID: number) {
   }
 }
 
-export async function removeBookMark( movieID: number) {
+export async function removeBookMark(movieID: number) {
   try {
     const res = await fetch(`/api/bookmark?movieId=${movieID}`, {
       method: "DELETE",
@@ -52,7 +52,7 @@ export async function addBookMark(
   status: string,
 ) {
   try {
-    await fetch("/api/bookmark", {
+    const data = await fetch("/api/bookmark", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -65,7 +65,24 @@ export async function addBookMark(
         status,
       }),
     });
+    return await data.json();
   } catch (error) {
     console.error("Error adding bookmark:", error);
+  }
+}
+
+export async function UpdateBookMark(movieID: number, status: string) {
+  try {
+    const data = await fetch("/api/bookmark", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        movieId: movieID,
+        status,
+      }),
+    });
+    return await data.json();
+  } catch (error) {
+    console.error("Error update bookmark:", error);
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { FiTrash2 } from "react-icons/fi";
 import { FaPlay } from "react-icons/fa";
 import { MdOutlineAccessTimeFilled } from "react-icons/md";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
@@ -8,9 +9,11 @@ import {
   fetchIsBookMarked,
   removeBookMark,
   addBookMark,
+  UpdateBookMark,
 } from "@/lib/services/BookmarkManager";
 import { useUserStore } from "@/store/useUserStore";
 import { Bookmark } from "@/constant/types";
+import { toast } from "react-toastify";
 
 export default function BookMarkModel({
   movieID,
@@ -39,27 +42,36 @@ export default function BookMarkModel({
     fetchBookmarkStatus();
   }, [movieID]);
 
-  const handleToogleBookmark = () => {
-    if (!userID) {
-      console.warn("User not logged in");
-      return;
-    }
-    if (isBookmarked) {
-      setIsBookmarked(false);
-      removeBookMark(movieID);
-      setStatus("");
-      return;
-    }
+  const handleToogleBookmark = async () => {
     setISWatchList(true);
   };
 
-  const handleAddbookmark = (statusParam?: string) => {
-    const finalStatus = statusParam ?? status;
-    if (!userID) {
-      console.warn("User not logged in");
+  const handleRemoveBookMark = async () => {
+    const isbookmarkremoved = await removeBookMark(movieID);
+    if (isbookmarkremoved.success) {
+      toast.success("Removed from bookmarks 🗑");
+      setIsBookmarked(false);
       return;
+    } else {
+      toast.error("Failed to remove bookmark ❌");
     }
-    addBookMark(
+  };
+
+  const handleUpdateBookMark = async (statusParam?: string) => {
+    const finalStatus = statusParam ?? status;
+    const updateBookMark = await UpdateBookMark(movieID, finalStatus);
+    if (updateBookMark.success) {
+      toast.success(`Bookmark updated to ${finalStatus} 🎬`);
+      setIsBookmarked(true);
+      return;
+    } else {
+      toast.error("Failed to update bookmark ❌");
+    }
+  };
+
+  const handleAddbookmark = async (statusParam?: string) => {
+    const finalStatus = statusParam ?? status;
+    const newbookmark = await addBookMark(
       movieID,
       title,
       overview,
@@ -68,8 +80,15 @@ export default function BookMarkModel({
       type,
       finalStatus,
     );
+    if (newbookmark.success) {
+      toast.success("Added to bookmarks ✅");
+      setIsBookmarked(true);
+    } else {
+      toast.error("Failed to add bookmark ❌");
+    }
   };
-  if (!userID) {
+
+  if (!userID?.id) {
     return <></>;
   }
   return (
@@ -92,10 +111,12 @@ export default function BookMarkModel({
       )}
       {isWatshList ? (
         <WatchListModel
-          isModel={setISWatchList}
+          setisModel={setISWatchList}
           setStatus={setStatus}
-          setIsBookmarked={setIsBookmarked}
+          isBookmarked={isBookmarked}
           handleAddbookmark={handleAddbookmark}
+          handleRemoveBookMark={handleRemoveBookMark}
+          handleUpdateBookMark={handleUpdateBookMark}
         />
       ) : null}
     </div>
@@ -103,15 +124,19 @@ export default function BookMarkModel({
 }
 
 function WatchListModel({
-  isModel,
+  setisModel,
   setStatus,
-  setIsBookmarked,
+  isBookmarked,
   handleAddbookmark,
+  handleRemoveBookMark,
+  handleUpdateBookMark,
 }: {
-  isModel: Dispatch<SetStateAction<boolean>>;
+  setisModel: Dispatch<SetStateAction<boolean>>;
+  isBookmarked: boolean;
   setStatus: Dispatch<SetStateAction<string>>;
-  setIsBookmarked: Dispatch<SetStateAction<boolean>>;
   handleAddbookmark: (status?: string) => void;
+  handleRemoveBookMark: (status?: string) => void;
+  handleUpdateBookMark: (status?: string) => void;
 }) {
   const [selection, setSelection] = useState<string | null>(null);
   const options = [
@@ -144,12 +169,18 @@ function WatchListModel({
             <li key={idx}>
               <button
                 type="button"
-                onClick={() => {
-                  setSelection(opt.label);
-                  setStatus(opt.label); // ✅ مهم
-                  setIsBookmarked(true); // ✅ يعمل bookmark
-                  isModel(false);
-                  handleAddbookmark(opt.label);
+                onClick={async () => {
+                  const status = opt.label;
+
+                  setSelection(status);
+                  setStatus(status);
+                  setisModel(false);
+
+                  if (isBookmarked) {
+                    await handleUpdateBookMark(status);
+                  } else {
+                    await handleAddbookmark(status);
+                  }
                 }}
                 className={`w-full text-left px-4 py-3 rounded-md border transition-colors duration-150 flex items-center justify-between hover:cursor-pointer ${
                   selection === opt.label
@@ -169,6 +200,29 @@ function WatchListModel({
               </button>
             </li>
           ))}
+
+          {isBookmarked && (
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelection("Delete");
+                  setisModel(false);
+                  handleRemoveBookMark();
+                }}
+                className="w-full text-left px-4 py-3 rounded-md border transition-all duration-200 flex items-center justify-between hover:cursor-pointer bg-red-500/10 border-red-500/30 hover:bg-red-500/20"
+              >
+                <span className="flex items-center gap-3">
+                  <FiTrash2 className="text-xl text-red-400" />
+                  <span className="font-medium text-red-400">
+                    Remove from Watchlist
+                  </span>
+                </span>
+
+                <span className="text-sm text-red-400/70">Delete</span>
+              </button>
+            </li>
+          )}
         </ul>
 
         <div className="mt-5 flex justify-end">
@@ -177,7 +231,7 @@ function WatchListModel({
             className="px-4 py-2 rounded-md border border-gray-700 hover:bg-gray-800 transition"
             onClick={() => {
               setSelection(null);
-              isModel(false);
+              setisModel(false);
               setStatus("");
             }}
           >

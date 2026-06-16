@@ -95,3 +95,35 @@ h6 {
     display: none !important;
   }
 }
+
+/* Movie Night Toast Theme */
+
+.Toastify__toast {
+  background: rgba(10, 10, 10, 0.85);
+  color: #fff;
+  border: 1px solid rgba(255, 0, 60, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  font-family: "Roboto Slab", serif;
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.1);
+}
+
+.Toastify__toast--success {
+  border-left: 4px solid #ff003c;
+}
+
+.Toastify__toast--error {
+  border-left: 4px solid #ff4d4f;
+}
+
+.Toastify__progress-bar {
+  background: linear-gradient(90deg, #ff003c, #ff4d4f);
+}
+
+.Toastify__close-button {
+  color: #aaa;
+}
+
+.Toastify__close-button:hover {
+  color: #fff;
+}

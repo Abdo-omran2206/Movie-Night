@@ -1,37 +1,17 @@
 import { NextResponse } from "next/server";
 import { getUserSession } from "../lib/getUserSession";
 import { supabaseClient } from "@/lib/supabase";
-import { BookmarkData } from "@/constant/types";
 
 export async function GET(req: Request) {
   const { success, userId } = await getUserSession();
 
   if (!success || !userId) {
-    return NextResponse.json(
-      { error: "Unauthorized", message: userId },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
   const { searchParams } = new URL(req.url);
   const movieId = searchParams.get("movieId");
-  const action = searchParams.get("action");
-
-  if (!userId) {
-    return NextResponse.json({ error: "userId is required" }, { status: 400 });
-  }
 
   try {
-    if (action === "count") {
-      const counts = await fetchStatusCount(userId);
-      return NextResponse.json(counts);
-    }
-
-    if (action === "new") {
-      const newBookmarks = await fetchNewBookmarks(userId);
-      return NextResponse.json(newBookmarks);
-    }
-
     if (movieId) {
       const bookmark = await fetchIsBookMarked(userId, Number(movieId));
       return NextResponse.json(bookmark);
@@ -51,15 +31,11 @@ export async function POST(req: Request) {
   const { success, userId } = await getUserSession();
 
   if (!success || !userId) {
-    return NextResponse.json(
-      { error: "Unauthorized", message: userId },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
     const body = await req.json();
-    const { movieId, title, overview, backdrop, poster, type, status } =
-      body;
+    const { movieId, title, overview, backdrop, poster, type, status } = body;
 
     if (!userId || !movieId || !title || !type || !status) {
       return NextResponse.json(
@@ -95,10 +71,7 @@ export async function DELETE(req: Request) {
   const { success, userId } = await getUserSession();
 
   if (!success || !userId) {
-    return NextResponse.json(
-      { error: "Unauthorized", message: userId },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
     const { searchParams } = new URL(req.url);
@@ -125,6 +98,34 @@ export async function DELETE(req: Request) {
   }
 }
 
+export async function PUT(req: Request) {
+  const { success, userId } = await getUserSession();
+
+  if (!success || !userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const body = await req.json();
+    const { movieId, status } = body;
+
+    const UpdateBookmark = await UpdateBookMark(
+      userId,
+      Number(movieId),
+      status,
+    );
+    if (!UpdateBookmark) {
+      return NextResponse.json({ success: false });
+    }
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("PUT /api/bookmark error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
 export async function fetchIsBookMarked(userID: string, movieID: number) {
   const { data, error } = await supabaseClient
     .from("bookmark")
@@ -142,18 +143,23 @@ export async function fetchIsBookMarked(userID: string, movieID: number) {
 }
 
 export async function removeBookMark(userID: string, movieID: number) {
-  const { data, error } = await supabaseClient
-    .from("bookmark")
-    .delete()
-    .eq("user_id", userID)
-    .eq("movie_id", movieID);
+  try {
+    const { error } = await supabaseClient
+      .from("bookmark")
+      .delete()
+      .eq("user_id", userID)
+      .eq("movie_id", movieID);
 
-  if (error) {
-    console.error("Error removing bookmark:", error);
-    return false;
+    if (error) {
+      console.error("❌ Error removing bookmark:", error);
+      return { success: false };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("❌ Unexpected error:", err);
+    return { success: false };
   }
-
-  return true;
 }
 
 export async function addBookMark(
@@ -193,56 +199,30 @@ export async function addBookMark(
     return true;
   } catch (err) {
     console.error("❌ Add bookmark error:", err);
+    return { success: false };
   }
 }
 
-async function fetchStatusCount(userId: string) {
-  const { data, error } = await supabaseClient
-    .from("bookmark")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+export async function UpdateBookMark(
+  userID: string,
+  movieID: number,
+  status: string,
+) {
+  try {
+    const { data, error } = await supabaseClient
+      .from("bookmark")
+      .update({ status })
+      .eq("movie_id", movieID)
+      .eq("user_id", userID);
 
-  if (error) {
-    console.error(error);
-    return {};
+    if (error) {
+      console.error("❌ Supabase error:", error);
+      return { success: false };
+    }
+
+    return { success: true, data };
+  } catch (err) {
+    console.error("❌ update bookmark error:", err);
+    return { success: false };
   }
-
-  const counts: Record<string, number> = {};
-
-  data?.forEach((item) => {
-    counts[item.status] = (counts[item.status] || 0) + 1;
-  });
-
-  return counts;
-}
-
-export async function fetchNewBookmarks(userId: string) {
-  const { data, error } = await supabaseClient
-    .from("bookmark")
-    .select(
-      `
-        status,
-        created_at,
-        movies (
-          movie_id,
-          title,
-          overview,
-          poster_path,
-          backdrop_path,
-          type
-        )
-      `,
-    )
-    .range(0, 4)
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
-  if (error) {
-    console.error("Error fetching new bookmarks:", error);
-    return [];
-  }
-
-  // Cast safety structure
-  const formattedData = (data as unknown as BookmarkData[]) || [];
-  return formattedData;
 }
