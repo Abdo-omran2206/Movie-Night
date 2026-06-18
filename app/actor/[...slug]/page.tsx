@@ -97,7 +97,7 @@ export default async function ActorPage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <ActorDetailsClient />
+        <ActorDetailsClient data={data}/>
       </>
     );
   }

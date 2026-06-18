@@ -1,4 +1,4 @@
-import { fetchMovieDetails } from "@/lib/services/tmdb";
+import { fetchMovieDetails, getCollectionDetails } from "@/lib/services/tmdb";
 import { Metadata } from "next";
 import MovieDetailsClient from "../MovieDetailsClient";
 import { slugify } from "@/lib/slugify";
@@ -53,7 +53,16 @@ export default async function MoviePage({
   const id = decodeId(encodedId);
   if (!id) notFound();
   const data = await fetchMovieDetails(id);
+
   if (!data) notFound();
+
+  let collection = null;
+
+  if (data?.belongs_to_collection) {
+    collection = await getCollectionDetails(
+      data.belongs_to_collection.id.toString(),
+    );
+  }
 
   // If only the encoded ID is present, redirect to full slug URL
   if (slug.length === 1) {
@@ -81,9 +90,7 @@ export default async function MoviePage({
       "@type": "Movie",
       name: data.title,
       description: data.overview,
-      image: data.poster_path
-        ? `${posterUrl}${data.poster_path}`
-        : undefined,
+      image: data.poster_path ? `${posterUrl}${data.poster_path}` : undefined,
       datePublished: data.release_date,
       aggregateRating: {
         "@type": "AggregateRating",
@@ -99,7 +106,7 @@ export default async function MoviePage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <MovieDetailsClient />
+        <MovieDetailsClient id={id} hashId={encodedId} data={data} collection={collection} />
       </>
     );
   }

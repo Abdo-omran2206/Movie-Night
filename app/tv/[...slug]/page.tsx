@@ -111,7 +111,7 @@ export default async function TvPage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <TvDetailsClient />
+        <TvDetailsClient id={id} hashId={encodedId} data={data}/>
       </>
     );
   }

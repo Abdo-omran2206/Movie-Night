@@ -1,79 +1,50 @@
-"use client";
-import Footer from "@/components/ui/Footer";
-import Navbar from "@/components/ui/Navbar";
+import CastClient from "../CastClient";
 import { fetchMovieDetails } from "@/lib/services/tmdb";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import CastList from "@/components/cards/CastCard";
-import LoadingModel from "@/components/models/LoadingModel";
-import Link from "next/link";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { decodeId } from "@/lib/hash";
-import { MovieDetail } from "@/constant/types";
+import { siteUrl } from "@/constant/main";
 
-export default function MovieCastPage() {
-  const [data, setData] = useState<MovieDetail | null>(null);
-  const { id: encodedId } = useParams<{ id: string }>();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id: encodedId } = await params;
+
   const id = decodeId(encodedId);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadData() {
-      if (!id) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const res = await fetchMovieDetails(id);
-        setData(res);
-        if (res) {
-          document.title = `Full Cast - ${res.title} - Movie Night`;
-        }
-      } catch (error) {
-        console.error("Failed to fetch movie details:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, [id]);
-  if (loading) {
-    return <LoadingModel message="Loading Cast Information..." />;
-  }
+  if (!id) return { title: "Cast Not Found" };
 
-  if (!data) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white text-xl">Movie not found.</p>
-        <Link href="/" className="text-red-500 hover:underline mt-4">
-          Back to Home
-        </Link>
-      </div>
-    );
-  }
+  const movie = await fetchMovieDetails(id);
+
+  if (!movie) return { title: "Cast Not Found" };
+
+  return {
+    title: `${movie.title} Cast & Actors`,
+    description: `Full cast list of ${movie.title}`,
+    alternates: {
+      canonical: `${siteUrl}/movie/cast/${encodedId}`,
+    },
+  };
+}
+
+export default async function CastPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id: encodedId } = await params;
+
+  const id = decodeId(encodedId);
+
+  if (!id) notFound();
+
+  const movie = await fetchMovieDetails(id);
+  if (!movie) notFound();
+
 
   return (
-    <>
-      <Navbar />
-      <main className="min-h-screen bg-black text-white py-20 px-4 md:px-10 lg:px-20">
-        <div className="container mx-auto">
-          <div className="mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">Full Cast</h1>
-            <div className="flex items-center gap-4 text-gray-400">
-              <h2 className="text-2xl font-semibold text-red-600">
-                {data.title}
-              </h2>
-              <span>({data.release_date.split("-")[0]})</span>
-            </div>
-            <div className="w-32 h-1.5 bg-red-600 rounded-full mt-6" />
-          </div>
-
-          <div className="bg-neutral-900/20 p-8 rounded-3xl ring-1 ring-white/5">
-            <CastList cast={data.credits?.cast || []} navig="movie" />
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+    <CastClient data={movie} />
   );
 }

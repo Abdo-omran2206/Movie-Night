@@ -1,8 +1,6 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
-import { useState } from "react";
 import generateMovieAvatar from "../../lib/generateMovieAvatar";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
@@ -15,17 +13,14 @@ type Props = {
 };
 
 function MovieImage({ item }: { item: MovieSummary }) {
-  const [imgError, setImgError] = useState(false);
-
   const isTv = !item.title && !!item.name;
   const originalTitle = isTv ? item.name : item.original_title;
 
   const fallbackAvatar = generateMovieAvatar(originalTitle || "Unknown");
 
-  const imageSrc =
-    !imgError && item.poster_path
-      ? posterUrl + item.poster_path
-      : fallbackAvatar;
+  const imageSrc = item.poster_path
+    ? posterUrl + item.poster_path
+    : fallbackAvatar;
 
   return (
     <Image
@@ -34,7 +29,6 @@ function MovieImage({ item }: { item: MovieSummary }) {
       fill
       sizes="(max-width:768px) 50vw, (max-width:1200px) 33vw, 16vw"
       className="object-cover"
-      onError={() => setImgError(true)}
     />
   );
 }
@@ -53,8 +47,12 @@ export default function MovieMiniCard({ movies, limit }: Props) {
           const isTv = !item.title && !!item.name;
           const title = isTv ? item.name : item.title;
           const originalTitle = isTv ? item.name : item.original_title;
-          const year = item.release_date ? item.release_date.split("-")[0] : item.first_air_date ? item.first_air_date.split("-")[0] : "";
-          
+          const year = item.release_date
+            ? item.release_date.split("-")[0]
+            : item.first_air_date
+              ? item.first_air_date.split("-")[0]
+              : "";
+
           const slug = slugify(`${title}-${year}`);
 
           const href = isTv

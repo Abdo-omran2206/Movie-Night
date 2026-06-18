@@ -1,13 +1,8 @@
-"use client";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import MovieMiniCard from "@/components/cards/MovieMiniCard";
-import LoadingModel from "@/components/models/LoadingModel";
-import { decodeId } from "@/lib/hash";
 import { profileUrl } from "@/constant/main";
 import { ActorDetail, MovieSummary } from "@/constant/types";
 
@@ -20,37 +15,14 @@ import {
   FaImdb,
 } from "react-icons/fa6";
 import { SiWikidata } from "react-icons/si";
-
-export default function ActorDetailsClient() {
-  const [data, setData] = useState<ActorDetail | null>(null);
-  const params = useParams();
-  const slug = params?.slug;
-  const slugArray = Array.isArray(slug) ? slug : [slug as string];
-  const encodedId = slugArray[0];
-  const idStr = decodeId(encodedId);
-  const id = idStr ? idStr : ""; // Use empty string if decoding fails
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      try {
-        const resp = await fetch(`/api/actor/${id}`);
-        const res = await resp.json();
-        setData(res);
-      } catch (error) {
-        console.error("Failed to fetch actor details:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, [id]);
-
-  if (loading) {
-    return <LoadingModel message="Loading Actor Profile..." />;
-  }
-
+import generateMovieAvatar from "@/lib/generateMovieAvatar";
+type Props = {
+  data: ActorDetail;
+};
+export default function ActorDetailsClient({ data }: Props) {
+  const imageSrc = data?.profile_path
+    ? profileUrl + data.profile_path
+    : generateMovieAvatar(data.name || "Unknown");
   if (!data) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white">
@@ -72,11 +44,7 @@ export default function ActorDetailsClient() {
             <div className="w-full lg:w-1/3 xl:w-1/4">
               <div className="relative aspect-2/3 w-full max-w-[400px] mx-auto lg:mx-0 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 mb-8">
                 <Image
-                  src={
-                    data.profile_path
-                      ? `${profileUrl}${data.profile_path}`
-                      : "/no-avatar.png"
-                  }
+                  src={imageSrc}
                   alt={data.name}
                   fill
                   className="object-cover"

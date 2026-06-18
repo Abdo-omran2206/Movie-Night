@@ -1,24 +1,28 @@
-"use client";
 import Image from "next/image";
 import { Movie, MovieCardProps } from "@/constant/types";
 import { posterUrl } from "@/constant/main";
 import Link from "next/link";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { useState } from "react";
 import generateMovieAvatar from "../../lib/generateMovieAvatar";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
 
 export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
-  const [imgError, setImgError] = useState(false);
-
-  const mediaType = movie.media_type || (movie.first_air_date ? "tv" : movie.known_for_department ? "person" : "movie");
+  const mediaType =
+    movie.media_type ||
+    (movie.first_air_date
+      ? "tv"
+      : movie.known_for_department
+        ? "person"
+        : "movie");
 
   // Detect Types
   const isTv = mediaType === "tv";
   const isPers = mediaType === "person";
 
-  const title = isPers ? movie.name : (movie.title || movie.name || movie.original_title || "Unknown");
+  const title = isPers
+    ? movie.name
+    : movie.title || movie.name || movie.original_title || "Unknown";
 
   const date = isTv ? movie.first_air_date : movie.release_date;
   const routes: Record<string, string> = {
@@ -42,13 +46,12 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
 
   let imageSrc: string = fallbackAvatar;
 
-  if (!imgError) {
-    if (isPers && movie.profile_path) {
-      imageSrc = posterUrl + movie.profile_path;
-    } else if (movie.poster_path) {
-      imageSrc = posterUrl + movie.poster_path;
-    }
+  if (isPers && movie.profile_path) {
+    imageSrc = posterUrl + movie.profile_path;
+  } else if (movie.poster_path) {
+    imageSrc = posterUrl + movie.poster_path;
   }
+
 
   return (
     <Link
@@ -60,12 +63,10 @@ export default function MovieCard({ movie, size = "medium" }: MovieCardProps) {
       {/* Poster */}
       <div className="relative aspect-2/3 overflow-hidden rounded-2xl shadow-lg mb-3 ring-1 ring-white/10 transition-all duration-300">
         <Image
-          key={imgError ? "fallback" : "main"} // FIX: force remount after error
           src={imageSrc}
           alt={title || "Poster"}
           fill
           className="object-cover brightness-85 group-hover:brightness-105 transition-all duration-300"
-          onError={() => setImgError(true)}
           sizes="(max-width: 768px) 250px, 250px"
         />
       </div>

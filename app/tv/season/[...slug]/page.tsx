@@ -72,7 +72,7 @@ export default async function SeasonPage({
       permanentRedirect(`/tv/season/${encodedId}/${seasonNum}/${expectedSlug}`);
     }
 
-    return <SeasonDetailsClient />;
+    return <SeasonDetailsClient series={series} season={season} hashId={encodedId}/>;
   }
 
   notFound();

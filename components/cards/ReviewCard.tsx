@@ -1,3 +1,4 @@
+'use client'
 import { IoClose } from "react-icons/io5";
 import Image from "next/image";
 import { reviewUrl } from "@/constant/main";

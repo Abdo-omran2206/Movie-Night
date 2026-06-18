@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { FaRegCommentDots } from "react-icons/fa";
 import ReviewsCard from "../cards/ReviewCard";
