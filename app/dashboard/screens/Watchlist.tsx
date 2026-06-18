@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import DashboardMovieCard from "../cards/DashboardMovieCard";
+import DashboardMovieCard from "@/components/cards/DashboardMovieCard";
 import { FaHeart, FaHistory } from "react-icons/fa";
-import  { STATUS } from "@/constant/main";
+import { STATUS } from "@/constant/main";
 
 export default function Watchlist({ userId }: { userId: string }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,9 +14,7 @@ export default function Watchlist({ userId }: { userId: string }) {
     const fetchWatchlist = async () => {
       setLoading(true);
       try {
-        const url = userId
-          ? `/api/dashboard/watchlist?userId=${encodeURIComponent(userId)}`
-          : "/api/dashboard/watchlist";
+        const url = "/api/dashboard/watchlist";
         const res = await fetch(url);
         const json = await res.json();
         if (!res.ok) {
@@ -55,21 +53,21 @@ export default function Watchlist({ userId }: { userId: string }) {
       <div className="flex flex-wrap gap-2 mb-5 px-3 lg:p-0">
         {STATUS.length > 0 &&
           STATUS.map((status) => {
-        const Icon = status.icon;
-        return (
-          <button
-            key={status.name}
-            onClick={() => setFilter(status.name)}
-            className={`text-xs flex items-center gap-2 py-1 px-2 lg:py-3 lg:px-6 lg:text-md lg:justify-around hover:cursor-pointer rounded-lg transition-colors ${
-          filter === status.name
-            ? "bg-red-600 text-white"
-            : "bg-neutral-800 text-neutral-400 hover:bg-red-600 hover:text-white"
-            }`}
-          >
-            <Icon className="text-sm" />
-            {status.name}
-          </button>
-        );
+            const Icon = status.icon;
+            return (
+              <button
+                key={status.name}
+                onClick={() => setFilter(status.name)}
+                className={`text-xs flex items-center gap-2 py-1 px-2 lg:py-3 lg:px-6 lg:text-md lg:justify-around hover:cursor-pointer rounded-lg transition-colors ${
+                  filter === status.name
+                    ? "bg-red-600 text-white"
+                    : "bg-neutral-800 text-neutral-400 hover:bg-red-600 hover:text-white"
+                }`}
+              >
+                <Icon className="text-sm" />
+                {status.name}
+              </button>
+            );
           })}
       </div>
 
@@ -105,15 +103,17 @@ export default function Watchlist({ userId }: { userId: string }) {
       ) : (
         <div className="w-full flex flex-wrap gap-6">
           {bookmarks
-            .filter((bookmark) => filter === "All" || bookmark.status === filter)
+            .filter(
+              (bookmark) => filter === "All" || bookmark.status === filter,
+            )
             .map((bookmark) => (
               <div key={bookmark.created_at} className="w-full md:w-auto">
                 <DashboardMovieCard
                   {...bookmark.movies}
                   status={bookmark.status}
                 />
-            </div>
-          ))}
+              </div>
+            ))}
         </div>
       )}
     </div>

@@ -1,16 +1,11 @@
-"use client";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import CastList from "@/components/cards/CastCard";
 import MovieMiniCard from "@/components/cards/MovieMiniCard";
 import TvSeasonCard from "@/components/cards/TvSeasonCard";
-import LoadingModel from "@/components/models/LoadingModel";
 import generateMovieAvatar from "@/lib/generateMovieAvatar";
-import { decodeId } from "@/lib/hash";
 import { posterUrl, backdropUrl } from "@/constant/main";
 import { Season, TvDetail } from "../../constant/types";
 import { GenresShips, RatingStars, Ships } from "@/components/ships";
@@ -19,46 +14,16 @@ import TrailerButtonModel from "@/components/models/TrailerButtonModel";
 import BookMarkModel from "@/components/models/BookMarkModel";
 import ReviewsModal from "@/components/models/ReviewsModel";
 
-export default function TvDetailsClient() {
-  const params = useParams();
-  const slug = params?.slug;
-  const slugArray = Array.isArray(slug) ? slug : [slug as string];
-  const encodedId = slugArray[0];
-  const idStr = decodeId(encodedId);
-  const id = idStr ? idStr : ""; // Use empty string if decoding fails
+type Props = {
+  id: string;
+  hashId: string;
+  data: TvDetail;
+};
 
-  const [data, setData] = useState<TvDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [imgError, setImgError] = useState(false);
-
-
-  useEffect(() => {
-    async function loadData() {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const resData = await fetch(`/api/tv/${id}`);
-        const res = await resData.json();
-        setData(res);
-      } catch (error) {
-        console.error("Failed to fetch tv details:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, [id]);
-
-  const imageSrc =
-    !imgError && data?.poster_path
-      ? posterUrl + data?.poster_path
-      : data
-        ? generateMovieAvatar(data.name)
-        : "";
-
-  if (loading) {
-    return <LoadingModel message="Fetching TV Show Details..." />;
-  }
+export default function TvDetailsClient({ id, hashId, data }: Props) {
+  const imageSrc = data?.poster_path
+    ? posterUrl + data.poster_path
+    : generateMovieAvatar(data.name || "Unknown");
 
   if (!data) {
     return (
@@ -97,7 +62,6 @@ export default function TvDetailsClient() {
             <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-transparent h-1/3" />
             {/* Subtle solid-ish bottom layer to hide image edges */}
             <div className="absolute inset-0 bottom-0 left-0 right-0 backdrop-blur-xs" />
-
           </div>
 
           <div className="relative z-10 flex flex-col lg:flex-row container mx-auto px-4 lg:px-20 gap-6 lg:gap-10 min-h-[60vh] lg:min-h-screen items-center py-20 lg:py-0">
@@ -108,14 +72,17 @@ export default function TvDetailsClient() {
                 width={500}
                 height={750}
                 className="rounded-2xl shadow-2xl hover:scale-105 transition-all duration-200"
-                onError={() => setImgError(true)}
               />
             </div>
 
             <div className="flex flex-col gap-8 text-center lg:text-left">
               <div className="flex flex-col gap-4">
                 <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold text-white text-shadow-lg leading-tight">
-                  {data?.name ? data.name.length > 30 ? data.name.slice(0, 30) + "..." : data.name : "Untitled Show"}
+                  {data?.name
+                    ? data.name.length > 30
+                      ? data.name.slice(0, 30) + "..."
+                      : data.name
+                    : "Untitled Show"}
                 </h1>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start items-center text-sm md:text-base text-gray-200">
                   <Ships ship={formatDate(data?.first_air_date)} />
@@ -152,61 +119,81 @@ export default function TvDetailsClient() {
                   </p>
                 </div>
                 <div className="flex justify-center items-center lg:justify-start lg:items-center gap-5">
-                  <ReviewsModal id={id} type="tv"/>
-                  <BookMarkModel movieID={Number(idStr)}  title={data.name} overview={data.overview || ""} backdrop={data.backdrop_path || undefined} poster={data.poster_path || ""} type="tv"/>
+                  <ReviewsModal id={id} type="tv" />
+                  <BookMarkModel
+                    movieID={Number(id)}
+                    title={data.name}
+                    overview={data.overview || ""}
+                    backdrop={data.backdrop_path || undefined}
+                    poster={data.poster_path || ""}
+                    type="tv"
+                  />
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                  <TrailerButtonModel trailerKey={trailerKey}/>
+                  <TrailerButtonModel trailerKey={trailerKey} />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {data.videos?.results && data.videos?.results.length > 2 && data.videos.results.some(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) && (
-          <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/30">
-            <div className="container mx-auto px-0 md:px-4">
-              <div className="mb-6 md:mb-10">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
-                  Trailers & Clips
-                </h2>
-                <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
-              </div>
+        {data.videos?.results &&
+          data.videos?.results.length > 2 &&
+          data.videos.results.some(
+            (v) =>
+              v.site === "YouTube" &&
+              (v.type === "Trailer" || v.type === "Teaser"),
+          ) && (
+            <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/30">
+              <div className="container mx-auto px-0 md:px-4">
+                <div className="mb-6 md:mb-10">
+                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2">
+                    Trailers & Clips
+                  </h2>
+                  <div className="w-12 md:w-20 h-1.5 bg-red-600 rounded-full" />
+                </div>
 
-              <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 custom-scrollbar scroll-smooth">
-                {data.videos.results
-                  .filter((v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser"))
-                  .map((video) => (
-                    <div key={video.id} className="min-w-[240px] md:min-w-[450px] flex flex-col gap-3 group">
-                      <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-xl transition-all duration-300 group-hover:border-red-600/30 group-hover:scale-[1.02]">
-                        <iframe
-                          src={`https://www.youtube.com/embed/${video.key}?rel=0&modestbranding=1`}
-                          title={video.name}
-                          className="w-full h-full border-0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="px-1">
-                        <h3 className="text-sm md:text-base font-bold text-white line-clamp-1 group-hover:text-red-500 transition-colors duration-300">
-                          {video.name}
-                        </h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[9px] font-black uppercase tracking-wider text-red-600 bg-red-600/10 px-1.5 py-0.5 rounded">
-                            {video.type}
-                          </span>
-                          <span className="text-[11px] text-gray-500 font-medium">
-                            YouTube
-                          </span>
+                <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 custom-scrollbar scroll-smooth">
+                  {data.videos.results
+                    .filter(
+                      (v) =>
+                        v.site === "YouTube" &&
+                        (v.type === "Trailer" || v.type === "Teaser"),
+                    )
+                    .map((video) => (
+                      <div
+                        key={video.id}
+                        className="min-w-[240px] md:min-w-[450px] flex flex-col gap-3 group"
+                      >
+                        <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-xl transition-all duration-300 group-hover:border-red-600/30 group-hover:scale-[1.02]">
+                          <iframe
+                            src={`https://www.youtube.com/embed/${video.key}?rel=0&modestbranding=1`}
+                            title={video.name}
+                            className="w-full h-full border-0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="px-1">
+                          <h3 className="text-sm md:text-base font-bold text-white line-clamp-1 group-hover:text-red-500 transition-colors duration-300">
+                            {video.name}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[9px] font-black uppercase tracking-wider text-red-600 bg-red-600/10 px-1.5 py-0.5 rounded">
+                              {video.type}
+                            </span>
+                            <span className="text-[11px] text-gray-500 font-medium">
+                              YouTube
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                </div>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
         {data.seasons && data.seasons.length > 0 && (
           <section className="py-10 md:py-16 px-4 md:px-10 bg-zinc-950/50">
             <div className="container mx-auto px-0 md:px-4">
@@ -221,7 +208,7 @@ export default function TvDetailsClient() {
                   <TvSeasonCard
                     key={season.id}
                     season={season}
-                    seriesId={encodedId}
+                    seriesId={hashId}
                     seriesName={data.name}
                   />
                 ))}

@@ -1,17 +1,12 @@
-"use client";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { FaPlay } from "react-icons/fa6";
 import CastList from "@/components/cards/CastCard";
 import MovieMiniCard from "@/components/cards/MovieMiniCard";
-import LoadingModel from "@/components/models/LoadingModel";
 import generateMovieAvatar from "@/lib/generateMovieAvatar";
 import { slugify } from "@/lib/slugify";
-import { decodeId } from "@/lib/hash";
 import { posterUrl, backdropUrl } from "@/constant/main";
 import { Collection, MovieDetail, MovieSummary } from "@/constant/types";
 import BookMarkModel from "@/components/models/BookMarkModel";
@@ -20,49 +15,22 @@ import formatDate from "@/lib/formatDate";
 import { GenresShips, RatingStars, Ships } from "@/components/ships";
 import ReviewsModel from "@/components/models/ReviewsModel";
 
-export default function MovieDetailsClient() {
-  const params = useParams();
-  const slug = params?.slug;
-  const slugArray = Array.isArray(slug) ? slug : [slug as string];
-  const encodedId = slugArray[0];
-  const idStr = decodeId(encodedId);
-  const id = idStr ? idStr : ""; // Use empty string if decoding fails
+type Props = {
+  id: string;
+  hashId: string;
+  data: MovieDetail;
+  collection?: Collection | null;
+};
 
-  const [data, setData] = useState<MovieDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [imgError, setImgError] = useState(false);
-  const [collection, setCollection] = useState<Collection | null>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const resData = await fetch(`/api/movies/${id.toString()}`);
-        const res = await resData.json();
-        setData(res);
-        if (res?.belongs_to_collection) {
-          const collData = await fetch(
-            `/api/movies/collection/${res.belongs_to_collection.id.toString()}`,
-          );
-          const coll = await collData.json();
-          setCollection(coll);
-        }
-      } catch (error) {
-        console.error("Failed to fetch movie details:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, [id]);
-
-  const imageSrc =
-    !imgError && data?.poster_path
-      ? posterUrl + data?.poster_path
-      : data
-        ? generateMovieAvatar(data.title || data.original_title || "Unknown")
-        : "";
+export default async function MovieDetailsClient({
+  id,
+  hashId,
+  data,
+  collection,
+}: Props) {
+  const imageSrc = data?.poster_path
+    ? posterUrl + data.poster_path
+    : generateMovieAvatar(data.title || "Unknown");
 
   const isAvailable = data?.runtime && data.runtime > 0;
 
@@ -70,10 +38,6 @@ export default function MovieDetailsClient() {
     data?.videos?.results?.find(
       (v) => v.type === "Trailer" && v.site === "YouTube",
     )?.key || data?.videos?.results?.[0]?.key;
-
-  if (loading) {
-    return <LoadingModel message="Fetching Movie Details..." />;
-  }
 
   if (!data) {
     return (
@@ -117,7 +81,6 @@ export default function MovieDetailsClient() {
                 width={500}
                 height={750}
                 className="rounded-2xl shadow-2xl hover:scale-105 transition-all duration-200"
-                onError={() => setImgError(true)}
               />
             </div>
 
@@ -184,7 +147,7 @@ export default function MovieDetailsClient() {
                   <Link
                     href={
                       isAvailable
-                        ? `/movie/player/${encodedId}/${slugify(data?.title + "-" + (data?.release_date ? data.release_date.split("-")[0] : ""))}`
+                        ? `/movie/player/${hashId}/${slugify(data?.title + "-" + (data?.release_date ? data.release_date.split("-")[0] : ""))}`
                         : "#"
                     }
                     className="bg-white hover:bg-neutral-200 text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-lg relative overflow-hidden group"

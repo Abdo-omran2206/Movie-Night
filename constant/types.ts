@@ -445,3 +445,16 @@ export interface Review {
     avatar_path?: string;
   };
 };
+
+export interface BookmarkData {
+  status: string;
+  created_at: string;
+  movies: {
+    movie_id: number;
+    title: string;
+    overview: string;
+    poster_path: string | null;
+    backdrop_path: string | null;
+    type: string;
+  } | null;
+}

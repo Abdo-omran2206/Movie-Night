@@ -1,7 +1,5 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import generateMovieAvatar from "../../lib/generateMovieAvatar";
 import { slugify } from "../../lib/slugify";
 import { encodeId } from "../../lib/hash";
@@ -10,14 +8,11 @@ import { Cast, CastSectionProps } from "../../constant/types";
 
 // 👇 كل ممثل ليه حالته الخاصة
 function CastImage({ item }: { item: Cast }) {
-  const [imgError, setImgError] = useState(false);
-
   const fallbackAvatar = generateMovieAvatar(item.name);
-
-  const imageSrc =
-    !imgError && item.profile_path
-      ? posterUrl + item.profile_path
-      : fallbackAvatar;
+  
+  const imageSrc = item?.profile_path
+    ? `${posterUrl}${item.profile_path}`
+    : fallbackAvatar;
 
   return (
     <Image
@@ -26,12 +21,16 @@ function CastImage({ item }: { item: Cast }) {
       fill
       sizes="(max-width:768px) 50vw, (max-width:1200px) 33vw, 16vw"
       className="object-cover"
-      onError={() => setImgError(true)}
     />
   );
 }
 
-export default function CastList({ cast, limit, movieId, navig }: CastSectionProps) {
+export default function CastList({
+  cast,
+  limit,
+  movieId,
+  navig,
+}: CastSectionProps) {
   if (!cast || cast.length === 0) return <p>No cast available</p>;
 
   const displayCast = limit ? cast.slice(0, limit) : cast;

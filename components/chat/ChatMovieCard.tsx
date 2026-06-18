@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import generateMovieAvatar from "../../lib/generateMovieAvatar";
 import { slugify } from "../../lib/slugify";
@@ -11,7 +8,6 @@ import { posterUrl } from "@/constant/main";
 import { Movie } from "../../constant/types";
 
 export default function ChatMovieCard({ movie }: { movie: Movie }) {
-  const [imgError, setImgError] = useState(false);
 
   const isTv = movie.media_type === "tv" || movie.first_air_date;
   const originalTitle = movie.title || movie.name || movie.original_title || "Unknown";
@@ -23,7 +19,7 @@ export default function ChatMovieCard({ movie }: { movie: Movie }) {
   const href = `/${basePath}/${encodeId(movie.id)}/${slug}`;
 
   const fallbackAvatar = generateMovieAvatar(originalTitle);
-  const imageSrc = !imgError && movie.poster_path ? posterUrl + movie.poster_path : fallbackAvatar;
+  const imageSrc = movie.poster_path ? posterUrl + movie.poster_path : fallbackAvatar;
 
   return (
     <Link 
@@ -36,7 +32,6 @@ export default function ChatMovieCard({ movie }: { movie: Movie }) {
           alt={originalTitle}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          onError={() => setImgError(true)}
           sizes="(max-width: 768px) 140px, 160px"
         />
         {/* Gradient Overlay for Text Readability */}

@@ -1,43 +1,11 @@
-"use client";
-import { useEffect, useState } from "react";
-// Use Next API for fetching movies
 import MovieCard from "../cards/MovieCard";
-import { SectionSkeleton } from "../ui/Skeleton";
-import { Movie, SectionProps } from "../../constant/types";
+import { SectionProps } from "../../constant/types";
+import { fetchMovies } from "@/lib/services/tmdb";
 
-
-export default function Section({
-  endpoint,
-  title,
-}: SectionProps) {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadMovies() {
-      setLoading(true);
-      const language =
-        typeof window !== "undefined" ? navigator.language : "en-US";
-      try {
-        const res = await fetch(
-          `/api/movies?endpoint=${encodeURIComponent(endpoint)}&page=1&language=${encodeURIComponent(
-            language,
-          )}`,
-        );
-        const data = await res.json();
-        setMovies(data.results || []);
-      } catch (err) {
-        console.error("Section API error:", err);
-        setMovies([]);
-      }
-      setLoading(false);
-    }
-    loadMovies();
-  }, [endpoint]);
-
-  if (loading) return <SectionSkeleton />;
-  if (!movies.length) return null;
-
+export default async function Section({ endpoint, title }: SectionProps) {
+  const language = typeof window !== "undefined" ? navigator.language : "en-US";
+  const data = await fetchMovies(endpoint, 1, language);
+  const movies = await data.results
   return (
     <section className="py-4 md:py-8 px-2 sm:px-4 relative" id={title}>
       <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">

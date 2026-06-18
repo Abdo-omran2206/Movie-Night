@@ -1,7 +1,5 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { FaPlay, FaStar, FaClock } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
 import Navbar from "@/components/ui/Navbar";
@@ -11,61 +9,30 @@ import generateMovieAvatar from "@/lib/generateMovieAvatar";
 import { slugify } from "@/lib/slugify";
 import { Ships, RatingStars } from "@/components/ships";
 import CastList from "@/components/cards/CastCard";
-import { decodeId, encodeId } from "@/lib/hash";
+import { encodeId } from "@/lib/hash";
 import { posterUrl, backdropUrl } from "@/constant/main";
 import TrailerButtonModel from "@/components/models/TrailerButtonModel";
 import formatDate from "@/lib/formatDate";
-import { useParams } from "next/navigation";
-import LoadingModel from "@/components/models/LoadingModel";
 
-export default function SeasonDetailsClient() {
-  const params = useParams();
-  const slug = params?.slug;
-  const slugArray = Array.isArray(slug) ? slug : [slug as string];
-  const encodedId = slugArray[0];
-  const idStr = decodeId(encodedId);
-  const id = idStr ? idStr : ""; // Use empty string if decoding fails
-  const seasonNUM = slugArray[1];
-
-  const [loading, setLoading] = useState(true);
-  const [series, setSeries] = useState<TvDetail | null>(null);
-  const [season, setSeason] = useState<SeasonDetail | null>(null);
-  const [imgError, setImgError] = useState(false);
-
-  useEffect(() => {
-    async function loadData() {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const resData = await fetch(`/api/tv/${id}`);
-        const res = await resData.json();
-        setSeries(res);
-        const seasonData = await fetch(`/api/tv/${id}/${seasonNUM}`);
-        const returnSeason = await seasonData.json();
-        setSeason(returnSeason);
-      } catch (error) {
-        console.error("Failed to fetch tv details:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, []);
-
-  const imageSrc =
-    !imgError && season?.poster_path
-      ? posterUrl + season.poster_path
-      : generateMovieAvatar(season?.name || series?.name || "");
+type Props = {
+  series: TvDetail;
+  season: SeasonDetail;
+  hashId: string;
+};
+export default function SeasonDetailsClient({
+  series,
+  season,
+  hashId,
+}: Props) {
+  const imageSrc = season?.poster_path
+    ? posterUrl + season.poster_path
+    : generateMovieAvatar(season.name || "Unknown");
 
   // Extract Trailer Key
   const trailerKey =
     season?.videos?.results?.find(
       (v) => v.type === "Trailer" && v.site === "YouTube",
     )?.key || season?.videos?.results?.[0]?.key;
-
-  if (loading) {
-    return <LoadingModel message="Fetching TV Show Details..." />;
-  }
 
   if (!series || !season) {
     return (
@@ -120,7 +87,6 @@ export default function SeasonDetailsClient() {
                     alt={season.name}
                     fill
                     className="object-cover"
-                    onError={() => setImgError(true)}
                   />
                 </div>
               </div>
@@ -176,7 +142,7 @@ export default function SeasonDetailsClient() {
             <div className="grid grid-cols-1 gap-6">
               {season.episodes.map((episode: Episode) => (
                 <Link
-                  href={`/tv/player/${encodeId(series.id)}/${slugify(series.name + "-s" + season.season_number + "-e" + episode.episode_number)}/${season.season_number}/${episode.episode_number}`}
+                  href={`/tv/player/${hashId}/${slugify(series.name + "-s" + season.season_number + "-e" + episode.episode_number)}/${season.season_number}/${episode.episode_number}`}
                   key={episode.id}
                   className="group bg-neutral-900/40 border border-white/5 rounded-2xl overflow-hidden hover:bg-neutral-900/60 transition-all duration-300 flex flex-col md:flex-row cursor-pointer"
                 >

@@ -52,14 +52,8 @@ export default function PlayerClient() {
       setLoading(true);
       try {
         // Try fetching as a movie first via API route
-        let resp = await fetch(`/api/movies/${id}`);
-        let data = await resp.json();
-
-        // If no movie found, try fetching as a TV show via API route
-        if (!data || (!data.title && !data.name)) {
-          const tvResp = await fetch(`/api/tv/${id}`);
-          data = await tvResp.json();
-        }
+        const resp = await fetch(`/api/movies/${id}`);
+        const data = await resp.json();
 
         setMovie(data);
       } catch (err) {

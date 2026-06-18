@@ -1,3 +1,4 @@
+'use client'
 import { IoClose } from "react-icons/io5";
 import Image from "next/image";
 import { reviewUrl } from "@/constant/main";
@@ -117,7 +118,7 @@ function ReviewItem({ review }: { review: Review }) {
           width={40}
           height={40}
           unoptimized
-          className="rounded-full object-cover shrink-0"
+          className="rounded-full object-cover shrink-0 w-10 h-10"
         />
         <h4 className="font-bold tracking-widest text-sm sm:text-base truncate">
           {review.author}
