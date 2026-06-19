@@ -34,6 +34,10 @@ export default function Watchlist({ userId }: { userId: string }) {
     fetchWatchlist();
   }, [userId]);
 
+  const filteredBookmarks = bookmarks.filter(
+    (bookmark) => filter === "All" || bookmark.status === filter,
+  );
+
   return (
     <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-3xl px-3 py-8 lg:p-8 min-h-[400px]">
       <div className="flex items-center gap-3 mb-6 px-5 lg:p-0">
@@ -100,20 +104,24 @@ export default function Watchlist({ userId }: { userId: string }) {
             Save movies and shows to watch them later.
           </p>
         </div>
+      ) : filteredBookmarks.length === 0 ? (
+        // 🟡 No results for selected filter
+        <div className="flex flex-col items-center justify-center py-16 text-neutral-600 border-2 border-dashed border-neutral-800 rounded-xl">
+          <p>No results for &quot;{filter}&quot;</p>
+          <p className="text-sm mt-2 text-neutral-500">
+            Try another filter or add more items.
+          </p>
+        </div>
       ) : (
         <div className="w-full flex flex-wrap gap-6">
-          {bookmarks
-            .filter(
-              (bookmark) => filter === "All" || bookmark.status === filter,
-            )
-            .map((bookmark) => (
-              <div key={bookmark.created_at} className="w-full md:w-auto">
-                <DashboardMovieCard
-                  {...bookmark.movies}
-                  status={bookmark.status}
-                />
-              </div>
-            ))}
+          {filteredBookmarks.map((bookmark) => (
+            <div key={bookmark.created_at} className="w-full md:w-auto">
+              <DashboardMovieCard
+                {...bookmark.movies}
+                status={bookmark.status}
+              />
+            </div>
+          ))}
         </div>
       )}
     </div>
