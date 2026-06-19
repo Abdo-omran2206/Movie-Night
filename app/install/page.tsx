@@ -1,5 +1,3 @@
-"use client";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaDownload, FaArrowLeft } from "react-icons/fa";
@@ -7,35 +5,18 @@ import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import { supabaseClient } from "../../lib/supabase";
 
-export default function InstallPage() {
-  const [appConfig, setAppConfig] = useState<{
-    latest_app_version: string;
-    app_link_update: string;
-  } | null>(null);
+export default async function InstallPage() {
+  const { data, error } = await supabaseClient
+    .from("app_config")
+    .select("latest_app_version, app_link_update")
+    .single();
 
-  useEffect(() => {
-    async function getAppDetailsForDownload() {
-      const { data, error } = await supabaseClient
-        .from("app_config")
-        .select("latest_app_version, app_link_update")
-        .single();
-
-      if (error) {
-        console.log("Error fetching app config:", error);
-        return;
-      }
-
-      setAppConfig(data);
-    }
-
-    getAppDetailsForDownload();
-  }, []);
-
-  const handleInstall = () => {
-    if (appConfig?.app_link_update) {
-      window.open(appConfig.app_link_update, "_blank");
-    }
-  };
+  if (error) {
+    console.log("Error fetching app config:", error);
+    return;
+  }
+  const app_version = data.latest_app_version
+  const app_link = data.app_link_update
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -84,13 +65,13 @@ export default function InstallPage() {
             </p>
 
             <div className="flex flex-col gap-4 w-full sm:w-auto sm:min-w-[300px]">
-              <button
-                onClick={handleInstall}
+              <Link
+                href={app_link}
                 className="bg-red-600 hover:cursor-pointer hover:bg-red-700 text-white px-10 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-red-900/40"
               >
                 <FaDownload size={20} />
-                Install App {appConfig?.latest_app_version}
-              </button>
+                Install App {app_version}
+              </Link>
 
               <Link
                 href="/"
