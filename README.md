@@ -6,7 +6,7 @@
 
 **Movie Night** is a premium, high-performance web application designed for cinema lovers. Discover trending films, explore detailed movie analytics, and watch the latest trailers through a stunning, cinematic interface built with **Next.js 15**, **Tailwind CSS**, and the **TMDB API**. You can also install Movie Night as a web app for a faster, app-like experience from the dedicated install page.
 
-**Live Demo:** [https://mymovienight.vercel.app](https://mymovienight.vercel.app)
+**Live Demo:** [https://movienighthub.vercel.app/](https://movienighthub.vercel.app/)
 
 **📱 Mobile App:** Check out the React Native version of this project here: [Movie Night App](https://github.com/Abdo-omran2206/Movie-Night-App)
 
