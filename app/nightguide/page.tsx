@@ -110,7 +110,7 @@ export default function NightGuidePage() {
   return (
     <div className="flex flex-col h-screen bg-[#050505] text-white overflow-hidden selection:bg-red-500/30">
       {/* Header - Minimal and Flat */}
-      <div className="flex justify-between items-center px-4 md:px-8 py-4 shrink-0 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md z-10 w-full relative">
+      <div className="flex sticky top-0 justify-between items-center px-4 md:px-8 py-4 shrink-0 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md z-10 w-full">
         <div className="flex items-center gap-4">
           <Link 
             href="/" 

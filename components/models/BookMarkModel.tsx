@@ -29,6 +29,9 @@ export default function BookMarkModel({
   const userID = useUserStore((state) => state.user);
 
   useEffect(() => {
+    if(!userID?.id){
+      return;
+    }
     const fetchBookmarkStatus = async () => {
       const bookmarked = await fetchIsBookMarked(movieID);
       if (bookmarked.length > 0) {
@@ -40,7 +43,7 @@ export default function BookMarkModel({
     };
 
     fetchBookmarkStatus();
-  }, [movieID]);
+  }, [movieID,userID]);
 
   const handleToogleBookmark = async () => {
     setISWatchList(true);
@@ -89,8 +92,9 @@ export default function BookMarkModel({
   };
 
   if (!userID?.id) {
-    return <></>;
+    return;
   }
+  
   return (
     <div
       onClick={handleToogleBookmark}
@@ -113,6 +117,7 @@ export default function BookMarkModel({
         <WatchListModel
           setisModel={setISWatchList}
           setStatus={setStatus}
+          status={status}
           isBookmarked={isBookmarked}
           handleAddbookmark={handleAddbookmark}
           handleRemoveBookMark={handleRemoveBookMark}
@@ -126,6 +131,7 @@ export default function BookMarkModel({
 function WatchListModel({
   setisModel,
   setStatus,
+  status,
   isBookmarked,
   handleAddbookmark,
   handleRemoveBookMark,
@@ -133,6 +139,7 @@ function WatchListModel({
 }: {
   setisModel: Dispatch<SetStateAction<boolean>>;
   isBookmarked: boolean;
+  status: string;
   setStatus: Dispatch<SetStateAction<string>>;
   handleAddbookmark: (status?: string) => void;
   handleRemoveBookMark: (status?: string) => void;
@@ -171,7 +178,7 @@ function WatchListModel({
                 type="button"
                 onClick={async () => {
                   const status = opt.label;
-
+                                    
                   setSelection(status);
                   setStatus(status);
                   setisModel(false);
@@ -183,7 +190,7 @@ function WatchListModel({
                   }
                 }}
                 className={`w-full text-left px-4 py-3 rounded-md border transition-colors duration-150 flex items-center justify-between hover:cursor-pointer ${
-                  selection === opt.label
+                  status === opt.label
                     ? "bg-yellow-500/20 border-yellow-500 text-yellow-300"
                     : "bg-neutral-800 border-neutral-700 hover:bg-neutral-800/80"
                 }`}
@@ -194,7 +201,7 @@ function WatchListModel({
                   </span>
                   <span className="font-medium">{opt.label}</span>
                 </span>
-                {selection === opt.label ? (
+                {status === opt.label ? (
                   <span className="text-sm text-yellow-300">Selected</span>
                 ) : null}
               </button>
