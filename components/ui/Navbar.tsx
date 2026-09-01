@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MdMenu } from "react-icons/md";
 import { FaCompass, FaSearch } from "react-icons/fa";
+import { CgPlayList } from "react-icons/cg";
 import SideBarMenu from "./SideBarMenu";
 import Image from "next/image";
 import { categories, genres } from "@/constant/main";
@@ -32,7 +33,6 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
 
   useEffect(() => {
     async function syncSearch() {
@@ -188,6 +188,12 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+            <Link
+              href="/playlist"
+              className="text-neutral-400 hover:text-white transition-all duration-300 hover:scale-105 flex items-center gap-1.5 group/pl"
+            >
+              Playlist
+            </Link>
 
             <Link
               href="/nightguide"

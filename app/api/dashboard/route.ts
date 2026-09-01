@@ -1,40 +1,37 @@
 import { NextResponse } from "next/server";
-// import { fetchStatusCount, fetchNewBookmarks } from "@/lib/services/BookmarkDb";
-import { getUserSession } from "../lib/getUserSession";
-import { supabaseClient } from "@/lib/supabase";
 import { BookmarkData } from "@/constant/types";
+import { createSupabaseServerClient } from "../lib/supabase";
 
 export async function GET() {
-  const { success, userId } = await getUserSession();
+  const supabase = await createSupabaseServerClient();
 
-  if (!success || !userId) {
-    return NextResponse.json(
-      { error: "Unauthorized", message: userId },
-      { status: 401 },
-    );
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   try {
-    const status = await fetchStatusCount(userId);
-    const newBookmarks = await fetchNewBookmarks(userId);
-    if (!status || !newBookmarks) {
-      NextResponse.json({ sucsses: false }, { status: 401 });
-    }
+    const status = await fetchStatusCount(supabase, user.id);
+    const newBookmarks = await fetchNewBookmarks(supabase, user.id);
+
     return NextResponse.json({ status, newBookmarks });
   } catch (err) {
     console.error("/api/dashboard error:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
-async function fetchStatusCount(userId: string) {
-  const { data, error } = await supabaseClient
+async function fetchStatusCount(supabase: any, userId: string) {
+  const { data, error } = await supabase
     .from("bookmark")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .select("status")
+    .eq("user_id", userId);
 
   if (error) {
     console.error(error);
@@ -43,39 +40,36 @@ async function fetchStatusCount(userId: string) {
 
   const counts: Record<string, number> = {};
 
-  data?.forEach((item) => {
+  data?.forEach((item: any) => {
     counts[item.status] = (counts[item.status] || 0) + 1;
   });
 
   return counts;
 }
 
-export async function fetchNewBookmarks(userId: string) {
-  const { data, error } = await supabaseClient
+async function fetchNewBookmarks(supabase: any, userId: string) {
+  const { data, error } = await supabase
     .from("bookmark")
-    .select(
-      `
-        status,
-        created_at,
-        movies (
-          movie_id,
-          title,
-          overview,
-          poster_path,
-          backdrop_path,
-          type
-        )
-      `,
-    )
-    .range(0, 4)
+    .select(`
+      status,
+      created_at,
+      movies (
+        movie_id,
+        title,
+        overview,
+        poster_path,
+        backdrop_path,
+        type
+      )
+    `)
     .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(5);
+
   if (error) {
     console.error("Error fetching new bookmarks:", error);
     return [];
   }
 
-  // Cast safety structure
-  const formattedData = (data as unknown as BookmarkData[]) || [];
-  return formattedData;
+  return (data as unknown as BookmarkData[]) || [];
 }

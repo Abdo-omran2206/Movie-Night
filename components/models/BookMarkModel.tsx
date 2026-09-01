@@ -1,19 +1,19 @@
 "use client";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { FiTrash2 } from "react-icons/fi";
-import { FaPlay } from "react-icons/fa";
-import { MdOutlineAccessTimeFilled } from "react-icons/md";
-import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { useUserStore } from "@/store/useUserStore";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
+import { Bookmark } from "@/constant/types";
 import {
   fetchIsBookMarked,
   removeBookMark,
   addBookMark,
   UpdateBookMark,
 } from "@/lib/services/BookmarkManager";
-import { useUserStore } from "@/store/useUserStore";
-import { Bookmark } from "@/constant/types";
 import { toast } from "react-toastify";
+import { FaBookmark, FaPlay, FaRegBookmark, FaTimes } from "react-icons/fa";
+import { MdOutlineAccessTimeFilled } from "react-icons/md";
+import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { FiTrash2 } from "react-icons/fi";
+import { HiOutlineFilm } from "react-icons/hi";
 
 export default function BookMarkModel({
   movieID,
@@ -23,84 +23,82 @@ export default function BookMarkModel({
   poster,
   type,
 }: Bookmark) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isWatshList, setISWatchList] = useState(false);
+  const [isBookmark, setBookmark] = useState(false);
+  const [isBookmarkModel, setIsBookmarkModel] = useState(false);
   const [status, setStatus] = useState("");
   const userID = useUserStore((state) => state.user);
 
   useEffect(() => {
-    if(!userID?.id){
-      return;
-    }
-    const fetchBookmarkStatus = async () => {
+    if (!userID?.id) return;
+
+    const fetchStatus = async () => {
       const bookmarked = await fetchIsBookMarked(movieID);
       if (bookmarked.length > 0) {
-        setIsBookmarked(true);
+        setBookmark(true);
         setStatus(bookmarked[0].status);
       } else {
-        setIsBookmarked(false);
+        setBookmark(false);
+        setStatus("");
       }
     };
 
-    fetchBookmarkStatus();
-  }, [movieID,userID]);
+    fetchStatus();
+  }, [movieID, userID]);
 
-  const handleToogleBookmark = async () => {
-    setISWatchList(true);
+  const handleToggleBookmark = () => {
+    setIsBookmarkModel(true);
   };
 
-  const handleRemoveBookMark = async () => {
-    const isbookmarkremoved = await removeBookMark(movieID);
-    if (isbookmarkremoved.success) {
-      toast.success("Removed from bookmarks 🗑");
-      setIsBookmarked(false);
-      return;
+  const handleRemoveFromBookmark = async () => {
+    const result = await removeBookMark(movieID);
+    if (result.success) {
+      toast.success("Removed from Bookmark 🗑");
+      setBookmark(false);
+      setStatus("");
     } else {
-      toast.error("Failed to remove bookmark ❌");
+      toast.error("Failed to remove ❌");
     }
   };
 
-  const handleUpdateBookMark = async (statusParam?: string) => {
-    const finalStatus = statusParam ?? status;
-    const updateBookMark = await UpdateBookMark(movieID, finalStatus);
-    if (updateBookMark.success) {
-      toast.success(`Bookmark updated to ${finalStatus} 🎬`);
-      setIsBookmarked(true);
-      return;
+  const handleUpdateBookmark = async (newStatus: string) => {
+    const result = await UpdateBookMark(movieID, newStatus);
+    if (result.success) {
+      toast.success(`Bookmark updated to "${newStatus}" 🎬`);
+      setBookmark(true);
+      setStatus(newStatus);
     } else {
-      toast.error("Failed to update bookmark ❌");
+      toast.error("Failed to update ❌");
     }
   };
 
-  const handleAddbookmark = async (statusParam?: string) => {
-    const finalStatus = statusParam ?? status;
-    const newbookmark = await addBookMark(
+  const handleAddToBookmark = async (newStatus: string) => {
+    const result = await addBookMark(
       movieID,
       title,
       overview,
       backdrop || "",
       poster,
       type,
-      finalStatus,
+      newStatus
     );
-    if (newbookmark.success) {
-      toast.success("Added to bookmarks ✅");
-      setIsBookmarked(true);
+    if (result.success) {
+      toast.success(`Added to Bookmark as "${newStatus}" ✅`);
+      setBookmark(true);
+      setStatus(newStatus);
     } else {
-      toast.error("Failed to add bookmark ❌");
+      toast.error("Failed to add ❌");
     }
   };
 
-  if (!userID?.id) {
-    return;
-  }
-  
+  if (!userID?.id) return null;
+
   return (
     <div
-      onClick={handleToogleBookmark}
+      onClick={handleToggleBookmark}
       className="flex justify-center items-center"
     >
-      {isBookmarked ? (
+      <div className="relative group">
+        {isBookmark ? (
         <FaBookmark
           size={30}
           color="#ffff00"
@@ -113,139 +111,387 @@ export default function BookMarkModel({
           className="flex hover:scale-125 transition-all duration-100 hover:cursor-pointer"
         />
       )}
-      {isWatshList ? (
-        <WatchListModel
-          setisModel={setISWatchList}
-          setStatus={setStatus}
+
+        {/* Tooltip */}
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs px-2 py-1 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none border border-white/10">
+          {isBookmarkModel ? status || "In Bookmark" : "Add to Bookmark"}
+        </span>
+      </div>
+
+      {isBookmarkModel && (
+        <BookmarkModal
+          setIsOpen={setIsBookmarkModel}
           status={status}
-          isBookmarked={isBookmarked}
-          handleAddbookmark={handleAddbookmark}
-          handleRemoveBookMark={handleRemoveBookMark}
-          handleUpdateBookMark={handleUpdateBookMark}
+          setStatus={setStatus}
+          isBookmark={isBookmark}
+          setBookmark={setBookmark}
+          title={title}
+          handleAddToBookmark={handleAddToBookmark}
+          handleRemoveFromBookmark={handleRemoveFromBookmark}
+          handleUpdateBookmark={handleUpdateBookmark}
         />
-      ) : null}
+      )}
     </div>
   );
 }
 
-function WatchListModel({
-  setisModel,
-  setStatus,
+// ─── Status Options ──────────────────────────────────────────────────────────
+
+const STATUS_OPTIONS = [
+  {
+    icon: FaPlay,
+    label: "Watching",
+    color: "#4CAF50",
+    bgGlow: "rgba(76,175,80,0.15)",
+    borderActive: "#4CAF50",
+    description: "Currently watching",
+  },
+  {
+    icon: MdOutlineAccessTimeFilled,
+    label: "Watch Later",
+    color: "#2196F3",
+    bgGlow: "rgba(33,150,243,0.15)",
+    borderActive: "#2196F3",
+    description: "Add to queue",
+  },
+  {
+    icon: IoCheckmarkCircle,
+    label: "Completed",
+    color: "#9C27B0",
+    bgGlow: "rgba(156,39,176,0.15)",
+    borderActive: "#9C27B0",
+    description: "Finished watching",
+  },
+  {
+    icon: IoCloseCircle,
+    label: "Dropped",
+    color: "#F44336",
+    bgGlow: "rgba(244,67,54,0.15)",
+    borderActive: "#F44336",
+    description: "Stopped watching",
+  },
+];
+
+// ─── Modal Component ─────────────────────────────────────────────────────────
+
+function BookmarkModal({
+  setIsOpen,
   status,
-  isBookmarked,
-  handleAddbookmark,
-  handleRemoveBookMark,
-  handleUpdateBookMark,
+  setStatus,
+  isBookmark,
+  setBookmark,
+  title,
+  handleAddToBookmark,
+  handleRemoveFromBookmark,
+  handleUpdateBookmark,
 }: {
-  setisModel: Dispatch<SetStateAction<boolean>>;
-  isBookmarked: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   status: string;
   setStatus: Dispatch<SetStateAction<string>>;
-  handleAddbookmark: (status?: string) => void;
-  handleRemoveBookMark: (status?: string) => void;
-  handleUpdateBookMark: (status?: string) => void;
+  isBookmark: boolean;
+  setBookmark: Dispatch<SetStateAction<boolean>>;
+  title: string;
+  handleAddToBookmark: (status: string) => void;
+  handleRemoveFromBookmark: () => void;
+  handleUpdateBookmark: (status: string) => void;
 }) {
-  const [selection, setSelection] = useState<string | null>(null);
-  const options = [
-    { icon: FaPlay, label: "Watching", color: "#4CAF50" },
-    { icon: MdOutlineAccessTimeFilled, label: "Watch Later", color: "#2196F3" },
-    { icon: IoCheckmarkCircle, label: "Completed", color: "#9C27B0" },
-    { icon: IoCloseCircle, label: "Dropped", color: "#F44336" },
-  ];
+  const [isClosing, setIsClosing] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState<string | null>(null);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => setIsOpen(false), 220);
+  };
+
+  const handleSelectStatus = async (newStatus: string) => {
+    setLoadingStatus(newStatus);
+    if (isBookmark) {
+      await handleUpdateBookmark(newStatus);
+    } else {
+      await handleAddToBookmark(newStatus);
+    }
+    setLoadingStatus(null);
+    handleClose();
+  };
+
+  const handleRemove = async () => {
+    setLoadingStatus("remove");
+    await handleRemoveFromBookmark();
+    setBookmark(false);
+    setStatus("");
+    setLoadingStatus(null);
+    handleClose();
+  };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={(e) => {
-        e.stopPropagation(); // ✅ يمنع وصول الكليك للـ parent
+        e.stopPropagation();
+        handleClose();
+      }}
+      style={{
+        background: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        animation: isClosing
+          ? "fadeOut 0.22s ease forwards"
+          : "fadeIn 0.22s ease forwards",
       }}
     >
+      {/* Modal Panel */}
       <div
         role="dialog"
         aria-modal="true"
-        className="w-full max-w-md bg-neutral-900 text-white rounded-xl shadow-xl p-6 mx-4"
+        aria-label="Bookmark options"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          animation: isClosing
+            ? "slideDown 0.22s ease forwards"
+            : "slideUp 0.22s ease forwards",
+        }}
+        className="w-full max-w-[420px] mx-4 rounded-2xl overflow-hidden shadow-2xl"
       >
-        <div className="flex items-center justify-center mb-4">
-          <h4 className="text-2xl text-center tracking-widest font-semibold">
-            Bookmark Options
-          </h4>
-        </div>
-
-        <ul className="grid gap-3">
-          {options.map((opt, idx) => (
-            <li key={idx}>
-              <button
-                type="button"
-                onClick={async () => {
-                  const status = opt.label;
-                                    
-                  setSelection(status);
-                  setStatus(status);
-                  setisModel(false);
-
-                  if (isBookmarked) {
-                    await handleUpdateBookMark(status);
-                  } else {
-                    await handleAddbookmark(status);
-                  }
-                }}
-                className={`w-full text-left px-4 py-3 rounded-md border transition-colors duration-150 flex items-center justify-between hover:cursor-pointer ${
-                  status === opt.label
-                    ? "bg-yellow-500/20 border-yellow-500 text-yellow-300"
-                    : "bg-neutral-800 border-neutral-700 hover:bg-neutral-800/80"
-                }`}
-              >
-                <span className="flex items-center gap-3">
-                  <span aria-hidden="true" className="text-xl">
-                    <opt.icon color={opt.color} />
-                  </span>
-                  <span className="font-medium">{opt.label}</span>
-                </span>
-                {status === opt.label ? (
-                  <span className="text-sm text-yellow-300">Selected</span>
-                ) : null}
-              </button>
-            </li>
-          ))}
-
-          {isBookmarked && (
-            <li>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelection("Delete");
-                  setisModel(false);
-                  handleRemoveBookMark();
-                }}
-                className="w-full text-left px-4 py-3 rounded-md border transition-all duration-200 flex items-center justify-between hover:cursor-pointer bg-red-500/10 border-red-500/30 hover:bg-red-500/20"
-              >
-                <span className="flex items-center gap-3">
-                  <FiTrash2 className="text-xl text-red-400" />
-                  <span className="font-medium text-red-400">
-                    Remove from Watchlist
-                  </span>
-                </span>
-
-                <span className="text-sm text-red-400/70">Delete</span>
-              </button>
-            </li>
-          )}
-        </ul>
-
-        <div className="mt-5 flex justify-end">
-          <button
-            type="button"
-            className="px-4 py-2 rounded-md border border-gray-700 hover:bg-gray-800 transition"
-            onClick={() => {
-              setSelection(null);
-              setisModel(false);
-              setStatus("");
+        {/* Glass card */}
+        <div
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(18,18,18,0.98) 0%, rgba(10,10,10,0.98) 100%)",
+            border: "1px solid rgba(229,9,20,0.18)",
+            boxShadow:
+              "0 0 0 1px rgba(255,255,255,0.04), 0 32px 64px rgba(0,0,0,0.8), 0 0 40px rgba(229,9,20,0.08)",
+          }}
+        >
+          {/* Header */}
+          <div
+            className="relative flex items-center justify-between px-6 pt-6 pb-4"
+            style={{
+              borderBottom: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            Cancel
-          </button>
+            {/* Red accent bar */}
+            <div
+              className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, #e50914, #ff4d4f, transparent)",
+              }}
+            />
+
+            <div className="flex items-center gap-3">
+              <div
+                className="flex items-center justify-center w-9 h-9 rounded-xl"
+                style={{
+                  background: "rgba(229,9,20,0.12)",
+                  border: "1px solid rgba(229,9,20,0.25)",
+                }}
+              >
+                <HiOutlineFilm className="text-red-500" size={18} />
+              </div>
+              <div>
+                <h2
+                  className="text-white font-bold tracking-wider text-lg leading-tight"
+                  style={{ fontFamily: "var(--font-bebas)" }}
+                >
+                  My Bookmark
+                </h2>
+                <p className="text-gray-400 text-xs mt-0.5 line-clamp-1 max-w-[200px]">
+                  {title}
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleClose}
+              aria-label="Close bookmark modal"
+              className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 hover:bg-white/10 hover:cursor-pointer"
+              style={{ color: "#888" }}
+            >
+              <FaTimes size={14} />
+            </button>
+          </div>
+
+          {/* Status label */}
+          <div className="px-6 pt-4 pb-2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              {isBookmark ? "Update Status" : "Choose Status"}
+            </p>
+          </div>
+
+          {/* Status Options */}
+          <ul className="px-6 pb-4 grid gap-2">
+            {STATUS_OPTIONS.map((opt) => {
+              const isSelected = status === opt.label;
+              const isLoading = loadingStatus === opt.label;
+
+              return (
+                <li key={opt.label}>
+                  <button
+                    type="button"
+                    id={`bookmark-status-${opt.label.toLowerCase().replace(" ", "-")}`}
+                    disabled={isLoading}
+                    onClick={() => handleSelectStatus(opt.label)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center justify-between hover:cursor-pointer group/btn relative overflow-hidden"
+                    style={{
+                      background: isSelected
+                        ? opt.bgGlow
+                        : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${
+                        isSelected
+                          ? opt.borderActive
+                          : "rgba(255,255,255,0.07)"
+                      }`,
+                      boxShadow: isSelected
+                        ? `0 0 16px ${opt.bgGlow}, inset 0 0 16px ${opt.bgGlow}`
+                        : "none",
+                    }}
+                  >
+                    {/* Hover shimmer */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 pointer-events-none"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)",
+                      }}
+                    />
+
+                    <span className="flex items-center gap-3 z-10">
+                      {/* Icon circle */}
+                      <span
+                        className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-transform duration-200 group-hover/btn:scale-110"
+                        style={{
+                          background: `${opt.bgGlow}`,
+                          border: `1px solid ${opt.color}33`,
+                        }}
+                      >
+                        {isLoading ? (
+                          <span
+                            className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin"
+                            style={{ borderColor: `${opt.color} transparent` }}
+                          />
+                        ) : (
+                          <opt.icon color={opt.color} size={15} />
+                        )}
+                      </span>
+
+                      <span className="flex flex-col">
+                        <span
+                          className="text-sm font-semibold leading-tight"
+                          style={{
+                            color: isSelected ? opt.color : "#e0e0e0",
+                          }}
+                        >
+                          {opt.label}
+                        </span>
+                        <span className="text-xs text-gray-500 leading-tight">
+                          {opt.description}
+                        </span>
+                      </span>
+                    </span>
+
+                    {/* Selected badge */}
+                    {isSelected && (
+                      <span
+                        className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 flex-shrink-0"
+                        style={{
+                          background: `${opt.color}22`,
+                          color: opt.color,
+                          border: `1px solid ${opt.color}44`,
+                        }}
+                      >
+                        Active
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+
+            {/* Remove Option — only when already in bookmark */}
+            {isBookmark && (
+              <li>
+                <button
+                  type="button"
+                  id="bookmark-remove-btn"
+                  disabled={loadingStatus === "remove"}
+                  onClick={handleRemove}
+                  className="w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 hover:cursor-pointer group/remove"
+                  style={{
+                    background: "rgba(229,9,20,0.06)",
+                    border: "1px solid rgba(229,9,20,0.2)",
+                  }}
+                >
+                  <span
+                    className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-transform duration-200 group-hover/remove:scale-110"
+                    style={{
+                      background: "rgba(229,9,20,0.1)",
+                      border: "1px solid rgba(229,9,20,0.3)",
+                    }}
+                  >
+                    {loadingStatus === "remove" ? (
+                      <span className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <FiTrash2 size={14} className="text-red-500" />
+                    )}
+                  </span>
+                  <span className="flex flex-col">
+                    <span className="text-sm font-semibold text-red-400 leading-tight">
+                      Remove from Bookmark
+                    </span>
+                    <span className="text-xs text-gray-500 leading-tight">
+                      Permanently remove this entry
+                    </span>
+                  </span>
+                </button>
+              </li>
+            )}
+          </ul>
+
+          {/* Footer */}
+          <div
+            className="px-6 py-4 flex items-center justify-between"
+            style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            <p className="text-xs text-gray-600">
+              {isBookmark
+                ? `Currently: `
+                : "Track what you're watching"}
+              {isBookmark && (
+                <span className="text-gray-400 font-medium">{status}</span>
+              )}
+            </p>
+            <button
+              type="button"
+              id="bookmark-cancel-btn"
+              onClick={handleClose}
+              className="px-4 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white transition-all duration-200 hover:bg-white/8 hover:cursor-pointer"
+              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Keyframe animations */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(24px) scale(0.96); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes slideDown {
+          from { opacity: 1; transform: translateY(0) scale(1); }
+          to { opacity: 0; transform: translateY(24px) scale(0.96); }
+        }
+      `}</style>
     </div>
   );
 }

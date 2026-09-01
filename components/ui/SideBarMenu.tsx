@@ -1,8 +1,10 @@
 import { IoClose, IoHome } from "react-icons/io5";
 import { FaDownload, FaRobot, FaInfoCircle, FaCompass } from "react-icons/fa";
+import { CgPlayList } from "react-icons/cg";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { categories, genres } from "@/constant/main";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function SideBarMenu({
   setIsMenuOpen,
@@ -10,6 +12,7 @@ export default function SideBarMenu({
   setIsMenuOpen: (isOpen: boolean) => void;
 }) {
   const [mounted, setMounted] = useState(false);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     // Trigger animation after mount
@@ -61,6 +64,14 @@ export default function SideBarMenu({
           >
             <FaCompass className="group-hover:scale-110 transition-transform" />
             <span>Explore</span>
+          </Link>
+          <Link
+            href="/playlist"
+            className="flex items-center gap-3 mb-4 hover:text-red-500 transition-colors group"
+            onClick={handleClose}
+          >
+            <CgPlayList size={24} className="group-hover:scale-110 transition-transform" />
+            <span>Playlists</span>
           </Link>
 
           <p className="text-gray-500 text-[10px] sm:text-xs font-bold tracking-widest mb-3 uppercase">

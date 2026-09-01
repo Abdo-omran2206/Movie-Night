@@ -14,6 +14,7 @@ import TrailerButtonModel from "@/components/models/TrailerButtonModel";
 import formatDate from "@/lib/formatDate";
 import { GenresShips, RatingStars, Ships } from "@/components/ships";
 import ReviewsModel from "@/components/models/ReviewsModel";
+import PlaylistModel from "@/components/models/PlayListModel";
 
 type Props = {
   id: string;
@@ -135,6 +136,14 @@ export default async function MovieDetailsClient({
                 <div className="flex justify-center items-center lg:justify-start lg:items-center gap-5">
                   <ReviewsModel id={id} type="movie" />
                   <BookMarkModel
+                    movieID={data.id}
+                    title={data.title}
+                    overview={data.overview}
+                    backdrop={data.backdrop_path || ""}
+                    poster={data.poster_path || ""}
+                    type="movie"
+                  />
+                  <PlaylistModel
                     movieID={data.id}
                     title={data.title}
                     overview={data.overview}

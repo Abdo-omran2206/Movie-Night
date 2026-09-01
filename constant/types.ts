@@ -392,7 +392,9 @@ export interface MovieMiniCardProps {
 
 export interface MovieCardProps {
   movie: Movie;
-  size?: "small"| "medium" | "large";
+  size?: "small" | "medium" | "large";
+  onRemove?: (movieId: number) => void;
+  removing?: boolean;
 }
 
 export interface MessageParserProps {
@@ -434,7 +436,7 @@ export interface DashboardMovieCardProps {
   poster_path: string | null;
   backdrop_path: string | null;
   type: string;
-  status:string;
+  status: string;
 }
 
 export interface Review {
@@ -444,7 +446,7 @@ export interface Review {
   author_details?: {
     avatar_path?: string;
   };
-};
+}
 
 export interface BookmarkData {
   status: string;
@@ -457,4 +459,24 @@ export interface BookmarkData {
     backdrop_path: string | null;
     type: string;
   } | null;
+}
+export type Visibility = "private" | "public" | "unlisted";
+
+export type Playlist = {
+  id: string;
+  name: string;
+  description?: string;
+  visibility: Visibility;
+  playlist_items?: { movie_id: number }[];
+};
+export interface PlaylistData {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string;
+  visibility: "public" | "private" | "unlisted";
+  slug: string;
+  share_token: string;
+  created_at: string;
+  updated_at: string;
 }

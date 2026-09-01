@@ -1,21 +1,21 @@
 import { NextResponse } from "next/server";
-import { supabaseClient } from "@/lib/supabase";
-import { getUserSession } from "../../lib/getUserSession";
+import { createSupabaseServerClient } from "../../lib/supabase";
 
 export async function GET() {
   try {
-    const { success, userId } = await getUserSession();
+    const supabase = await createSupabaseServerClient();
 
-    if (!success || !userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();    
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { data, error } = await supabaseClient
+    const { data, error } = await supabase
       .from("bookmark")
-      .select(`
+      .select(
+        `
         status,
         created_at,
         movies (
@@ -26,15 +26,16 @@ export async function GET() {
           backdrop_path,
           type
         )
-      `)
-      .eq("user_id", userId)
+      `,
+      )
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Error fetching watchlist:", error);
       return NextResponse.json(
         { error: error.message || "Failed to fetch" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -43,7 +44,7 @@ export async function GET() {
     console.error("/api/account/watchlist error:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

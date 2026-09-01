@@ -15,8 +15,11 @@ const genAI = new GoogleGenerativeAI(apiKey as string);
  * Models tried in order. On quota / rate-limit / 404 the next one is used.
  */
 const MODEL_PRIORITY = [
+  "gemini-3.6-flash",
   "gemini-2.5-flash",
   "gemini-2.5-flash-lite",
+  "gemini-2.5-pro",
+  "gemini-3.1-flash-lite",
   "gemini-1.5-flash",
 ];
 
@@ -45,6 +48,8 @@ RULES:
 - The year must be the correct release year
 - Be concise and engaging
 - Use emoji to keep it lively 🎉
+- If the user gives preferences, adapt recommendations accordingly
+- Mix between popular and hidden gems
 - NEVER include IDs, URLs, or technical data — just title and year
 - NEVER say "I can't find" or refuse to help — always provide recommendations
 
@@ -67,9 +72,15 @@ let conversationHistory: Content[] = [];
 //  Main AI Function (with model fallback)
 // ─────────────────────────────────────────────
 
-export async function askAI(prompt: string, history: Content[] = []): Promise<{ text: string, newHistory: Content[] }> {
+export async function askAI(
+  prompt: string,
+  history: Content[] = [],
+): Promise<{ text: string; newHistory: Content[] }> {
   if (!prompt.trim()) {
-    return { text: "Please ask me something about movies or TV shows! 🎬", newHistory: history };
+    return {
+      text: "Please ask me something about movies or TV shows! 🎬",
+      newHistory: history,
+    };
   }
 
   for (let i = 0; i < MODEL_PRIORITY.length; i++) {
@@ -81,7 +92,8 @@ export async function askAI(prompt: string, history: Content[] = []): Promise<{ 
 
       const model = genAI.getGenerativeModel({ model: modelName });
 
-      const historyToUse = history && history.length ? history : conversationHistory;
+      const historyToUse =
+        history && history.length ? history : conversationHistory;
 
       const chat = model.startChat({
         history: [
@@ -102,7 +114,11 @@ export async function askAI(prompt: string, history: Content[] = []): Promise<{ 
       const text = result.response.text();
 
       // Persist conversation
-      let updatedHistory = [...(history && history.length ? history : conversationHistory), { role: "user" as const, parts: [{ text: prompt }] }, { role: "model" as const, parts: [{ text }] }];
+      let updatedHistory = [
+        ...(history && history.length ? history : conversationHistory),
+        { role: "user" as const, parts: [{ text: prompt }] },
+        { role: "model" as const, parts: [{ text }] },
+      ];
       if (updatedHistory.length > MAX_HISTORY) {
         updatedHistory = updatedHistory.slice(-MAX_HISTORY);
       }
@@ -112,7 +128,10 @@ export async function askAI(prompt: string, history: Content[] = []): Promise<{ 
       return { text, newHistory: updatedHistory };
     } catch (error: unknown) {
       const err = error as { status?: number; message?: string };
-      console.warn(`[NightGuide] Model "${modelName}" failed:`, err?.message ?? error);
+      console.warn(
+        `[NightGuide] Model "${modelName}" failed:`,
+        err?.message ?? error,
+      );
 
       const isRetryable =
         err?.status === 429 ||
@@ -130,7 +149,10 @@ export async function askAI(prompt: string, history: Content[] = []): Promise<{ 
     }
   }
 
-  return { text: "⚠️ All models are currently unavailable. Please try again in a moment.", newHistory: history };
+  return {
+    text: "⚠️ All models are currently unavailable. Please try again in a moment.",
+    newHistory: history,
+  };
 }
 
 // Clear the stored conversation history
@@ -160,13 +182,19 @@ function handleError(error: { status?: number; message?: string }): string {
   if (error?.status === 429 || error?.message?.includes("quota")) {
     return "⚠️ All models are rate-limited right now. Please wait a moment and try again.";
   }
-  if (error?.message?.includes("fetch") || error?.message?.includes("network")) {
+  if (
+    error?.message?.includes("fetch") ||
+    error?.message?.includes("network")
+  ) {
     return "⚠️ Connection error. Please check your internet connection.";
   }
   if (error?.status === 401 || error?.message?.includes("API key")) {
     return "⚠️ Authentication error. Please check your API key.";
   }
-  if (error?.message?.includes("safety") || error?.message?.includes("blocked")) {
+  if (
+    error?.message?.includes("safety") ||
+    error?.message?.includes("blocked")
+  ) {
     return "⚠️ That request was blocked. Please try rephrasing your question.";
   }
   return "⚠️ Something went wrong. Please try again.";

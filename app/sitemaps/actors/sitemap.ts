@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetchMovies } from "../../../lib/services/tmdb";
-import { MovieSummary } from "../../../constant/types";
-import { slugify } from "../../../lib/slugify";
-import { encodeId } from "../../../lib/hash";
-import { siteUrl } from "../../../constant/main";
+import { fetchMovies } from "@/lib/services/tmdb";
+import { MovieSummary } from "@/constant/types";
+import { slugify } from "@/lib/slugify";
+import { encodeId } from "@/lib/hash";
+import { siteUrl } from "@/constant/main";
 
 async function getPopularActorIds() {
   const pages = [1, 2, 3, 4, 5];
@@ -11,28 +11,38 @@ async function getPopularActorIds() {
 
   const results = await Promise.all(
     endpoints.flatMap((endpoint) =>
-      pages.map((page) => fetchMovies(endpoint, page))
+      pages.map((page) => fetchMovies(endpoint, page).catch(() => ({ results: [] })))
     )
   );
 
-  const allActors = results.flatMap((res) => res.results);
-  const uniqueActors = Array.from(new Map(allActors.map((actor: MovieSummary) => [actor.id, actor])).values());
+  const allActors = results.flatMap((res) => res?.results || []);
+  const uniqueActors = Array.from(
+    new Map(allActors.filter((actor) => actor && actor.id).map((actor: MovieSummary) => [actor.id, actor])).values()
+  );
 
   return uniqueActors.map((actor: MovieSummary) => ({
     id: actor.id,
-    slug: slugify(actor.name || actor.original_name || "actor")
+    slug: slugify(actor.name || actor.original_name || "actor"),
   }));
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const actorIds = await getPopularActorIds();
+  try {
+    const actorIds = await getPopularActorIds();
 
-  const actorPages: MetadataRoute.Sitemap = actorIds.map(({ id, slug }: { id: number; slug: string }) => ({
-    url: `${siteUrl}/actor/${encodeId(id)}/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
+    const actorPages: MetadataRoute.Sitemap = actorIds.map(
+      ({ id, slug }: { id: number; slug: string }) => ({
+        url: `${siteUrl}/actor/${encodeId(id)}/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })
+    );
 
-  return actorPages;
+    return actorPages;
+  } catch (error) {
+    console.error("Error generating actors sitemap:", error);
+    return [];
+  }
 }
+

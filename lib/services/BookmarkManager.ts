@@ -2,7 +2,9 @@ import { BookmarkData } from "@/constant/types";
 
 export async function fetchStatusCount(): Promise<Record<string, number>> {
   try {
-    const res = await fetch(`/api/bookmark?action=count`);
+    const res = await fetch(`/api/bookmark?action=count`, {
+      credentials: "include",
+    });
     return await res.json();
   } catch (error) {
     console.error("Error fetching status count:", error);
@@ -12,7 +14,9 @@ export async function fetchStatusCount(): Promise<Record<string, number>> {
 
 export async function fetchNewBookmarks(): Promise<BookmarkData[]> {
   try {
-    const res = await fetch(`/api/bookmark?action=new`);
+    const res = await fetch(`/api/bookmark?action=new`, {
+      credentials: "include",
+    });
     return await res.json();
   } catch (error) {
     console.error("Error fetching new bookmarks:", error);
@@ -22,7 +26,9 @@ export async function fetchNewBookmarks(): Promise<BookmarkData[]> {
 
 export async function fetchIsBookMarked(movieID: number) {
   try {
-    const res = await fetch(`/api/bookmark?movieId=${movieID}`);
+    const res = await fetch(`/api/bookmark?movieId=${movieID}`, {
+      credentials: "include",
+    });
     return await res.json();
   } catch (error) {
     console.error("Error fetching is bookmarked:", error);
@@ -34,6 +40,7 @@ export async function removeBookMark(movieID: number) {
   try {
     const res = await fetch(`/api/bookmark?movieId=${movieID}`, {
       method: "DELETE",
+      credentials: "include",
     });
     return await res.json();
   } catch (error) {
@@ -54,6 +61,7 @@ export async function addBookMark(
   try {
     const data = await fetch("/api/bookmark", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         movieId: movieID,
@@ -75,6 +83,7 @@ export async function UpdateBookMark(movieID: number, status: string) {
   try {
     const data = await fetch("/api/bookmark", {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         movieId: movieID,

@@ -32,7 +32,7 @@ import { IoFlame, IoStar, IoCalendar, IoPlay } from "react-icons/io5";
 import { MdAnimation } from "react-icons/md";
 
 // ─── Site URL ────────────────────────────────────────────────────────────────
-export const siteUrl = "https://movienighthub.netlify.app";
+export const siteUrl = "https://movienighthub.vercel.app";
 
 // ─── TMDB Base URLs ───────────────────────────────────────────────────────────
 export const tmdbBaseUrl = "https://api.themoviedb.org/3";
