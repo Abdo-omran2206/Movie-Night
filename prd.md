@@ -1,375 +1,368 @@
 ## Product Requirements Document (PRD) – Movie Night Web App
 
+**Last Updated:** September 2026  
+**Version:** 2.0
+
+---
+
 ### 1. Overview
 
 - **Product name**: Movie Night
-- **Platform**: Web (Next.js App Router)
-- **Primary purpose**: Help movie and TV show lovers discover, explore, and watch content through a cinematic, Netflix-style interface powered by TMDB and third‑party streaming providers.
+- **Platform**: Web (Next.js 16 App Router) + Android APK + PWA
+- **Live URL**: `https://movienighthub.vercel.app`
+- **Primary purpose**: Help movie and TV show enthusiasts discover, explore, and watch content through a cinematic, Netflix-style interface powered by TMDB and third-party streaming providers.
 - **Target users**:
-  - Casual viewers who want quick recommendations and trending titles for movies and TV shows.
-  - Enthusiasts who care about cast, crew, analytics, and filmography.
+  - Casual viewers who want quick AI-powered recommendations and trending titles for movies and TV shows.
+  - Enthusiasts who care about cast, crew, analytics, ratings, and filmography.
   - Users who want to watch content directly via integrated streaming providers.
+  - Community users who want to create and share movie playlists with others.
+  - Mobile users who want a native Android APK or installable PWA experience.
+
+---
 
 ### 2. Objectives & Success Metrics
 
 - **Objectives**
-  - Provide a fast, delightful browsing and discovery experience for movies.
-  - Offer rich movie and actor detail pages with trailers, cast, recommendations, and filmography.
-  - Enable users to watch selected movies via embedded streaming providers.
+  - Provide a fast, delightful browsing and discovery experience for movies and TV shows.
+  - Offer rich movie/TV/actor detail pages with trailers, cast, recommendations, reviews, and filmography.
+  - Enable users to watch selected movies and TV episodes via embedded streaming providers.
+  - Allow users to manage personal watchlists (Watch Later, Watching, Completed, Dropped) and community playlists.
   - Maintain strong SEO and shareability to attract organic traffic.
+  - Provide an Android APK and PWA download to extend reach to mobile-native users.
+  - Allow remote maintenance control via Supabase without code deployments.
+
 - **Success metrics**
   - Time to first meaningful interaction (home page fully interactive) ≤ 3s on modern devices.
   - Search to result display ≤ 2s p95 under normal network conditions.
-  - ≥ 60% of sessions include at least one detail page view (`/movie/[hash]/[slug]` or `/actor/[hash]/[slug]`).
+  - ≥ 60% of sessions include at least one detail page view.
   - Bounce rate on movie detail pages < 40%.
-  - Uptime of external API calls (TMDB + streaming providers) ≥ 99% over a rolling 30 days.
+  - Uptime of external API calls (TMDB + Supabase) ≥ 99% over a rolling 30 days.
+  - NightGuide AI uptime ≥ 99% (enforced by model fallback chain).
+
+---
 
 ### 3. Core User Flows
 
 1. **Browse home & trending**
-  - User lands on `/`.
-  - Sees hero banner slider of trending movies (TMDB `/trending/movie/week`).
-    - Numeric genre ID: e.g. `/category/28` for Action via TMDB genres.
-  - Movies are listed in a grid with pagination via `?page={n}`.
-2. **View movie details**
-  - User visits `/movie/[hash]/[slug]`.
-  - App fetches movie details with appended `credits`, `similar`, `videos`, `recommendations`, `keywords`.
-  - Page shows poster/backdrop, title, release date, runtime, rating (with stars), genres, overview.
-  - User can:
-    - See cast carousel and open full cast page.
-    - See recommended and similar movies in mini-card carousels.
-    - Open trailer modal (YouTube) if available.
-    - Click “Watch Now” to navigate to `/movie/player/[hash]/[slug]` when `runtime > 0` (available).
-3. **View full cast**
-  - User clicks into `/movie/cast/[hash]` from movie detail.
-  - Page shows full cast list with actor thumbnails and roles.
-  - User can click an actor to open `/actor/[hash]/[slug]`.
-4. **View actor details & filmography**
-  - User visits `/actor/[hash]/[slug]`.
-  - App fetches actor details with `movie_credits` and `images`.
-  - Page shows profile image, personal info (department, birthday, place of birth), biography, and filmography grid.
-  - User can click any movie in filmography to open `/movie/[hash]/[slug]`.
-5. **Watch content via external streams**
-  - User clicks “Watch Now” on `/movie/[hash]/[slug]` or `/tv/[hash]/[slug]` and is navigated to `/movie/player/[hash]/[slug]` or `/tv/player/[hash]/[slug]?s=1&e=1`.
-  - App loads details and constructs an initial embed URL using TV Season/Episode routing or pure Movie ID routing through integrated streaming API tables.
-  - User sees video player iframe and a row of stream source buttons.
-  - User may switch streams without reloading the page; iframe `src` updates dynamically to selected provider URL via client-state mapping.
-  - For TV Shows, users can pick different Seasons and Episodes via a custom scrolling selector, which dynamically updates the player URL and browser history via `replaceState` without a hard reload.
-  - User watches content in fullscreen if supported by the provider.
-6. **Install the web app**
-  - User visits `/install` from the footer or a shared link.
-  - Page highlights the Movie Night experience and shows an install call-to-action.
-  - On click, user is directed to the latest app download/store URL configured via Supabase `app_config`.
-7. **Discover content via Explore Hub**
-  - User visits `/explore`.
-  - Sees a premium dual-pane layout with a sticky filter sidebar (or mobile drawer).
-  - User adjusts range sliders (Year, Rating), selects genres, or picks a region/language.
-  - Results update in real-time in a responsive grid.
-  - User can toggle between Media Types (Movies/TV) without losing filter context.
-  - User uses pagination to browse large filtered lists.
-8. **Ask NightGuide for Recommendations (AI Chat)**
-  - User clicks the floating "NightGuide" widget or navigates to `/nightguide`.
-  - User types a prompt (e.g., "Recommend a sci-fi movie from 2014").
-  - The Gemini AI processes the request using a custom prompt, formatted as text with `🎬 **Title** (Year)`.
-  - The client parses the AI response and invisibly invokes a local TMDB search.
-  - The interface seamlessly displays the text response alongside accurate `ChatMovieCard` visual components without AI ID hallucination.
-9. **User Authentication & Dashboard**
-  - User visits `/account/login` or `/account/signup`.
-  - User authenticates and logs in; session is saved.
-  - User is redirected to `/dashboard` containing customized statistics (Watchlist count, History count) and a personalized activity feed.
-  - User can toggle between **Profile Overview** and **Watchlist** tabs to manage their bookmarked movies and TV shows.
-10. **Browse & Add Bookmarks**
-  - Authenticated user can click bookmark/heart buttons on movie/TV cards or detail pages to save to "Watch Later" or mark as "Completed".
-  - Changes are persisted server-side via `/api/bookmark` and reflected in the user's dashboard.
-11. **Read Reviews**
-  - User browses to a movie or TV show detail page.
-  - User opens reviews modal or section to read reviews fetched directly from the TMDB API, rendered using the custom `ReviewCard` and `ReviewsModel`.
+   - User lands on `/`.
+   - Sees hero banner slider of trending movies (TMDB `/trending/movie/week`).
+   - IP geolocation (`ipwho.is` with fallbacks to `ipapi.co`, Cloudflare) determines regional section displayed (e.g., "Trending in Egypt").
+   - Scrolls through horizontally scrollable `MovieCard` sections configured via Supabase `sections_content`.
+
+2. **View movie or TV details**
+   - User visits `/movie/[hash]/[slug]` or `/tv/[hash]/[slug]`.
+   - App fetches TMDB details with `append_to_response=credits,similar,videos,recommendations,keywords`.
+   - Page shows poster/backdrop, title, release date, runtime, rating, genres, overview.
+   - User can open trailers, full cast, reviews, recommendations, and "Watch Now".
+
+3. **Watch content**
+   - User clicks "Watch Now" → navigated to `/movie/player/[hash]/[slug]` or `/tv/player/[hash]/[slug]/[season]/[episode]`.
+   - Streaming sources fetched from Supabase `stream_urls` table; multiple providers available.
+   - TV shows have an interactive season/episode picker — switching episodes updates URL via `replaceState` without page reload.
+
+4. **Search content**
+   - User types query; results appear on `/search?q=...&type=multi&page=1`.
+   - Supports movie, TV, actor, or multi-search mode.
+   - URL is fully synced — supports browser back/forward.
+
+5. **Explore Hub discovery**
+   - User visits `/explore`.
+   - Adjusts filters: Year range, Min Rating, Genres (multi-select), Region, Language, Sort Order.
+   - Results update live in a responsive grid.
+   - On mobile, "Refine" floating button opens a full-screen filter drawer.
+
+6. **Ask NightGuide AI**
+   - User opens floating NightGuide widget or navigates to `/nightguide`.
+   - Types a prompt (e.g., "Recommend a dark thriller from 2015").
+   - Gemini AI returns `🎬 **Title** (Year)` formatted recommendations.
+   - Client parses and fetches TMDB data to render `ChatMovieCard` — no hallucinated IDs.
+   - If the primary model (`gemini-2.5-flash`) fails, automatically falls back through `gemini-2.5-flash-lite` → `gemini-1.5-flash`.
+
+7. **User authentication & watchlist**
+   - User registers/logs in via `/account/signup` or `/account/login`.
+   - Dashboard at `/dashboard` shows stats, recent activity, and watchlist tabs.
+   - Bookmarks save via `/api/bookmark` with status: `Watch Later`, `Watching`, `Completed`, `Dropped`.
+   - DiceBear avatars auto-generated from username.
+
+8. **Community playlists**
+   - User browses public playlists at `/playlist`.
+   - Views a specific playlist at `/playlist/[id]`.
+   - Shares a playlist via `/playlist/share` unique URL.
+   - Authenticated users can create and manage personal playlists from `/dashboard`.
+
+9. **Install the app**
+   - User visits `/install`.
+   - **Primary option**: Downloads the Android `.apk` — version number and download URL are pulled from Supabase `app_config` (`latest_app_version`, `app_release_url`).
+   - **Alternative option**: Step-by-step PWA installation guides for iOS (Safari), Android Chrome, and Desktop (Chrome/Edge).
+
+10. **Maintenance mode**
+    - Admin sets `force_stop = true` and `platform = "website"` or `"all"` in Supabase `app_config`.
+    - Root layout detects this at render time and replaces the entire site with a branded maintenance screen.
+    - Screen shows: NightGuide mascot (animated float + pulse ring), shimmer headline, custom `force_message`, film strip bars.
+
+---
 
 ### 4. Functional Requirements
 
 #### 4.1 Navigation & Layout
 
-- **Navbar**
-  - Fixed at top on all primary pages.
-  - Contains:
-    - Menu toggle opening a sidebar with key navigation (Home, Trending, Categories, etc.).
-    - Logo linking back to `/`.
-    - Desktop navigation links with glassmorphic dropdowns for **Explore** and **Genres**.
-    - Search input integrated with `/search` route.
-  - On submit, empty or whitespace-only queries should be ignored.
-- **Sidebar menu**
-  - Provides quick navigation to:
-    - Home.
-    - Primary categories (Top Rated, Popular, Upcoming, Now Playing, Trending).
-    - Selected genre shortcuts (via TMDB genre IDs).
-- **Footer**
-  - Present on main content pages (home, search, details, category, actor, cast).
-  - Contains branding and basic links (e.g., attribution to TMDB) plus a prominent link to the install page (`/install`).
+- **Navbar** — fixed at top on all primary pages:
+  - Mobile hamburger → animated sidebar.
+  - Logo linking to `/`.
+  - Desktop nav links: Home, Discover (`/explore`), Night Guide (`/nightguide`), Install App (`/install`), About (`/about`).
+  - Glassmorphic dropdowns for **Explore** (Trending, Top Rated, Popular, Upcoming, Now Playing) and **Genres** (19 categories).
+  - Search input navigating to `/search`.
+- **Sidebar** — slide-in menu with key nav links and genre shortcuts.
+- **Footer** — present on main content pages; contains TMDB attribution, social media links, and `/install` link.
 
 #### 4.2 Home Page (`/`)
 
-- **Hero banner**
-  - Data source: TMDB `/trending/movie/week`.
-  - Carousel using Swiper:
-    - Autoplay with configurable delay (~5s).
-    - Navigation arrows and pagination dots.
-    - Infinite looping.
-  - Each slide:
-    - Background backdrop image.
-    - Movie title, release date, rating with star visualization, vote count.
-    - Genre chips based on TMDB genre IDs.
-    - Overview snippet with truncation.
-    - “View Movie” button linking to `/movie/[hash]/[slug]`.
-- **Sections**
-  - Configured from **Supabase** `sections_content` table based on the user's IP-detected region.
-  - Falls back to hardcoded default sections if no DB matching or failure:
-    - `/movie/top_rated`, `/movie/popular`, `/movie/upcoming`, `/movie/now_playing`, etc.
-  - Dynamically injects the current `{region}` and `{countryName}` (via `ipwho.is` Geolocation) into the "Trending in..." row (e.g., "Trending in Egypt").
-  - Each section:
-    - Title corresponding to category.
-    - Horizontal scrollable list of `MovieCard`s (`size="large"`).
-    - “View all” link to `/category/[categorySlug]`.
-  - While loading, show skeleton UI instead of empty state.
+- Hero banner Swiper carousel with autoplay (~5s), loop, arrows, pagination dots.
+- Sections dynamically loaded from Supabase `sections_content` filtered by user's detected region.
+- Each section: horizontal `MovieCard` list + "View all" link → `/category/[slug]`.
+- Geolocation: `ipwho.is` primary, `ipapi.co` + Cloudflare as fallbacks.
+- Skeleton loading states during data fetch.
 
 #### 4.3 Search (`/search`)
 
-- **Inputs & URL**
-  - Accepts `q` (string), `page` (optional, default 1), and `type` (optional, default "multi") via query parameters.
-  - If `q` is missing or empty, show prompt text instead of results.
-- **Behavior**
-  - On mount, parse `q`, `page`, and `type` from URL.
-  - Fetch results from TMDB via dynamic search endpoints (`search/multi`, `search/movie`, `search/tv`, `search/person`) based on the selected `type`.
-  - Sync component state with URL (including the active filter) so that back/forward navigation works.
-  - Auto-scroll to top on new searches or page changes.
-- **UI**
-  - Heading “RESULTS FOR "{query}"” with a pulsing result count and accent bar.
-  - Dropdown filter to switch between All Items, Movies, TV Shows, and Actors.
-  - Results shown as `MovieCard`s or `SearchItem`s in a responsive grid.
-  - Premium loading state and customized empty state message when no results are found.
-  - Pagination:
-    - Prev/Next buttons, disabled at boundaries, synced with URL.
-    - Current page and total pages displayed visually.
+- URL params: `q`, `page` (default 1), `type` (default `"multi"`).
+- Search modes: `multi`, `movie`, `tv`, `person`.
+- URL-synced state: back/forward navigation preserved.
+- Responsive grid of `MovieCard`s or `SearchItem`s.
+- Pagination with Prev/Next and page indicator.
 
 #### 4.4 Category & Genre (`/category/[category]`)
 
-- **Category resolution**
-  - Map known slugs to TMDB endpoints dynamically supporting `movie` or `tv` based on the URL `type` parameter:
-    - `trending` → `/trending/{mediaType}/week`
-    - `top_rated` → `/{mediaType}/top_rated`
-    - `popular`/`populer` → `/{mediaType}/popular`
-    - `upcoming` → `/movie/upcoming` or `/tv/on_the_air`
-    - `now_playing` → `/movie/now_playing` or `/tv/airing_today`
-  - Numeric `category` (all digits) is treated as genre ID:
-    - Endpoint: `/discover/{mediaType}?with_genres={id}`.
-    - Display title fetched dynamically from genre list based on the slug.
-  - For unknown slugs, default to `/{mediaType}/{slug}` and title derived from slug.
-- **Pagination & Filtering**
-  - Use `page` query parameter for infinite-like pagination, synced with the URL.
-  - Use `type` query parameter (`movie` or `tv`) to toggle media type.
-  - Update URL and smooth scroll to top on change.
-  - Display current and total pages with Prev/Next controls.
-- **UI**
-  - Page header with category/genre title, subtext, and a media type dropdown filter.
-  - Content displayed via `MovieCard` components (`size="medium"`).
-  - Premium Loading skeleton grid while fetching and tailored empty states.
+- Slug resolvers: `trending` → `/trending/{mediaType}/week`, `top_rated`, `popular`, `upcoming`, `now_playing`.
+- Numeric slug → genre ID → `/discover/{mediaType}?with_genres={id}`.
+- `type` query param toggles between `movie` and `tv`.
+- Pagination synced with URL, smooth scroll-to-top on change.
+- Media type dropdown filter in page header.
 
 #### 4.5 Movie Details (`/movie/[hash]/[slug]`)
 
-- **Data**
-  - Use single TMDB call with `append_to_response=credits,similar,videos,recommendations,keywords`.
-  - Handle null/undefined responses gracefully and show “Movie not found” with navigation back home.
-- **Hero section**
-  - Backdrop or poster as background with dark overlay.
-    - Foreground content:
-    - Poster card (with fallback avatar if no poster or image error).
-      - Title, formatted release date, runtime (in hours/minutes), rating (stars and numeric).
-      - Genre chips.
-      - Overview text with length-limited truncation.
-      - Primary CTA: “Watch Now” (or “Coming Soon” if runtime is undefined/0).
-      - Secondary CTA: “Watch Trailer” that opens a YouTube modal when a video key is available.
-- **Supporting sections**
-  - **Cast**:
-    - Horizontal list of top N cast (e.g., up to 11).
-    - Each card links to `/actor/[id]/[slug]`.
-    - Provide prominent “Full Cast” entry point to `/movie/cast/[id]`.
-  - **Recommendations & Similar Movies**:
-    - Each section displayed only if results are present.
-    - Uses `MovieMiniCard` grid for compact cards.
+- Single TMDB fetch with `append_to_response=credits,similar,videos,recommendations,keywords`.
+- Hero: backdrop/poster background, dark overlay, foreground content (poster, title, date, runtime, rating, genres, overview).
+- CTAs: "Watch Now" (`/movie/player/...`) or "Coming Soon" if `runtime === 0`; "Watch Trailer" modal.
+- Cast carousel (top N cast) + "Full Cast" link → `/movie/cast/[id]`.
+- Reviews modal via TMDB reviews API.
+- Recommendations and Similar Movies mini-card grids.
 
-#### 4.6 Full Cast (`/movie/cast/[hash]` and `/tv/cast/[hash]`)
+#### 4.6 TV Details (`/tv/[hash]/[slug]`)
 
-- **Data**
-  - Reuse `fetchMovieDetails` or `fetchTvDetails`, using `credits` from response.
-  - Fallback if no media or credits are found.
-- **UI**
-  - Title: “Full Cast”.
-  - Subtitle: movie title and year.
-  - Accent divider for visual structure.
-  - Cast list rendered in a scrollable container using `CastList`.
+- Same structure as movie details.
+- TV player navigates to `/tv/player/[hash]/[slug]/[season]/[episode]`.
+- Full season/episode structure; cast and crew breakdowns.
 
-#### 4.7 Actor Details (`/actor/[hash]/[slug]`)
+#### 4.7 Full Cast (`/movie/cast/[id]` and `/tv/cast/[id]`)
 
-- **Data**
-  - Use TMDB `/person/{id}` with appended `movie_credits,images`.
-  - Handle missing profile image with fallback asset.
-- **UI**
-  - Left column:
-    - Portrait image.
-    - Personal info card: known for, birthday, place of birth (when available).
-  - Right column:
-    - Actor name headline.
-    - Biography text (multi-line).
-  - Filmography section:
-    - Heading “Filmography”.
-    - `MovieMiniCard` grid from `movie_credits.cast`.
+- Fetches `credits` from TMDB.
+- `CastList` component in scrollable container.
+- Title, subtitle (media title + year), accent divider.
 
-#### 4.8 Player (`/movie/player/[hash]/[slug]` and `/tv/player/[hash]/[slug]?s=[season]&e=[episode]`)
+#### 4.8 Actor Details (`/actor/[hash]/[slug]`)
 
-- **Data**
-  - Fetch movie or TV details by ID for page title and context.
-  - Set browser document title dynamically, e.g., `Watch {title} S{season} E{episode} - Movie Night`.
-- **Streaming sources**
-  - Pull multiple streaming domains directly from the Supabase `stream_urls` table (e.g., vidsrc, multiembed).
-  - Construct stream URLs using predefined templates stored in the database, mapping `{id}`, `{s}`, and `{e}` slugs dynamically for TV shows.
-  - UI:
-    - Display helper text instructing users to switch sources if playback fails.
-    - Show an array of stream buttons mapped to database entries; highlight active stream.
-    - Update iframe `src` via React State rather than page refresh.
-    - TV Shows display an 'Episodes' controller grid featuring horizontal season selection and a responsive episode grid. Clicking an episode uses `window.history.replaceState` to update the URL flawlessly without triggering a page reload.
-  - Requirements:
-    - Iframe must take full width of container and 16:9 aspect ratio.
-    - `allowFullScreen` enabled.
-    - Failures from a given domain should not break the page; users can try other sources.
+- Fetches `/person/{id}?append_to_response=movie_credits,images`.
+- Profile portrait + personal info card (known for, birthday, birthplace).
+- Biography text.
+- Filmography grid via `MovieMiniCard` from `movie_credits.cast`.
 
-#### 4.9 NightGuide AI Assistant
+#### 4.9 Movie Player (`/movie/player/[hash]/[slug]`)
 
-- **UI & Integration**
-  - **Floating Widget**: A globally available floating chat button (hidden on the dedicated `/nightguide` page) providing quick recommendations.
-  - **Dedicated Page (`/nightguide`)**: A distraction-free, full-screen chat experience featuring premium aesthetics (e.g., glassmorphic inputs, slide-in animations).
-  - **Movie Cards via MessageParser**: AI output matching the pattern `(🎬|📺) **Title** (Year)` is parsed by the client. The client performs a local search against the TMDB API, rendering a compact `ChatMovieCard` in the chat to prevent broken links from AI hallucinated IDs.
-- **AI Logic & Fallbacks**
-  - Prompted strictly to return recommendations avoiding internal IDs, only referencing Titles and Years.
-  - Implements an automated capability fallback hierarchy: if `gemini-2.5-flash` is rate-limited or errors, it falls back to `gemini-2.5-flash-lite`, and then to `gemini-1.5-flash` to ensure uninterrupted service.
+- Fetches movie details; sets browser tab title dynamically.
+- Stream sources from Supabase `stream_urls` (`{id}` template substitution).
+- Provider buttons row; active source highlighted.
+- 16:9 iframe with `allowFullScreen`.
+- Source switching updates iframe `src` via React state — no page reload.
 
-#### 4.10 Explore Hub (`/explore`)
+#### 4.10 TV Player (`/tv/player/[hash]/[slug]/[season]/[episode]`)
 
-- **Discovery Flow**
-  - Fetches results from TMDB via the advanced `/discover` endpoints.
-  - Maintains state for multiple criteria: media type, release year, minimum rating, genre IDs, production region, and original language.
-- **Filter Controls**
-  - **Range Sliders**: Custom-styled for "Release Year" (1900 to current) and "Min Rating" (0 to 10).
-  - **Genre Selection**: Multi-select animated checkbox list fetching IDs from `GENRE_MAP`.
-  - **Dropdowns**: Premium selectors for **Region** and **Content Language** based on pre-vetted datasets.
-  - **Sorting**: Instant toggle between Popularity, Release Date, Vote Average, and Vote Count.
-- **Responsive Layout**
-  - **Desktop**: Dual-pane layout where the left column is a sticky glassmorphic aside and the right column is the results grid.
-  - **Mobile**: Floating "Refine" button at `z-index: 45` that triggers a slide-out drawer overlay containing all filter controls.
-  - Interactions: Media toggles and resets on mobile automatically dismiss the drawer for immediate feedback.
-- **Visual Feedback**
-  - "Live Database" status indicator with pulsing glow.
-  - Dynamic "Discovering {count} Titles" result counter.
-  - Grid responsiveness: 2 columns on mobile, scaling up to 5 on large desktops.
+- 4-part catch-all slug: `[encodedId]/[expectedSlug]/[season]/[episode]`.
+- Stream URLs use `{id}`, `{s}`, `{e}` template substitution from Supabase.
+- Interactive Episodes controller: horizontal season tabs + responsive episode grid.
+- Clicking an episode calls `window.history.replaceState` to update the URL without reload.
+- Browser title: `Watch {Title} S{season} E{episode} – Movie Night`.
 
-#### 4.11 User Authentication & Accounts
+#### 4.11 NightGuide AI Assistant
 
-- **Authentication Flow**
-  - Supports sign-up (`/account/signup`) and log-in (`/account/login`) pages.
-  - Authenticates users securely and maintains sessions via custom API routes (`/api/account/login`, `/api/account/signup`, `/api/account/logout`).
-- **DiceBear Avatars**
-  - Automatically generates customized visual user avatars based on their usernames using the DiceBear avatar collection/core library.
+- **Floating Widget**: Globally rendered via `DynamicNightGuide` (lazy-loaded, hidden on `/nightguide`).
+- **Full-screen Page** (`/nightguide`): Glassmorphic chat input, slide-in message animations, `ChatMovieCard` for visual results.
+- **AI Prompt**: Strictly constrained to output `(🎬|📺) **Title** (Year)` format; no TMDB IDs.
+- **MessageParser**: Regex parses AI output; triggers TMDB search; renders `ChatMovieCard` per match.
+- **Fallback Chain**: `gemini-2.5-flash` → `gemini-2.5-flash-lite` → `gemini-1.5-flash`.
 
-#### 4.12 User Dashboard & Watchlist
+#### 4.12 Explore Hub (`/explore`)
 
-- **Dashboard Page (`/dashboard`)**
-  - Provides a personalized dashboard for logged-in users.
-  - Contains navigation tabs for **Profile Overview** and **Watchlist**.
-  - Displays user stats like number of items in "Watch Later" (Watchlist) and "Completed" (History).
-  - Displays a "Recent Activity" feed of newly bookmarked movies/TV shows using a specialized `DashboardMovieCard` component.
-- **Watchlist Manager**
-  - Communicates with `/api/bookmark` to retrieve and modify user bookmarks.
-  - Allows items to be classified into states (e.g., "Watch Later", "Completed").
+- TMDB `/discover/{mediaType}` endpoint with live filter state.
+- Filter state: `mediaType`, `year`, `minRating`, `genreIds[]`, `region`, `language`, `sortBy`.
+- Desktop: dual-pane with sticky `<aside>` sidebar.
+- Mobile: floating "Refine" button at `z-45` → full-screen drawer overlay.
+- Closing the drawer auto-dismisses on media toggle or reset.
+- Result grid: 2 → 5 columns responsive, `MovieCard` components.
 
-#### 4.13 Reviews Component
+#### 4.13 User Authentication (`/account/login`, `/account/signup`)
 
-- **Visual Reviews**
-  - Detail pages integrate a reviews modal (`ReviewsModel`) powered by TMDB reviews API.
-  - Uses `ReviewCard` component to format review authors, content, ratings, and timestamps.
+- Custom API routes: `/api/account/login`, `/api/account/signup`, `/api/account/logout`.
+- Sessions stored via Supabase; protected routes check auth state.
+- DiceBear avatar generated client-side from username.
 
-### 5. Non‑Functional Requirements
+#### 4.14 User Dashboard (`/dashboard`)
+
+- Tabs: **Profile Overview** and **Watchlist**.
+- Stats: count of Watch Later, Watching, Completed, Dropped items.
+- Recent Activity feed using `DashboardMovieCard`.
+- Watchlist manager with status filter (All / Completed / Watching / Watch Later / Dropped).
+- **Playlist Management**: Create, edit, and delete personal playlists; toggle public/private.
+
+#### 4.15 Playlists (`/playlist`, `/playlist/[id]`, `/playlist/share`)
+
+- **Public Listing** (`/playlist`): Fetches all public playlists from `/api/dashboard/playlist/public`. Skeleton loading + empty state. `PlaylistCard` grid (3 columns on desktop).
+- **Playlist Detail** (`/playlist/[id]`): Full list of movies/TV shows in the playlist with their cards, title, description, visibility.
+- **Shareable Links** (`/playlist/share`): Unique sharable URL for any playlist; accessible without authentication.
+- **Dashboard API**: `/api/dashboard/playlist/` handles CRUD operations for authenticated users.
+
+#### 4.16 Install Page (`/install`)
+
+- **Android APK (Primary)**:
+  - Version number and download URL from Supabase `app_config.latest_app_version` and `app_config.app_release_url`.
+  - Displays Android version requirements, APK size specs.
+  - 3-step guide: Allow Unknown Sources → Download APK → Install.
+  - Direct download + direct link buttons.
+- **PWA Guides (Alternative)**:
+  - iOS Safari: step-by-step Share → Add to Home Screen.
+  - Android Chrome: Install prompt or address bar icon.
+  - Desktop Chrome/Edge: address bar install icon or `...` menu.
+- **Background**: `install_page_background.png` as full-screen fixed cinematic backdrop.
+- Supabase fetch wrapped in try/catch; falls back to `v1.0.0` and GitHub releases URL.
+
+#### 4.17 About Page (`/about`)
+
+- Metadata: `title`, `description`, `keywords`, canonical URL, OpenGraph, Twitter card.
+- JSON-LD: `AboutPage` + `Organization` schema.
+- Sections: Hero, Stats (1M+ movies, 500K+ actors, 25+ genres, 100% free), Mission, Features Grid (6 cards), How It Works (3 steps), Tech Stack badges, FAQ (4 items), Community (social media links), CTA.
+- Same cinematic background as install page.
+
+#### 4.18 Maintenance Mode (Root Layout)
+
+- Supabase `app_config` query on every root layout render.
+- Condition: `force_stop === true && (platform === "website" || platform === "all")`.
+- Wrapped in `try/catch`; network failures render the app normally (fail open).
+- Maintenance screen replaces entire site:
+  - Film strip bars (top & bottom).
+  - Floating NightGuide mascot (`NightGuide.png`) with CSS `float` animation + `pulse-ring` pseudo-element.
+  - MN logo (`favicon.png`) brand anchor at top.
+  - Shimmer text headline ("We'll Be Back Soon!").
+  - Dynamic `force_message` from Supabase.
+  - Animated live status badge.
+  - Footer with auto-updating copyright year.
+- `<meta name="robots" content="noindex, nofollow">` injected during maintenance.
+
+#### 4.19 SEO & Sitemaps
+
+- **`robots.ts`**: Disallows `/api/`, `/account/`, `/dashboard/`. References all 5 sitemap URLs.
+- **`/sitemaps/pages/sitemap.ts`**: Static pages including `/`, `/about`, `/install`, `/nightguide`, `/explore`, `/account/login`, `/account/signup`, all genre categories.
+- **`/sitemaps/movies/sitemap.ts`**: Dynamic TMDB popular movies → `/movie/player/[hash]/[slug]` URLs.
+- **`/sitemaps/tv/sitemap.ts`**: Dynamic TMDB popular TV → `/tv/player/[hash]/[slug]/1/1` URLs.
+- **`/sitemaps/actors/sitemap.ts`**: Dynamic TMDB popular persons → `/actor/[hash]/[slug]` URLs.
+- All sitemaps wrapped in `try/catch` for resilience.
+- **`public/sitemap.xml`**: Master sitemap index pointing to all sub-sitemaps on production domain.
+
+---
+
+### 5. Non-Functional Requirements
 
 #### 5.1 Performance
 
-- Use client-side data fetching only where required for interactivity (e.g. search, category, player, movie details, actors) and avoid unnecessary re-renders.
-- Use skeleton loaders and loading states for API-driven components.
-- Ensure images use optimized TMDB sizes (`w500`, `w1280`) and `next/image` for lazy loading and responsive behavior.
-- Horizontal and grid lists should scroll smoothly without jank on mid‑range mobile devices.
+- Server Components for all static/data-fetching pages; Client Components only for interactive features.
+- `next/image` for all TMDB images with `w500`/`w1280` sizes, lazy loading, responsive srcset.
+- Skeleton loaders on every async page/component.
+- Horizontal lists scroll smoothly on mid-range mobile (no jank).
+- `<link rel="preconnect">` for TMDB API and image CDN in root layout `<head>`.
 
 #### 5.2 Reliability & Error Handling
 
-- All TMDB requests must:
-  - Use the configured `NEXT_PUBLIC_API_KEY`.
-  - Guard against missing API keys and log errors in development.
-  - Fail gracefully with empty arrays or null values.
-- UI should:
-  - Avoid hard crashes on network errors.
-  - Show appropriate empty states (“Movie not found.”, “Actor not found.”, “No movies found for this category.”).
-  - Never show raw error objects to end users.
+- All TMDB requests use `NEXT_PUBLIC_API_KEY`; guard against missing key.
+- All Supabase calls use `try/catch`; maintenance mode fails open (renders normal app) if Supabase is unreachable.
+- Server Component async pages always return JSX with fallback values — never `undefined` (prevents React rendering crash).
+- Install page falls back to `"v1.0.0"` and GitHub releases URL if Supabase fetch fails.
+- UI never shows raw error objects to end users.
 
 #### 5.3 Security & Privacy
 
-- Do not expose any secrets other than required public TMDB/streaming keys prefixed with `NEXT_PUBLIC_`.
-- Never log API keys or full URLs with sensitive query parameters in production.
-- All external iframes must be from trusted, preconfigured domains.
-- Respect TMDB API usage terms, including attributions and branding.
+- No secrets exposed via non-`NEXT_PUBLIC_` environment variables to the client.
+- All external streaming iframes are from pre-configured trusted domains (Supabase `stream_urls`).
+- TMDB API usage complies with terms (attribution in footer, no excessive requests).
+- Auth sessions managed server-side via Supabase SSR.
 
 #### 5.4 SEO & Metadata
 
-- Use Next.js metadata API to configure:
-  - Site-wide title templates, descriptions, and keywords.
-  - OpenGraph and Twitter cards using primary icon/thumbnail.
-  - Robots configuration allowing indexing and rich previews.
-  - Sitemap and robots endpoints.
-- Provide structured data (JSON‑LD) for the website and site search action.
-- Ensure clean, keyword-rich URL patterns:
-  - `/`, `/search`, `/category/[category]`
-  - `/movie/[hash]/[slug]`, `/tv/[hash]/[slug]`, `/actor/[hash]/[slug]`
-  - `/movie/cast/[hash]`, `/movie/player/[hash]/[slug]`, `/tv/player/[hash]/[slug]?s=[season]&e=[episode]`
-  - `/nightguide` (AI assistant full screen)
-  - `/install` (web app install and download page)
+- Next.js Metadata API for per-page `title`, `description`, `keywords`, canonical, OpenGraph, Twitter.
+- JSON-LD structured data: `WebSite` + `SearchAction` (root), `AboutPage` + `Organization` (about), `MoviePage` (detail pages).
+- Segmented sitemaps for scalability; `robots.ts` prevents indexing of private routes.
+- Clean, keyword-rich URL patterns across all routes.
 
 #### 5.5 Accessibility & UX
 
-- Maintain sufficient color contrast for text and key UI elements against the dark background.
-- Ensure primary flows (search, navigation to details, playback) are usable with keyboard.
-- Provide focus states for interactive elements (buttons, links, tabs).
-- Avoid text-only indicators for crucial actions; combine icons and labels when space allows.
+- Sufficient color contrast (white/light gray text on near-black backgrounds).
+- Primary flows (search, navigation, playback) usable with keyboard.
+- Focus states on all interactive elements.
+- Icons paired with labels where space permits.
+- `selection:bg-red-600` text selection accent throughout for brand consistency.
+
+---
 
 ### 6. External Dependencies & Configuration
 
 - **APIs**
-  - TMDB REST API (`https://api.themoviedb.org/3`).
-  - Streaming providers via configurable environment variables or Supabase URL DB.
-  - IP Geolocation API (`https://ipwho.is/`) for regional dynamic content.
-  - Supabase database (`sections_content`, `stream_urls`, etc.).
-- **Environment variables (public)**
-  - `NEXT_PUBLIC_API_KEY` – TMDB API key.
-  - `NEXT_PUBLIC_STREAM_API`, `NEXT_PUBLIC_STREAM2_API`, `NEXT_PUBLIC_STREAM3_API`, `NEXT_PUBLIC_STREAM4_API`, `NEXT_PUBLIC_STREAM5_API` – base URLs for streaming providers.
-  - `NEXT_PUBLIC_GEMINI_API_KEY` – Google Generative AI API key for the NightGuide assistant.
-- **Libraries**
-  - Next.js, React, TypeScript.
-  - Axios / fetch for networking.
-  - Swiper for hero carousel.
-  - React Icons, react-loading-skeleton, DiceBear avatars for poster fallbacks.
+  - TMDB REST API (`https://api.themoviedb.org/3`)
+  - Google Generative AI — Gemini (`@google/generative-ai`)
+  - IP Geolocation: `ipwho.is` → `ipapi.co` → Cloudflare fallback chain
+  - Supabase: `app_config`, `sections_content`, `stream_urls`, `bookmarks`, `playlists`
 
-### 7. Out of Scope (for this version)
+- **Environment Variables**
+
+  | Variable | Purpose |
+  |---|---|
+  | `NEXT_PUBLIC_API_KEY` | TMDB API key |
+  | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+  | `NEXT_PUBLIC_SUPABASE_KEY` | Supabase anon key |
+  | `NEXT_PUBLIC_HASH_SALT` | hashids salt for obfuscating TMDB IDs in URLs |
+  | `NEXT_PUBLIC_GEMINI_API_KEY` | Google Gemini AI API key |
+
+- **Key Libraries**
+
+  | Package | Version | Purpose |
+  |---|---|---|
+  | `next` | 16.1.6 | Framework + App Router |
+  | `react` / `react-dom` | 19.2.3 | UI library |
+  | `tailwindcss` | ^4.3.1 | Styling |
+  | `@supabase/supabase-js` | ^2.97.0 | Database client |
+  | `@supabase/ssr` | ^0.12.5 | SSR auth helpers |
+  | `@google/generative-ai` | ^0.24.1 | Gemini AI |
+  | `swiper` | ^12.1.0 | Hero carousel |
+  | `zustand` | ^5.0.14 | Global state (NightGuide chat, UI) |
+  | `hashids` | ^2.3.0 | ID encoding/decoding for URLs |
+  | `slugify` | ^1.6.6 | Slug generation for SEO URLs |
+  | `react-icons` | ^5.5.0 | Icon library |
+  | `react-loading-skeleton` | ^3.5.0 | Skeleton loading states |
+  | `react-toastify` | ^11.1.0 | Toast notifications |
+  | `@dicebear/core` + `@dicebear/collection` | ^9.3.1 | User avatar generation |
+
+---
+
+### 7. Out of Scope (Current Version)
 
 - Multi-language/i18n.
-- Offline mode or advanced caching.
-- Social features (sharing, comments, ratings from users).
+- Offline mode or Service Worker caching.
+- Social features (user-to-user comments, ratings, following).
+- Push notifications.
 
-### 8. Future Enhancements (High‑Level)
+---
 
-- Integrate multi-language support and region-based content.
-- Offline caching for common lists and recently visited details.
-- Enhanced analytics (top searches, most-watched categories, engagement funnels).
+### 8. Future Enhancements
 
+- Multi-language support and region-based content localization (i18n).
+- Offline caching for recently visited pages and common lists.
+- Enhanced analytics dashboard (top searches, most-watched, engagement funnels).
+- Social features: follow users, comment on playlists, rating system.
+- Notification system for new episodes or upcoming releases.
