@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const setUserStore = useUserStore((state) => state.setUser);
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -26,16 +26,10 @@ export default function LoginPage() {
         alert("Login failed: " + (data.error || "Unknown error"));
         return;
       }
-      if (!data.session) {
-        alert("Session not found");
-        return;
-      }
-
       setUserStore({
         id: data.user?.id,
         email: data.user?.email,
         name: data.user?.user_metadata?.username || "User",
-        jwt: data.sesstion?.accaccess_token
       });
 
       router.push("/dashboard");

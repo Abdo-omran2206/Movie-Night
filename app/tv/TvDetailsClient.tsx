@@ -13,6 +13,7 @@ import formatDate from "@/lib/formatDate";
 import TrailerButtonModel from "@/components/models/TrailerButtonModel";
 import BookMarkModel from "@/components/models/BookMarkModel";
 import ReviewsModal from "@/components/models/ReviewsModel";
+import PlaylistModel from "@/components/models/PlayListModel";
 
 type Props = {
   id: string;
@@ -125,6 +126,14 @@ export default function TvDetailsClient({ id, hashId, data }: Props) {
                     title={data.name}
                     overview={data.overview || ""}
                     backdrop={data.backdrop_path || undefined}
+                    poster={data.poster_path || ""}
+                    type="tv"
+                  />
+                  <PlaylistModel
+                    movieID={Number(id)}
+                    title={data.name}
+                    overview={data.overview || ""}
+                    backdrop={data.backdrop_path || ""}
                     poster={data.poster_path || ""}
                     type="tv"
                   />
