@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 
 const NightGuide = dynamic(() => import("./NightGuide"), { 
   ssr: false,
@@ -7,5 +8,9 @@ const NightGuide = dynamic(() => import("./NightGuide"), {
 });
 
 export default function DynamicNightGuide() {
+  const pathname = usePathname();
+  if (pathname === "/maintenance") {
+    return null;
+  }
   return <NightGuide />;
 }
