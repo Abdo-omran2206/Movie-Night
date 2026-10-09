@@ -6,11 +6,13 @@
 
 **Movie Night** is a premium, high-performance web application for cinema lovers. Discover trending films, binge-worthy TV series, and explore actor filmographies through a stunning cinematic interface. Powered by **Next.js 16**, **React 19**, **Tailwind CSS 4**, **TMDB API**, and **Google Gemini AI** — installable as an Android APK or a Progressive Web App (PWA).
 
-**Live Site:** [https://movienighthub.vercel.app](https://movienighthub.vercel.app)
-
-**📱 Android App:** Available via the [Install Page](https://movienighthub.vercel.app/install) — download the native `.apk` or install as a PWA.
-
-**📱 React Native Version:** [Movie Night App](https://github.com/Abdo-omran2206/Movie-Night-App)
+<p align="center">
+  <a href="https://github.com/MovieNightHQ/Movie-Night-App"><strong>📱 Mobile</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/MovieNightHQ/Movie-Night-Desktop"><strong>🖥️ Desktop</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/MovieNightHQ"><strong>🏠 Organization</strong></a>
+</p>
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
@@ -19,13 +21,23 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![Gemini AI](https://img.shields.io/badge/Gemini_AI-NightGuide-4285F4?style=for-the-badge&logo=google)](https://ai.google.dev/)
 
+<details>
+  <summary><strong>📚 On this page</strong></summary>
+
+  - [What you can do](#-features)
+  - [Technology](#-tech-stack)
+  - [Run locally](#-getting-started)
+  - [Data model](#-supabase-tables)
+  - [Contributing](#-contributing)
+  - [License](#-license)
+
+</details>
+
 ---
 
 ## 📝 Description
 
 **Movie Night** brings the full magic of cinema to your browser — and your home screen. It provides an immersive interface for discovering, searching, and exploring movies, TV shows, and actors. Whether you want tonight's trending blockbuster, a classic series, or a niche indie gem, Movie Night delivers. Powered by TMDB API, Google Gemini AI, and Supabase, it offers a Netflix-inspired dark UI with advanced filtering, AI recommendations, personal watchlists, community playlists, and native Android APK support.
-
----
 
 ## ✨ Features
 
@@ -157,7 +169,7 @@
 
 ### 1. Prerequisites
 
-- Node.js 18.x or later
+- Node.js 20.9 or later
 - A TMDB API Key — [Get one here](https://www.themoviedb.org/documentation/api)
 - A Supabase project — [supabase.com](https://supabase.com/)
 - A Google Gemini API Key — [ai.google.dev](https://ai.google.dev/)
@@ -165,8 +177,8 @@
 ### 2. Clone & Install
 
 ```bash
-git clone https://github.com/Abdo-omran2206/Movie-Night.git
-cd movie-night
+git clone https://github.com/MovieNightHQ/Movie-Night.git
+cd Movie-Night
 npm install
 ```
 
@@ -297,7 +309,7 @@ app/
 
 ## 🤝 Contributing
 
-Contributions are always welcome!
+Contributions are welcome. For a smooth review, describe the user-facing change, include reproduction steps for bug fixes, and avoid committing secrets or personal API keys. Open an issue first for larger changes so the approach can be discussed.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -315,10 +327,16 @@ Contributions are always welcome!
 - LinkedIn: [abdalla-omran](https://www.linkedin.com/in/abdalla-omran-388572361/)
 - Reddit: [r/myMovieNight](https://www.reddit.com/r/myMovieNight/)
 - Discord: [Join Server](https://discord.gg/yep7xvZj)
-- Project: [Movie-Night](https://github.com/Abdo-omran2206/Movie-Night)
+- Project: [Movie-Night](https://github.com/MovieNightHQ/Movie-Night)
 
 ---
 
 **Made with ❤️ for movie lovers everywhere** 🍿
+
+## 📜 License
+
+Movie Night is open source under the [MIT License](./LICENSE). You may use, copy, modify, distribute, sublicense, and sell the software, provided the copyright and permission notice are included with copies or substantial portions. The software is provided **“as is,” without warranty**, and the authors are not liable for claims or damages. See the [full license text](./LICENSE).
+
+This license applies to this repository; third-party libraries, APIs, movie data, artwork, and trademarks remain subject to their owners' terms. This product uses the TMDB API but is not endorsed or certified by TMDB.
 
 _Powered by [The Movie Database (TMDB) API](https://www.themoviedb.org/)_
